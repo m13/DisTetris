@@ -2,5 +2,4 @@
 <resources>
     <string name="hello">Hello World, distetris!</string>
     <string name="app_name">DisTetris</string>
-    <string name="test">Test</string>
 </resources>
