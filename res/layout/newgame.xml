@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	    <TextView
+	    	android:id="@+id/newgameTextView01"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:text="Channel's name"
+		    android:textSize="16sp" />
+	   	<EditText
+			android:id="@+id/newgameEditText01"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="wifi" />
+    </LinearLayout>
+    
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	    <TextView
+	    	android:id="@+id/newgameTextView02"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:text="Number of teams"
+		    android:textSize="16sp" />
+	   	<EditText
+			android:id="@+id/newgameEditText02"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="3" />
+    </LinearLayout>
+    
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	    <TextView
+	    	android:id="@+id/newgameTextView03"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:text="Number of players"
+		    android:textSize="16sp" />
+	   	<EditText
+			android:id="@+id/newgameEditText03"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="6" />
+    </LinearLayout>
+    
+	<Button
+		android:id="@+id/newgameButton01"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="Create" />
+	<Button
+		android:id="@+id/newgameButton02"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="Back" />
+</LinearLayout>
