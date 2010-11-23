@@ -1,5 +1,6 @@
 package games.distetris.presentation;
 
+import games.distetris.domain.CtrlDomain;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,9 +18,10 @@ public class Distetris extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		Log.d(TAG, "onPause");
-        setContentView(R.layout.main);
-        setButtons();
+
+		setContentView(R.layout.main);
+		//CtrlDomain.getInstance().createServer();
+		CtrlDomain.getInstance().connectServer("x");
     }
 
 	private void setButtons() {
