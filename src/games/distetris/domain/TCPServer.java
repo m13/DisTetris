@@ -12,12 +12,14 @@ public class TCPServer implements Runnable {
 	public static final int SERVERPORT = 4444;
 	
 	private Vector<TCPConnection> connections;
-	private int numTeams;
+	private Integer numTeams;
+	private Integer numTurns;
 	
-	public TCPServer(Vector<TCPConnection> connections, int numTeams) {
+	public TCPServer(Vector<TCPConnection> connections, int numTeams, int numTurns) {
 		super();
 		this.connections = connections;
 		this.numTeams = numTeams;
+		this.numTurns = numTurns;
 	}
 	
 	public void run() {
@@ -30,7 +32,7 @@ public class TCPServer implements Runnable {
 				Socket client = serverSocket.accept();
 				TCPConnection conn = new TCPConnection(client);
 				connections.add(conn);
-				conn.out("WAITING " + (connections.size()) + "," + (numTeams-1));
+				conn.out("WAITING " + (connections.size()) + "," + (numTeams-1) + "," + numTurns);
 			}
 		
 		} catch (Exception e) {

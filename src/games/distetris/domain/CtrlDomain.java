@@ -26,11 +26,14 @@ public class CtrlDomain {
 	private Integer player = 0;
 	private Integer team = 0;
 	private Integer round = 0;
+	private boolean myTurn = false;
+	private Integer myTurns = 0;
 	
 	// dynamic configuration (server)
 	private Integer numPlayers = 1;
 	private Integer freeSlots = 1;
 	private Integer numTeams = 2;
+	private Integer numTurns = 2;
 	
 	
 	CtrlDomain () {
@@ -58,14 +61,14 @@ public class CtrlDomain {
 	}
 	
 	public void startNet() {
-		NET.createServer(numPlayers, numTeams);
+		NET.createServer(numPlayers, numTeams, numTurns);
 		NET.connectServer("10.0.2.2", handler);
 	}
 	
 	
 
 	private void parserController(String str) {
-		Log.d("", str);
+		Log.d("PARSER", str);
 		String[] actionContent = str.split(" ", 2);
 		String[] args = actionContent[1].split(",");
 
@@ -73,8 +76,10 @@ public class CtrlDomain {
 		{
 			// 1: assigned idPlayer
 			// 2: number of teams
+			// 3: num of turns
 			player = (player == -1) ? player : Integer.valueOf(args[0]);
 			team = GAME.windowChoiceTeam(Integer.valueOf(args[1]));
+			myTurns = Integer.valueOf(args[2]);
 			NET.sendSignal("JOIN " + String.valueOf(player) + "," + String.valueOf(team));
 		}
 		else if (actionContent[0].equals("JOIN"))
@@ -98,15 +103,19 @@ public class CtrlDomain {
 		{
 			// NULL
 			String result = "DO";
-			do {
-				result = GAME.playPiece();
-				NET.sendSignal("PING " + serialize(GAME.getPiece()));
-				
-			} while (result.equals("DO"));
+			myTurn = true;
+			for (int i = myTurns; i>0; i--) {
+				do {
+					result = GAME.playPiece();
+					NET.sendSignal("PING " + serialize(GAME.getPiece()));
+					
+				} while (result.equals("DO"));
+			}
 			
 			// testing!
 			if (round>3) result = "END";
 			
+			myTurn = false;
 			NET.sendSignal("FINISHED " + result);
 		}
 		else if (actionContent[0].equals("PING"))
@@ -117,17 +126,24 @@ public class CtrlDomain {
 		else if (actionContent[0].equals("PONG"))
 		{
 			// 1: serialized Piece
-			GAME.setPiece(unserialize(actionContent[1]));
+			if (!myTurn) {
+				GAME.setPiece(unserialize(actionContent[1]));
+			}
 		}
 		else if (actionContent[0].equals("FINISHED"))
 		{
 			// 1: String result
+			// 2: (if error) String error
 			if (args[0].equals("END")) {
 				NET.sendSignals("END " + serialize(GAME.getBoard()));
-			} else {
+			} else if (args[0].equals("NEXT")) {
 				GAME.setPiece(args[0]);
 				NET.sendSignals("START " + serialize(GAME.getBoard()));
 				NET.nextPlayer();
+			} else if (args[0].equals("ERROR")) {
+				NET.sendSignals("ERROR "+args[1]);
+			} else {
+				// nothing
 			}
 		}
 		else if (actionContent[0].equals("END"))

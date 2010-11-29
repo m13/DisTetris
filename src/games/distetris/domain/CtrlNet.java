@@ -3,7 +3,6 @@ package games.distetris.domain;
 import java.util.Vector;
 
 import android.os.Handler;
-import android.util.Log;
 
 public class CtrlNet {
 	
@@ -21,7 +20,7 @@ public class CtrlNet {
 	}
 	
 	
-	public void createServer(int numPlayers, int numTeams) {
+	public void createServer(int numPlayers, int numTeams, int numTurns) {
 		this.numPlayers = numPlayers;
 		this.numTeams = numTeams;
 		
@@ -30,7 +29,7 @@ public class CtrlNet {
 			teamPlayer.add(seq);
 		}
 		
-		Thread sThread = new Thread(new TCPServer(connections, numTeams));
+		Thread sThread = new Thread(new TCPServer(connections, numTeams, numTurns));
 		sThread.start();
 		
 		Thread sendThread = new Thread(new TCPServerSend(connections));
@@ -57,7 +56,6 @@ public class CtrlNet {
 
 	public int registerPlayer(int posPlayer, int chosenTeam) {
 		Integer pos = new Integer(posPlayer);
-		Log.d("", String.valueOf(chosenTeam)+String.valueOf(posPlayer));
 		(teamPlayer.elementAt(chosenTeam)).add(pos);
 		numPlayers--;
 		return numPlayers;

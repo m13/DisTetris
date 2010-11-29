@@ -15,9 +15,10 @@ public class CtrlGame {
 	}
 
 	public String playPiece() {
-		return "0";
+		return "NEXT";
 		// return
-		// piece == next player
+		// "ERROR" == send error to all
+		// "NEXT" == next player
 		// "DO" == continue playing
 		// "END" == end
 	}
@@ -27,6 +28,9 @@ public class CtrlGame {
 	}
 
 	public void setPiece(Object object) {
+		// check if it's diferent of the last piece. Then
+		// it means that it's another turn of a same player...
+		// A bit odd... I know. Check the logic of CtrlNet!
 	}
 
 	
