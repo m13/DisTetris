@@ -27,7 +27,7 @@ public class Distetris extends Activity {
 	private void setButtons() {
 
         int[] allIdButtons = new int[] { R.id.mainButton01,
-        		R.id.mainButton02, R.id.mainButton03, R.id.mainButton04 };
+        		R.id.mainButton02, R.id.mainButton03, R.id.mainButton04,R.id.mainButton05 };
 		
         for (int idButton : allIdButtons) {
 	        Button button = (Button) findViewById(idButton);
@@ -47,6 +47,9 @@ public class Distetris extends Activity {
 		                case R.id.mainButton04:
 		                	i.setClass(v.getContext(), Configure.class);
 		                	break;
+		                case R.id.mainButton05:
+		                	i.setClass(v.getContext(), Game.class);
+		                	break;		                	
 	                }
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(i);
