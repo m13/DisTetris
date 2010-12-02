@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public class Game extends Activity {
+	GameView v;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game);
+        v = new GameView(getBaseContext());
+        setContentView(v);
     }
 }
