@@ -23,4 +23,9 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="Configure" />
+	<Button
+		android:id="@+id/mainButton05"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="Single Game" />	    
 </LinearLayout>
