@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -65,6 +66,9 @@ public class CtrlDomain {
 		NET.connectServer("10.0.2.2", handler);
 	}
 	
+	public int[][] getBoard(){
+		return GAME.getBoard();
+	}
 	
 
 	private void parserController(String str) {
