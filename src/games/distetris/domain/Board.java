@@ -11,29 +11,17 @@ public class Board implements Serializable {
 
 
 	public int[][] getBoard() {
+		board[0][0] = Color.parseColor("#FFFF0000");
+		board[0][1] = Color.parseColor("#FFFF0000");
+		board[0][2] = Color.parseColor("#FFFF0000");
 		board[1][0] = Color.parseColor("#FFFF0000");
-		board[1][1] = Color.parseColor("#FF00FF00");
-		board[1][2] = Color.parseColor("#FF00F0F0");
 		
-		board[2][0] = Color.parseColor("#FF00F000");
-		board[3][1] = Color.parseColor("#FFFFFF00");
-		board[4][2] = Color.parseColor("#FFFF00FF");
+		board[1][1] = Color.parseColor("#FF0000FF");
+		board[1][2] = Color.parseColor("#FF0000FF");
+		board[2][1] = Color.parseColor("#FF0000FF");
+		board[2][2] = Color.parseColor("#FF0000FF");
+		
 		return board;
 	}
 	
-	
-	public void setTestBoard(){
-		board[1][0] = Color.parseColor("#FFFF0000");
-		board[1][1] = Color.parseColor("#FFFF0000");
-		board[1][2] = Color.parseColor("#FFFF0000");
-		board[1][3] = Color.parseColor("#FFFF0000");
-		board[1][4] = Color.parseColor("#FFFF0000");
-		board[1][5] = Color.parseColor("#FFFF0000");
-		board[1][6] = Color.parseColor("#FFFF0000");
-		board[1][7] = Color.parseColor("#FFFF0000");
-		board[1][8] = Color.parseColor("#FFFF0000");
-		board[1][9] = 0;
-		board[1][10] = Color.parseColor("#FFFF0000");
-		
-	}
 }
