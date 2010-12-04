@@ -6,23 +6,28 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class JoinGame extends Activity implements NewGameListener {
+public class NewGameWaiting extends Activity implements NewGameListener {
 	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		L.d("Start");
 
-		setContentView(R.layout.joingame);
+		setContentView(R.layout.newgamewaiting);
 
-		CtrlDomain.getInstance().findServersUDP(this);
+		L.d("ContentView setted");
+
+		CtrlDomain.getInstance().createServerUDP(this);
 
 		L.d("End");
-    }
+	}
 
 	@Override
 	public void addEvent(String str) {
 		TextView tv = ((TextView) findViewById(R.id.TextView01));
 		tv.setText(tv.getText() + "\n" + str);
 	}
+
+
 }

@@ -1,10 +1,24 @@
 package games.distetris.domain;
 
-import android.graphics.Color;
 import android.util.Log;
 
 public class CtrlGame {
+
+	private static CtrlGame INSTANCE = null;
+
 	Board board = new Board();
+
+	private CtrlGame() {
+		L.d("Created");
+	}
+
+	public static CtrlGame getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new CtrlGame();
+		}
+		return INSTANCE;
+	}
+
 	// show pop-up where choose the team
 	// return the team chosen
 	public int windowChoiceTeam(int availableTeams) {

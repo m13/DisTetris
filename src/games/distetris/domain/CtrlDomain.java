@@ -1,11 +1,13 @@
 package games.distetris.domain;
 
+import games.distetris.presentation.NewGameListener;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -16,8 +18,8 @@ public class CtrlDomain {
 	
 	// controllers
 	private static CtrlDomain INSTANCE = null;
-	private CtrlNet NET;
-	private CtrlGame GAME;
+	private CtrlNet NET = null;
+	private CtrlGame GAME = null;
 	
 	private Listener listener;
 	private Handler handler;
@@ -37,7 +39,9 @@ public class CtrlDomain {
 	private Integer numTurns = 2;
 	
 	
-	CtrlDomain () {
+	private CtrlDomain() {
+		L.d("Created");
+
 		this.handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -51,8 +55,8 @@ public class CtrlDomain {
 	public static CtrlDomain getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlDomain();
-			INSTANCE.NET = new CtrlNet();
-			INSTANCE.GAME = new CtrlGame();
+			INSTANCE.NET = CtrlNet.getInstance();
+			INSTANCE.GAME = CtrlGame.getInstance();
 		}
 		return INSTANCE;
 	}
@@ -62,8 +66,8 @@ public class CtrlDomain {
 	}
 	
 	public void startNet() {
-		NET.createServer(numPlayers, numTeams, numTurns);
-		NET.connectServer("10.0.2.2", handler);
+		NET.createServerTCP(numPlayers, numTeams, numTurns);
+		NET.connectServerTCP("10.0.2.2", handler);
 	}
 	
 	public int[][] getBoard(){
@@ -198,4 +202,21 @@ public class CtrlDomain {
 		}
 		return object;
 	}
+
+	public void createServerUDP(NewGameListener listener) {
+		NET.createServerUDP(listener);
+	}
+
+	public void findServersUDP(NewGameListener listener) {
+		NET.findServersUDP(listener);
+	}
+
+	public void closeServerUDP() {
+		NET.closeServerUDP();
+	}
+
+	public void setWifiManager(WifiManager systemService) {
+		NET.setWifiManager(systemService);
+	}
+
 }

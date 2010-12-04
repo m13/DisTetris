@@ -1,27 +1,29 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.L;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 public class Distetris extends Activity {
-	
-    // Debugging
-    private static final String TAG = "DISTETRIS";
-    private static final boolean DEBUG = true;
-    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-		Log.d(TAG, "onPause");
+		super.onCreate(savedInstanceState);
+		L.d("Start");
+
+		// System Services only can be get from an antivity, so the instance is passed to be used later
+		CtrlDomain.getInstance().setWifiManager((WifiManager) getSystemService(Context.WIFI_SERVICE));
+
         setContentView(R.layout.main);
         setButtons();
-        CtrlDomain.getInstance().startNet();
+		//CtrlDomain.getInstance().startNet();
+		L.d("End");
     }
 
 	private void setButtons() {
@@ -62,37 +64,37 @@ public class Distetris extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Log.d(TAG, "onStart");
+		L.d("onStart");
 	}
 	
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.d(TAG, "onRestart");
+		L.d("onRestart");
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
+		L.d("onResume");
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d(TAG, "onPause");
+		L.d("onPause");
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Log.d(TAG, "onStop");
+		L.d("onStop");
 	}
     
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy");
+		L.d("onDestroy");
 	}
     
 	

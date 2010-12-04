@@ -1,11 +1,25 @@
 package games.distetris.domain;
 
+import games.distetris.presentation.NewGameListener;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Vector;
 
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.util.Log;
 
 public class CtrlNet {
 	
+	public static Integer PORT = 5555;
+	
+	private static CtrlNet INSTANCE = null;
+
 	private Vector<TCPConnection> connections;
 	private Vector<Vector<Integer>> teamPlayer;
 	private Integer pointerTeamPlayer = 0;
@@ -13,14 +27,28 @@ public class CtrlNet {
 	private Integer numPlayers;
 	private Integer numTeams;
 	
+	private Thread threadTCPServer;
+	private Thread threadTCPServerSend;
 	
-	CtrlNet() {
+	private UDPServer threadUDPServer;
+
+	private WifiManager wifiManager;
+	
+	private CtrlNet() {
+		L.d("Created");
+
 		this.connections = new Vector<TCPConnection>();
 		this.teamPlayer = new Vector<Vector<Integer>>();
 	}
+
+	public static CtrlNet getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new CtrlNet();
+		}
+		return INSTANCE;
+	}
 	
-	
-	public void createServer(int numPlayers, int numTeams, int numTurns) {
+	public void createServerTCP(int numPlayers, int numTeams, int numTurns) {
 		this.numPlayers = numPlayers;
 		this.numTeams = numTeams;
 		
@@ -29,15 +57,15 @@ public class CtrlNet {
 			teamPlayer.add(seq);
 		}
 		
-		Thread sThread = new Thread(new TCPServer(connections, numTeams, numTurns));
-		sThread.start();
+		this.threadTCPServer = new Thread(new TCPServer(connections, numTeams, numTurns));
+		this.threadTCPServer.start();
 		
-		Thread sendThread = new Thread(new TCPServerSend(connections));
-		sendThread.start();
+		this.threadTCPServerSend = new Thread(new TCPServerSend(connections));
+		this.threadTCPServerSend.start();
 	}
 
 	
-	public void connectServer(String ip, Handler handler) {
+	public void connectServerTCP(String ip, Handler handler) {
 		Thread cThread = new Thread(new TCPClient(ip, connections, handler));
 		cThread.start();
 	}
@@ -75,5 +103,63 @@ public class CtrlNet {
 		
 		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
 		connections.elementAt(firstPlayerPos).out("CONTINUE ");
+	}
+
+	public void createServerUDP(NewGameListener listener) {
+		this.threadUDPServer = new UDPServer(UDPServer.MODE_SERVER, listener);
+		this.threadUDPServer.start();
+		L.d("Its running!");
+	}
+
+	public void findServersUDP(NewGameListener listener) {
+		this.threadUDPServer = new UDPServer(UDPServer.MODE_CLIENT, listener);
+		this.threadUDPServer.start();
+		L.d("Its running!");
+		this.threadUDPServer.sendBroadcast("PING");
+		L.d("Sent PING");
+	}
+
+	public void closeServerUDP() {
+		this.threadUDPServer.close();
+		L.d("Closed");
+	}
+
+	public InetAddress getBroadcastAddress() throws IOException {
+		DhcpInfo dhcp = wifiManager.getDhcpInfo();
+
+		if (dhcp == null) {
+			Log.d("NET", "Could not get dhcp info");
+			return null;
+		}
+
+		int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+		byte[] quads = new byte[4];
+		for (int k = 0; k < 4; k++)
+			quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+		return InetAddress.getByAddress(quads);
+	}
+
+	public InetAddress getLocalAddress() throws IOException {
+
+		try {
+			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+				NetworkInterface intf = en.nextElement();
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+					InetAddress inetAddress = enumIpAddr.nextElement();
+					if (!inetAddress.isLoopbackAddress()) {
+						//return inetAddress.getHostAddress().toString();
+						return inetAddress;
+					}
+				}
+			}
+		} catch (SocketException e) {
+			Log.e("NET", e.toString());
+		}
+		return null;
+	}
+
+	public void setWifiManager(WifiManager systemService) {
+		L.d("Wifi set");
+		this.wifiManager = systemService;
 	}
 }
