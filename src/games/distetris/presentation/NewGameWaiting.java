@@ -5,15 +5,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 
 public class NewGameWaiting extends Activity {
 	
-	private Handler udpHandler = new Handler() {
+	private Handler tcpHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			updateConnectedClients();
+		}
+
+	};
+
+	private Handler udpHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
 		}
 
 	};
@@ -30,6 +40,7 @@ public class NewGameWaiting extends Activity {
 	protected void onStart() {
 		super.onStart();
 
+		CtrlDomain.getInstance().serverTCPStart(tcpHandler);
 		CtrlDomain.getInstance().serverUDPStart(udpHandler);
 
 	}
@@ -39,11 +50,18 @@ public class NewGameWaiting extends Activity {
 		super.onStop();
 
 		CtrlDomain.getInstance().serverUDPStop();
+		CtrlDomain.getInstance().serverTCPStop();
 
 	}
 
 	private void updateConnectedClients() {
 		String[] users = CtrlDomain.getInstance().serverTCPGetConnectedUsers();
+		String str = "";
+		for (int i = 0; i < users.length; i++) {
+			str += users[i] + "\n";
+		}
+		TextView tv = ((TextView) findViewById(R.id.TextView01));
+		tv.setText("Usuarios conectados:\n" + str);
 	}
 
 }

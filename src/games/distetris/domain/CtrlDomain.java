@@ -29,6 +29,7 @@ public class CtrlDomain {
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
+	private String name;
 	private Integer numPlayers = 1;
 	private Integer freeSlots = 1;
 	private Integer numTeams = 2;
@@ -198,6 +199,41 @@ public class CtrlDomain {
 
 	public String[] serverTCPGetConnectedUsers() {
 		return NET.serverTCPGetConnectedUsers();
+	}
+
+	public String getPlayerName() {
+		return "Viciado";
+	}
+
+	public void serverConfigure(String name, int numTeams, int numPlayers, int numTurns) {
+		this.name = name;
+		this.numTeams = numTeams;
+		this.numPlayers = numPlayers;
+		this.numTurns = numTurns;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public Integer getNumTeams() {
+		return this.numTeams;
+	}
+
+	public Integer getNumPlayers() {
+		return this.numPlayers;
+	}
+
+	public Integer getNumTurns() {
+		return this.numTurns;
+	}
+
+	public void serverTCPStart(Handler udpHandler) {
+		NET.serverTCPStart(numPlayers, numTeams, numTurns);
+	}
+
+	public void serverTCPStop() {
+		NET.serverTCPStop();
 	}
 
 }

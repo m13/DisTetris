@@ -18,6 +18,8 @@ public class TCPConnection {
 			this.socket = socket;
 			this.out = new PrintWriter(socket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+			this.name = in();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

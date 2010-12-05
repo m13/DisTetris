@@ -59,14 +59,25 @@ public class CtrlNet {
 		this.threadTCPServer = new TCPServer(connections, numTeams, numTurns);
 		this.threadTCPServer.start();
 		
-		this.threadTCPServerSend = new TCPServerSend(connections);
-		this.threadTCPServerSend.start();
+		// TODO: we really need this?
+		//this.threadTCPServerSend = new TCPServerSend(connections);
+		//this.threadTCPServerSend.start();
 	}
 
 	
 	public void serverTCPConnect(String ip, int port, Handler handler) {
 		this.threadTCPClient = new TCPClient(ip, port, connections, handler);
 		this.threadTCPClient.start();
+	}
+
+	public void serverTCPStop() {
+		if (this.threadTCPServer != null && this.threadTCPServer.isAlive()) {
+			this.threadTCPServer.close();
+			while (this.threadTCPServer.isAlive()) {
+				;
+			}
+		}
+		L.d("Closed");
 	}
 
 
@@ -173,12 +184,13 @@ public class CtrlNet {
 	}
 
 	public String[] serverTCPGetConnectedUsers() {
-		String[] names = new String[connections.size()];
+		Vector<String> n = new Vector<String>();
 
 		for (int i = 0; i < connections.size(); i++) {
-			names[i] = connections.get(i).getName();
+			n.add(connections.get(i).getName());
 		}
 
-		return names;
+		return (String[]) n.toArray();
 	}
+
 }

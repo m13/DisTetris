@@ -1,6 +1,6 @@
 package games.distetris.presentation;
 
-import games.distetris.domain.CtrlGame;
+import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.L;
 import android.app.Activity;
 import android.content.Intent;
@@ -19,11 +19,19 @@ public class NewGame extends Activity {
         
         final Button button = (Button) findViewById(R.id.newgameButton01);
 		final EditText textNameServer = (EditText) findViewById(R.id.newgameEditText01);
+		final EditText textNumTeams = (EditText) findViewById(R.id.newgameEditText02);
+		final EditText textNumPlayers = (EditText) findViewById(R.id.newgameEditText03);
+		final EditText textNumTurns = (EditText) findViewById(R.id.newgameEditText04);
+
+		final String nameServer = textNameServer.getText().toString();
+		final Integer numTeams = Integer.parseInt(textNumTeams.getText().toString());
+		final Integer numPlayers = Integer.parseInt(textNumPlayers.getText().toString());
+		final Integer numTurns = Integer.parseInt(textNumTurns.getText().toString());
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-				CtrlGame.getInstance().setName(textNameServer.getText().toString());
+				CtrlDomain.getInstance().serverConfigure(nameServer, numTeams, numPlayers, numTurns);
 
                 Intent i = new Intent();
 				i.setClass(v.getContext(), NewGameWaiting.class);

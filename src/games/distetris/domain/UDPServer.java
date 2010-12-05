@@ -80,10 +80,8 @@ public class UDPServer extends Thread {
 					// SERVER
 					L.d("Mode server entered");
 
-					L.d("Updated UI");
-
 					// Send an answer to the client
-					sendIP(remoteIP, CtrlGame.getInstance().getName() + "|" + CtrlNet.PORT);
+					sendIP(remoteIP, CtrlDomain.getInstance().getName() + "|" + CtrlNet.PORT);
 
 					L.d("Sent answer to client");
 

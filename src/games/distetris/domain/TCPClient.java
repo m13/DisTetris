@@ -12,6 +12,7 @@ public class TCPClient extends Thread {
 	private String ip;
 	private int port;
 	private Vector<TCPConnection> connections;
+	private TCPConnection connection;
 	private Handler handler;
 	
 	public TCPClient(String ip, int port, Vector<TCPConnection> connections, Handler handler) {
@@ -27,10 +28,14 @@ public class TCPClient extends Thread {
 			L.d("C: Connecting...");
 			
 			Socket socket = new Socket(ip, port);
-			connections.add(0, new TCPConnection(socket));
+			this.connection = new TCPConnection(socket);
+			connections.add(0, this.connection);
+
+			connection.out(CtrlDomain.getInstance().getPlayerName());
+
 			try {
 				String received;
-				while ((received = connections.firstElement().in()) != null) {
+				while ((received = connection.in()) != null) {
 					L.d("C: Received");
 					sendMsg("MSG", received);
 				}
@@ -38,7 +43,7 @@ public class TCPClient extends Thread {
 			} catch (Exception e) {
 				L.e("S: Error");
 			} finally {
-				connections.firstElement().close();
+				connection.close();
 			}
 		} catch (Exception e) {
 			L.e("C: Error");
