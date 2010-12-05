@@ -1,7 +1,5 @@
 package games.distetris.domain;
 
-import games.distetris.presentation.NewGameListener;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -66,8 +64,8 @@ public class CtrlDomain {
 	}
 	
 	public void startNet() {
-		NET.createServerTCP(numPlayers, numTeams, numTurns);
-		NET.connectServerTCP("10.0.2.2", handler);
+		NET.serverTCPStart(numPlayers, numTeams, numTurns);
+		NET.serverTCPConnect("10.0.2.2", handler);
 	}
 	
 	public int[][] getBoard(){
@@ -203,16 +201,16 @@ public class CtrlDomain {
 		return object;
 	}
 
-	public void createServerUDP(NewGameListener listener) {
-		NET.createServerUDP(listener);
+	public void serverUDPStart(Handler handler) {
+		NET.serverUDPStart(handler);
 	}
 
-	public void findServersUDP(NewGameListener listener) {
-		NET.findServersUDP(listener);
+	public void serverUDPFind(Handler handler) {
+		NET.serverUDPFind(handler);
 	}
 
-	public void closeServerUDP() {
-		NET.closeServerUDP();
+	public void serverUDPStop() {
+		NET.serverUDPStop();
 	}
 
 	public void setWifiManager(WifiManager systemService) {

@@ -1,7 +1,5 @@
 package games.distetris.domain;
 
-import games.distetris.presentation.NewGameListener;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -48,7 +46,7 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 	
-	public void createServerTCP(int numPlayers, int numTeams, int numTurns) {
+	public void serverTCPStart(int numPlayers, int numTeams, int numTurns) {
 		this.numPlayers = numPlayers;
 		this.numTeams = numTeams;
 		
@@ -65,7 +63,7 @@ public class CtrlNet {
 	}
 
 	
-	public void connectServerTCP(String ip, Handler handler) {
+	public void serverTCPConnect(String ip, Handler handler) {
 		Thread cThread = new Thread(new TCPClient(ip, connections, handler));
 		cThread.start();
 	}
@@ -105,22 +103,33 @@ public class CtrlNet {
 		connections.elementAt(firstPlayerPos).out("CONTINUE ");
 	}
 
-	public void createServerUDP(NewGameListener listener) {
-		this.threadUDPServer = new UDPServer(UDPServer.MODE_SERVER, listener);
+	public void serverUDPStart(Handler handler) {
+		// If a previous server is already running, stop it
+		serverUDPStop();
+
+		this.threadUDPServer = new UDPServer(UDPServer.MODE_SERVER, handler);
 		this.threadUDPServer.start();
 		L.d("Its running!");
 	}
 
-	public void findServersUDP(NewGameListener listener) {
-		this.threadUDPServer = new UDPServer(UDPServer.MODE_CLIENT, listener);
+	public void serverUDPFind(Handler handler) {
+		// If a previous server is already running, stop it
+		serverUDPStop();
+
+		this.threadUDPServer = new UDPServer(UDPServer.MODE_CLIENT, handler);
 		this.threadUDPServer.start();
 		L.d("Its running!");
 		this.threadUDPServer.sendBroadcast("PING");
 		L.d("Sent PING");
 	}
 
-	public void closeServerUDP() {
-		this.threadUDPServer.close();
+	public void serverUDPStop() {
+		if (this.threadUDPServer != null && this.threadUDPServer.isAlive()) {
+			this.threadUDPServer.close();
+			while (this.threadUDPServer.isAlive()) {
+				;
+			}
+		}
 		L.d("Closed");
 	}
 

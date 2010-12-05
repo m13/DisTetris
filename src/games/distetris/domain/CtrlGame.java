@@ -5,6 +5,7 @@ import android.util.Log;
 public class CtrlGame {
 
 	private static CtrlGame INSTANCE = null;
+	private String name;
 
 	Board board = new Board();
 
@@ -59,5 +60,13 @@ public class CtrlGame {
 
 	// save the score in the DB
 	public void saveScore() {
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

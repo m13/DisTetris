@@ -1,20 +1,21 @@
 package games.distetris.domain;
 
-import games.distetris.presentation.NewGameListener;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.security.InvalidParameterException;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class UDPServer extends Thread {
 
 	public static Integer MODE_SERVER = 1;
 	public static Integer MODE_CLIENT = 2;
-	private NewGameListener listener;
+	private Handler handler;
 	private DatagramSocket socket;
 	private Boolean keepRunning;
 	private int mode;
@@ -23,18 +24,18 @@ public class UDPServer extends Thread {
 	 * The mode parameter tells the UDPServer if is acting as a SERVER (1) or
 	 * CLIENT (2)
 	 * 
-	 * SERVER: will answer all incoming packets
+	 * SERVER: will answer all incoming packets with a reply packet
 	 * 
-	 * CLIENT: will update the UI with all incoming packets (in case there are
-	 * multiple servers)
+	 * CLIENT: will send a broadcast packet and update the UI with all the
+	 * answers (in case there are multiple servers)
 	 */
-	public UDPServer(int mode, NewGameListener listener) {
+	public UDPServer(int mode, Handler handler) {
 
-		if (mode != 1 && mode != 2) {
+		if (mode != MODE_SERVER && mode != MODE_CLIENT) {
 			throw new InvalidParameterException();
 		}
 
-		this.listener = listener;
+		this.handler = handler;
 		this.keepRunning = true;
 		this.mode = mode;
 
@@ -63,32 +64,39 @@ public class UDPServer extends Thread {
 				L.d("Datagram received");
 
 				InetAddress remoteIP = packet.getAddress();
+
+				L.d("Remote IP: " + remoteIP);
+
+				// Ignore if the packet received is sent by us
+				// (this happens because broadcast traffic is sent to us too)
 				if (remoteIP.equals(CtrlNet.getInstance().getLocalAddress()))
 					continue;
 
 				String content = new String(packet.getData(), 0, packet.getLength());
-				Log.d("UDPServer", "Received response " + content);
+				L.d("Content: " + content);
 
 				if (mode == 1) {
 
 					// SERVER
-					L.d("Mode server");
+					L.d("Mode server entered");
 
-					// Send the obtained bytes to the UI Activity
-					listener.addEvent("[C] " + remoteIP + " " + content);
+					L.d("Updated UI");
 
 					// Send an answer to the client
-					sendIP(remoteIP, "PONG");
+					sendIP(remoteIP, CtrlGame.getInstance().getName() + "!" + CtrlNet.PORT);
+
+					L.d("Sent answer to client");
 
 				} else if (mode == 2) {
 
 					// CLIENT
-					L.d("Mode client");
+					L.d("Mode client entered");
 
-					listener.addEvent("[S] " + remoteIP + " " + content);
+					sendUIServer(content.split("!")[0], remoteIP, content.split("!")[1]);
 
 				}
 
+				L.d("Finished work");
 
 			}
 
@@ -121,6 +129,16 @@ public class UDPServer extends Thread {
 		} catch (Exception e) {
 			Log.e("UDPServer", "Exception during sendIP", e);
 		}
+	}
+
+	private void sendUIServer(String name, InetAddress remoteIP, String port) {
+		Message msg = new Message();
+		Bundle data = new Bundle();
+		data.putString("NAME", name);
+		data.putString("IP", remoteIP.getHostAddress());
+		data.putString("PORT", port);
+		msg.setData(data);
+		handler.sendMessage(msg);
 	}
 
 }

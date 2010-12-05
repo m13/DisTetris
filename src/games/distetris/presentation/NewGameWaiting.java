@@ -1,33 +1,44 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
-import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.os.Handler;
+import android.os.Message;
 
-public class NewGameWaiting extends Activity implements NewGameListener {
+public class NewGameWaiting extends Activity {
 	
+	private Handler udpHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+		}
+
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		L.d("Start");
 
 		setContentView(R.layout.newgamewaiting);
 
-		L.d("ContentView setted");
-
-		CtrlDomain.getInstance().createServerUDP(this);
-
-		L.d("End");
 	}
 
 	@Override
-	public void addEvent(String str) {
-		TextView tv = ((TextView) findViewById(R.id.TextView01));
-		tv.setText(tv.getText() + "\n" + str);
+	protected void onStart() {
+		super.onStart();
+
+		CtrlDomain.getInstance().serverUDPStart(udpHandler);
+
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		CtrlDomain.getInstance().serverUDPStop();
+
+	}
 
 }
