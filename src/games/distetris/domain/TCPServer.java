@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import android.util.Log;
 
-public class TCPServer implements Runnable {
+public class TCPServer extends Thread {
 
 	public static final String SERVERIP = "10.0.2.2";
 	public static final int SERVERPORT = 4444;

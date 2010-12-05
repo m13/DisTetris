@@ -13,6 +13,7 @@ public class NewGameWaiting extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+			updateConnectedClients();
 		}
 
 	};
@@ -39,6 +40,10 @@ public class NewGameWaiting extends Activity {
 
 		CtrlDomain.getInstance().serverUDPStop();
 
+	}
+
+	private void updateConnectedClients() {
+		String[] users = CtrlDomain.getInstance().serverTCPGetConnectedUsers();
 	}
 
 }

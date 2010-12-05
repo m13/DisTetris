@@ -83,7 +83,7 @@ public class UDPServer extends Thread {
 					L.d("Updated UI");
 
 					// Send an answer to the client
-					sendIP(remoteIP, CtrlGame.getInstance().getName() + "!" + CtrlNet.PORT);
+					sendIP(remoteIP, CtrlGame.getInstance().getName() + "|" + CtrlNet.PORT);
 
 					L.d("Sent answer to client");
 
@@ -92,7 +92,7 @@ public class UDPServer extends Thread {
 					// CLIENT
 					L.d("Mode client entered");
 
-					sendUIServer(content.split("!")[0], remoteIP, content.split("!")[1]);
+					sendUIServer(content.split("\\|")[0], remoteIP, content.split("\\|")[1]);
 
 				}
 

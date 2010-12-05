@@ -11,6 +11,7 @@ public class TCPConnection {
 	private Socket socket;
 	PrintWriter out;
 	BufferedReader in;
+	String name;
 
 	public TCPConnection(Socket socket) {
 		try {
@@ -36,6 +37,10 @@ public class TCPConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 }

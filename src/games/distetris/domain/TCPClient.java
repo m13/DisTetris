@@ -6,18 +6,17 @@ import java.util.Vector;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
-public class TCPClient implements Runnable {
+public class TCPClient extends Thread {
 	
 	private String ip;
 	private int port;
 	private Vector<TCPConnection> connections;
 	private Handler handler;
 	
-	public TCPClient(String ip, Vector<TCPConnection> connections, Handler handler) {
+	public TCPClient(String ip, int port, Vector<TCPConnection> connections, Handler handler) {
 		this.ip = ip;
-		this.port = 3333;
+		this.port = port;
 		this.connections = connections;
 		this.handler = handler;
 	}
@@ -25,28 +24,28 @@ public class TCPClient implements Runnable {
 	public void run() {
 		
 		try {
-			Log.d("TCP", "C: Connecting...");
+			L.d("C: Connecting...");
 			
 			Socket socket = new Socket(ip, port);
 			connections.add(0, new TCPConnection(socket));
 			try {
 				String received;
 				while ((received = connections.firstElement().in()) != null) {
-					Log.d("TCP", "C: Received");
+					L.d("C: Received");
 					sendMsg("MSG", received);
 				}
 				
 			} catch (Exception e) {
-				Log.e("TCP", "S: Error", e);
+				L.e("S: Error");
 			} finally {
 				connections.firstElement().close();
 			}
 		} catch (Exception e) {
-			Log.e("TCP", "C: Error", e);
+			L.e("C: Error");
 		}
 	}
 	
-	public void sendMsg(String type, String content) {
+	private void sendMsg(String type, String content) {
 		Message msg = new Message();
 		Bundle data = new Bundle();
 		data.putString(type, content);

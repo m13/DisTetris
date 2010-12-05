@@ -17,7 +17,9 @@ public class JoinGame extends Activity {
 			// This function will be called several times in case there are multiple server
 			// The only information returned is the NAME, IP and PORT of the found server
 			// Must update the UI accordingly to allow the user choose a server
-			addLogText(msg.getData().getString("NAME") + " " + msg.getData().getString("IP") + " " + msg.getData().getString("PORT"));
+			String str = msg.getData().getString("NAME") + " " + msg.getData().getString("IP") + " " + msg.getData().getString("PORT");
+			TextView tv = ((TextView) findViewById(R.id.TextView01));
+			tv.setText(tv.getText() + "\n" + str);
 		}
 	};
 
@@ -52,11 +54,6 @@ public class JoinGame extends Activity {
 
 		CtrlDomain.getInstance().serverUDPStop();
 
-	}
-
-	public void addLogText(String str) {
-		TextView tv = ((TextView) findViewById(R.id.TextView01));
-		tv.setText(tv.getText() + "\n" + str);
 	}
 
 }

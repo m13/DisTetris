@@ -2,7 +2,7 @@ package games.distetris.domain;
 
 import java.util.Vector;
 
-public class TCPServerSend implements Runnable {
+public class TCPServerSend extends Thread {
 
 	public static final String SERVERIP = "10.0.2.2";
 	public static final int SERVERPORT = 4444;

@@ -25,12 +25,13 @@ public class CtrlNet {
 	private Integer numPlayers;
 	private Integer numTeams;
 	
-	private Thread threadTCPServer;
-	private Thread threadTCPServerSend;
-	
+	private TCPServer threadTCPServer;
+	private TCPServerSend threadTCPServerSend;
+	private TCPClient threadTCPClient;
 	private UDPServer threadUDPServer;
 
 	private WifiManager wifiManager;
+
 	
 	private CtrlNet() {
 		L.d("Created");
@@ -55,17 +56,17 @@ public class CtrlNet {
 			teamPlayer.add(seq);
 		}
 		
-		this.threadTCPServer = new Thread(new TCPServer(connections, numTeams, numTurns));
+		this.threadTCPServer = new TCPServer(connections, numTeams, numTurns);
 		this.threadTCPServer.start();
 		
-		this.threadTCPServerSend = new Thread(new TCPServerSend(connections));
+		this.threadTCPServerSend = new TCPServerSend(connections);
 		this.threadTCPServerSend.start();
 	}
 
 	
-	public void serverTCPConnect(String ip, Handler handler) {
-		Thread cThread = new Thread(new TCPClient(ip, connections, handler));
-		cThread.start();
+	public void serverTCPConnect(String ip, int port, Handler handler) {
+		this.threadTCPClient = new TCPClient(ip, port, connections, handler);
+		this.threadTCPClient.start();
 	}
 
 
@@ -156,7 +157,6 @@ public class CtrlNet {
 				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
 					if (!inetAddress.isLoopbackAddress()) {
-						//return inetAddress.getHostAddress().toString();
 						return inetAddress;
 					}
 				}
@@ -170,5 +170,15 @@ public class CtrlNet {
 	public void setWifiManager(WifiManager systemService) {
 		L.d("Wifi set");
 		this.wifiManager = systemService;
+	}
+
+	public String[] serverTCPGetConnectedUsers() {
+		String[] names = new String[connections.size()];
+
+		for (int i = 0; i < connections.size(); i++) {
+			names[i] = connections.get(i).getName();
+		}
+
+		return names;
 	}
 }
