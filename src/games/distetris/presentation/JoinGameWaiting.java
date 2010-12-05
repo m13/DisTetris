@@ -1,5 +1,6 @@
 package games.distetris.presentation;
 
+import games.distetris.domain.CtrlDomain;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +9,7 @@ import android.widget.Toast;
 
 public class JoinGameWaiting extends Activity {
 
-	private Handler udpHandler = new Handler() {
+	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -27,9 +28,12 @@ public class JoinGameWaiting extends Activity {
 
 		Bundle bundle = this.getIntent().getExtras();
 		String serverName = bundle.getString("NAME");
-		String serverIp = bundle.getString("IP");
-		int serverPort = bundle.getInt("NAME");
-		Toast.makeText(getBaseContext(), "Received " + serverName + " " + serverIp + " " + serverPort, Toast.LENGTH_SHORT).show();
+		String serverIP = bundle.getString("IP");
+		int serverPort = bundle.getInt("PORT");
+		Toast.makeText(getBaseContext(), "Received " + serverName + " " + serverIP + " " + serverPort, Toast.LENGTH_SHORT).show();
+
+		CtrlDomain.getInstance().setHandlerUI(handler);
+		CtrlDomain.getInstance().serverTCPConnect(serverIP, serverPort);
 	}
 
 	@Override

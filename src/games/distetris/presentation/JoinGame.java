@@ -61,6 +61,7 @@ public class JoinGame extends Activity {
 				Intent i = new Intent();
 				i.setClass(view.getContext(), JoinGameWaiting.class);
 				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				i.putExtras(b);
 				startActivity(i);
 
 			}
@@ -84,6 +85,7 @@ public class JoinGame extends Activity {
 	protected void onStart() {
 		super.onStart();
 
+		serverList.clear();
 		CtrlDomain.getInstance().serverUDPFind(udpHandler);
 
 	}

@@ -9,17 +9,22 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
-import android.util.Log;
 
 public class CtrlDomain {
+
+	public static final int MODE_SERVER = 1;
+	public static final int MODE_CLIENT = 2;
 
 	// controllers
 	private static CtrlDomain INSTANCE = null;
 	private CtrlNet NET = null;
 	private CtrlGame GAME = null;
 
-	private Listener listener;
 	private Handler handler;
+	private Handler handlerUI;
+
+	// dynamic configuration
+	private int mode = 0;
 
 	// dynamic configuration (player)
 	private Integer player = 0;
@@ -57,12 +62,8 @@ public class CtrlDomain {
 		return INSTANCE;
 	}
 
-	public void setListener(Listener listener) {
-		this.listener = listener;
-	}
-
 	public void startNet() {
-		NET.serverTCPStart(numPlayers, numTeams, numTurns);
+		NET.serverTCPStart(numTeams, numPlayers, numTurns, handler);
 		NET.serverTCPConnect("10.0.2.2", CtrlNet.PORT, handler);
 	}
 
@@ -71,7 +72,7 @@ public class CtrlDomain {
 	}
 
 	private void parserController(String str) {
-		Log.d("PARSER", str);
+		L.d(str);
 		String[] actionContent = str.split(" ", 2);
 		String[] args = actionContent[1].split(",");
 
@@ -95,7 +96,7 @@ public class CtrlDomain {
 			// 1: serialized Board
 			round++;
 			GAME.setBoard(unserialize(actionContent[1]));
-			Log.d("START", "");
+			L.d("START");
 		} else if (actionContent[0].equals("CONTINUE")) {
 			// NULL
 			String result = "DO";
@@ -181,8 +182,8 @@ public class CtrlDomain {
 		return object;
 	}
 
-	public void serverUDPStart(Handler handler) {
-		NET.serverUDPStart(handler);
+	public void serverUDPStart() {
+		NET.serverUDPStart();
 	}
 
 	public void serverUDPFind(Handler handler) {
@@ -228,12 +229,27 @@ public class CtrlDomain {
 		return this.numTurns;
 	}
 
-	public void serverTCPStart(Handler udpHandler) {
-		NET.serverTCPStart(numPlayers, numTeams, numTurns);
+	public void serverTCPStart() {
+		this.mode = MODE_SERVER;
+		NET.serverTCPStart(numTeams, numPlayers, numTurns, handler);
 	}
 
 	public void serverTCPStop() {
+		this.mode = 0;
 		NET.serverTCPStop();
+	}
+
+	public void serverTCPConnect(String serverIP, int serverPort) {
+		this.mode = MODE_CLIENT;
+		NET.serverTCPConnect(serverIP, serverPort, handler);
+	}
+
+	public void setHandlerUI(Handler hand) {
+		this.handlerUI = hand;
+	}
+
+	public void updatedPlayers() {
+		handlerUI.sendEmptyMessage(0);
 	}
 
 }

@@ -27,7 +27,7 @@ public class CtrlNet {
 	
 	private TCPServer threadTCPServer;
 	private TCPServerSend threadTCPServerSend;
-	private TCPClient threadTCPClient;
+	private TCPConnection threadTCPClient;
 	private UDPServer threadUDPServer;
 
 	private WifiManager wifiManager;
@@ -47,7 +47,7 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 	
-	public void serverTCPStart(int numPlayers, int numTeams, int numTurns) {
+	public void serverTCPStart(int numTeams, int numPlayers, int numTurns, Handler handler) {
 		this.numPlayers = numPlayers;
 		this.numTeams = numTeams;
 		
@@ -56,7 +56,7 @@ public class CtrlNet {
 			teamPlayer.add(seq);
 		}
 		
-		this.threadTCPServer = new TCPServer(connections, numTeams, numTurns);
+		this.threadTCPServer = new TCPServer(connections, numTeams, numPlayers, numTurns, handler);
 		this.threadTCPServer.start();
 		
 		// TODO: we really need this?
@@ -66,8 +66,14 @@ public class CtrlNet {
 
 	
 	public void serverTCPConnect(String ip, int port, Handler handler) {
-		this.threadTCPClient = new TCPClient(ip, port, connections, handler);
+		//TODO: check if the connections of the vector are already closed
+		this.connections.clear();
+
+		this.threadTCPClient = new TCPConnection(ip, port, handler);
+		this.connections.add(threadTCPClient);
 		this.threadTCPClient.start();
+
+		this.threadTCPClient.out(CtrlDomain.getInstance().getName());
 	}
 
 	public void serverTCPStop() {
@@ -82,7 +88,7 @@ public class CtrlNet {
 
 
 	public void sendSignal(String string) {
-		connections.lastElement().out(string);
+		threadTCPClient.out(string);
 	}
 	
 	public void sendSignals(String string) {
@@ -115,13 +121,12 @@ public class CtrlNet {
 		connections.elementAt(firstPlayerPos).out("CONTINUE ");
 	}
 
-	public void serverUDPStart(Handler handler) {
+	public void serverUDPStart() {
 		// If a previous server is already running, stop it
 		serverUDPStop();
 
-		this.threadUDPServer = new UDPServer(UDPServer.MODE_SERVER, handler);
+		this.threadUDPServer = new UDPServer(UDPServer.MODE_SERVER, null);
 		this.threadUDPServer.start();
-		L.d("Its running!");
 	}
 
 	public void serverUDPFind(Handler handler) {
@@ -187,10 +192,15 @@ public class CtrlNet {
 		Vector<String> n = new Vector<String>();
 
 		for (int i = 0; i < connections.size(); i++) {
-			n.add(connections.get(i).getName());
+			//TODO: real player name
+			//n.add(connections.get(i).getName());
+			n.add(i + "");
 		}
 
-		return (String[]) n.toArray();
+		String[] st = new String[n.size()];
+		n.toArray(st);
+
+		return st;
 	}
 
 }

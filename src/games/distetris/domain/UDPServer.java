@@ -75,7 +75,7 @@ public class UDPServer extends Thread {
 				String content = new String(packet.getData(), 0, packet.getLength());
 				L.d("Content: " + content);
 
-				if (mode == 1) {
+				if (mode == MODE_SERVER) {
 
 					// SERVER
 					L.d("Mode server entered");
@@ -85,7 +85,7 @@ public class UDPServer extends Thread {
 
 					L.d("Sent answer to client");
 
-				} else if (mode == 2) {
+				} else if (mode == MODE_CLIENT) {
 
 					// CLIENT
 					L.d("Mode client entered");

@@ -6,43 +6,101 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class TCPConnection {
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
+public class TCPConnection extends Thread {
+
+	private String ip;
+	private int port;
 	private Socket socket;
-	PrintWriter out;
-	BufferedReader in;
-	String name;
 
-	public TCPConnection(Socket socket) {
+	private PrintWriter out;
+	private BufferedReader in;
+
+	private Handler handler;
+
+	private Boolean keepRunning;
+
+	public TCPConnection(String ip, int port, Handler handler) {
 		try {
-			this.socket = socket;
-			this.out = new PrintWriter(socket.getOutputStream(), true);
-			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.ip = ip;
+			this.port = port;
 
-			this.name = in();
+			this.socket = new Socket(ip, port);
+			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.out = new PrintWriter(socket.getOutputStream(), true);
+
+			this.handler = handler;
+			this.keepRunning = true;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void out(String content) {
-		out.println(content);
+	public TCPConnection(Socket socket, Handler handler) {
+		try {
+			this.socket = socket;
+			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.out = new PrintWriter(socket.getOutputStream(), true);
+
+			this.handler = handler;
+			this.keepRunning = true;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	@Override
+	public void run() {
+		super.run();
+
+		try {
+			try {
+
+				String received;
+				while (keepRunning && (received = in()) != null) {
+					sendMsg("MSG", received);
+				}
+
+			} catch (Exception e) {
+				L.e("S: Error");
+			} finally {
+				socket.close();
+			}
+		} catch (Exception e) {
+			L.e("C: Error");
+		}
 	}
 
 	public String in() throws IOException {
 		return in.readLine();
 	}
 
+	public void out(String content) {
+		out.println(content);
+	}
+
+	private void sendMsg(String type, String content) {
+		Message msg = new Message();
+		Bundle data = new Bundle();
+		data.putString(type, content);
+		msg.setData(data);
+		handler.sendMessage(msg);
+	}
+
 	public void close() {
 		try {
-			socket.close();
+			this.keepRunning = false;
+			this.socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String getName() {
-		return this.name;
-	}
 
 }

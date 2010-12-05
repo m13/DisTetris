@@ -9,21 +9,12 @@ import android.widget.TextView;
 
 public class NewGameWaiting extends Activity {
 	
-	private Handler tcpHandler = new Handler() {
+	private Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			updateConnectedClients();
-		}
-
-	};
-
-	private Handler udpHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
 		}
 
 	};
@@ -40,8 +31,10 @@ public class NewGameWaiting extends Activity {
 	protected void onStart() {
 		super.onStart();
 
-		CtrlDomain.getInstance().serverTCPStart(tcpHandler);
-		CtrlDomain.getInstance().serverUDPStart(udpHandler);
+		CtrlDomain.getInstance().setHandlerUI(handler);
+
+		CtrlDomain.getInstance().serverTCPStart();
+		CtrlDomain.getInstance().serverUDPStart();
 
 	}
 
