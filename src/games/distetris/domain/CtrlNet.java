@@ -7,6 +7,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -17,6 +18,7 @@ public class CtrlNet {
 	public static Integer PORT = 5555;
 	
 	private static CtrlNet INSTANCE = null;
+	private Context CTX = null;
 
 	private Vector<TCPConnection> connections;
 	private Vector<Vector<Integer>> teamPlayer;
@@ -40,9 +42,10 @@ public class CtrlNet {
 		this.teamPlayer = new Vector<Vector<Integer>>();
 	}
 
-	public static CtrlNet getInstance() {
+	public static CtrlNet getInstance(Context ctx) {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlNet();
+			INSTANCE.CTX = ctx;
 		}
 		return INSTANCE;
 	}
@@ -73,7 +76,7 @@ public class CtrlNet {
 		this.connections.add(threadTCPClient);
 		this.threadTCPClient.start();
 
-		this.threadTCPClient.out(CtrlDomain.getInstance().getName());
+		this.threadTCPClient.out(CtrlDomain.getInstance(CTX).getName());
 	}
 
 	public void serverTCPStop() {

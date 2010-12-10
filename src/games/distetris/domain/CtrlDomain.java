@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,8 @@ public class CtrlDomain {
 	private static CtrlDomain INSTANCE = null;
 	private CtrlNet NET = null;
 	private CtrlGame GAME = null;
+	
+	private Context CTX = null;
 
 	private Handler handler;
 	private Handler handlerUI;
@@ -53,12 +56,17 @@ public class CtrlDomain {
 		};
 	}
 
-	public static CtrlDomain getInstance() {
+	public static CtrlDomain getInstance(Context ctx) {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlDomain();
-			INSTANCE.NET = CtrlNet.getInstance();
-			INSTANCE.GAME = CtrlGame.getInstance();
+			INSTANCE.NET = CtrlNet.getInstance(ctx);
+			INSTANCE.GAME = CtrlGame.getInstance(ctx);
+			INSTANCE.CTX = ctx;
 		}
+		return INSTANCE;
+	}
+	
+	public static CtrlDomain getInstance() {
 		return INSTANCE;
 	}
 

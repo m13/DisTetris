@@ -23,11 +23,21 @@ public class DbHelper {
 		db.close();
 	}
 
-	// -MENUS-
+	public void insertValues(int type, String name, Integer puntuation, Long date) {
+		String[] types = new String[] {
+				"individual",
+				"team" };
+		
+		String sql = "INSERT INTO "+types[type]+" (name, puntuation, date)" +
+				"VALUES (?, " +
+				String.valueOf(puntuation) + ", " + 
+				String.valueOf(date)+")";
+		db.execSQL(sql, new String[]{ name });
+	}
+	
 
 
 	
-	// -WIDGET-
 
 	// -CLASS-
 
@@ -42,7 +52,10 @@ public class DbHelper {
 			Log.d("DB", "onCreate");
 			String[] sqlBlock = new String[] {
 					"CREATE TABLE config (key TEXT, value INT)",
-					"INSERT INTO config (key, value) VALUES ('FirstTime', 1)"
+					"INSERT INTO config (key, value) VALUES ('FirstTime', 1)",
+
+					"CREATE TABLE individual (name TEXT, puntuation INT, date INT)",
+					"CREATE TABLE team (name TEXT, puntuation INT, date INT)"
 			};
 
 			for (String sql : sqlBlock) { db.execSQL(sql); }
@@ -52,7 +65,9 @@ public class DbHelper {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.d("DB", "onUpgrade");
 			String[] sqlBlock = new String[] {
-					"DROP TABLE IF EXISTS config"
+					"DROP TABLE IF EXISTS config",
+					"DROP TABLE IF EXISTS individual",
+					"DROP TABLE IF EXISTS team"
 			};
 
 			for (String sql : sqlBlock) { db.execSQL(sql); }

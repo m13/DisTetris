@@ -17,8 +17,9 @@ public class Distetris extends Activity {
 		super.onCreate(savedInstanceState);
 		L.d("Start");
 
-		// System Services only can be get from an antivity, so the instance is passed to be used later
-		CtrlDomain.getInstance().setWifiManager((WifiManager) getSystemService(Context.WIFI_SERVICE));
+		// System Services only can be get from an activity, so the instance is passed to be used later
+		Context ctx = getBaseContext();
+		CtrlDomain.getInstance(ctx).setWifiManager((WifiManager) getSystemService(Context.WIFI_SERVICE));
 
         setContentView(R.layout.main);
         setButtons();
