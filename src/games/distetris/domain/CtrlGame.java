@@ -26,6 +26,10 @@ public class CtrlGame {
 		}
 		return INSTANCE;
 	}
+	
+	public static CtrlGame getInstance() {
+		return INSTANCE;
+	}
 
 	// show pop-up where choose the team
 	// return the team chosen
@@ -51,7 +55,7 @@ public class CtrlGame {
 	}
 
 	public void setPiece(Object object) {
-		// check if it's diferent of the last piece. Then
+		// check if it's different of the last piece. Then
 		// it means that it's another turn of a same player...
 		// A bit odd... I know. Check the logic of CtrlNet!
 	}

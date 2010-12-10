@@ -50,6 +50,10 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 	
+	public static CtrlNet getInstance() {
+		return INSTANCE;
+	}
+	
 	public void serverTCPStart(int numTeams, int numPlayers, int numTurns, Handler handler) {
 		this.numPlayers = numPlayers;
 		this.numTeams = numTeams;
