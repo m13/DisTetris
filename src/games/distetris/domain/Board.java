@@ -42,8 +42,8 @@ public class Board implements Serializable {
 	 * @param p
 	 */
 	public void addPiece(Piece p){
-		for(int r=0,br = p.x;r<p.x+PIECESIZE;r++,br++){
-			for(int c=0, bc = p.y;c<p.x+PIECESIZE;c++,bc++){
+		for(int r=0,br = p.x;br<p.x+PIECESIZE;r++,br++){
+			for(int c=0, bc = p.y;bc<p.x+PIECESIZE;c++,bc++){
 				if(p.getBlockType(r, c)!=PieceConstants.FREEBLOCK){
 					board[br][bc] = p.color;
 				}
@@ -106,10 +106,29 @@ public class Board implements Serializable {
 	/**
 	 * Given a piece, it checks if it collides with the actual board
 	 * @param p
-	 * @return
+	 * @return false if collides (not possible movement) true otherwise
 	 */
-	public boolean Collides(Piece p){
+	public boolean isMovementPossible(Piece p){
+		for(int pr=0,br = p.x;br<p.x+PIECESIZE;pr++,br++){
+			for(int pc=0, bc = p.y;bc<p.x+PIECESIZE;pc++,bc++){
+				//Limit collision check
+				if( pc < 0 ||
+					pc > COLS -1 ||
+					pr > ROWS -1){
+						if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK) return false; //collides with board limits
+				}
+				
+				//Board Collision Check
+				if(bc >= 0){
+					if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK
+							&& this.isFreeBlock(br, bc)){
+						return false;
+					}
+				}
+			}
+		}
 		
+		//The piece does not collide
 		return true;
 	}
 	
