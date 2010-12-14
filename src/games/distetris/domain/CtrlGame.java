@@ -53,7 +53,7 @@ public class CtrlGame {
 	}
 
 	public Piece getPiece() {
-		return new Piece();
+		return new Piece(1,1);
 	}
 
 	public void setPiece(Object object) {
