@@ -62,6 +62,9 @@ public class CtrlGame {
 		// A bit odd... I know. Check the logic of CtrlNet!
 	}
 
+	public void cleanBoard(){
+		this.board.cleanBoard();
+	}
 	
 	public int[][] getBoard() {
 		return board.getBoard();

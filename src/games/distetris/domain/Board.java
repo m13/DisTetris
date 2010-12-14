@@ -19,8 +19,23 @@ public class Board implements Serializable {
 	Map<String,Integer> playersScore = new HashMap<String,Integer>();
 	
 	// board
-	private int[][] board = new int[ROWS][COLS];
+	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
 	
+	
+	private void testboard(){
+		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
+		board[ROWS-3][1] = Color.parseColor("#FFFF0000");
+		board[ROWS-3][2] = Color.parseColor("#FFFF0000");
+		board[ROWS-4][0] = Color.parseColor("#FFFF0000");
+		
+		board[ROWS-4][1] = Color.parseColor("#FF0000FF");
+		board[ROWS-4][2] = Color.parseColor("#FF0000FF");
+		board[ROWS-5][1] = Color.parseColor("#FF0000FF");
+		board[ROWS-5][2] = Color.parseColor("#FF0000FF");
+		
+		for(int c=0;c<COLS;c++) board[ROWS-1][c] = Color.parseColor("#FF00FF00");
+		for(int c=0;c<COLS;c++) board[ROWS-2][c] = Color.parseColor("#FF00FFF0");
+	}
 	
 	/**
 	 * Create a new empty board
@@ -31,6 +46,8 @@ public class Board implements Serializable {
 				board[r][c] = FREEBLOCK;
 			}
 		}
+		
+		testboard();
 	}
 
 	/**
@@ -79,8 +96,8 @@ public class Board implements Serializable {
 	 * Shifts all the upper lines down
 	 * @param line
 	 */
-	public void killLine(int line){
-		for(int r=line;r>0;r++){
+	private void killLine(int line){
+		for(int r=line;r>0;r--){
 			for(int c=0;c<COLS;c++){
 				board[r][c] = board[r-1][c];
 			}
@@ -99,7 +116,7 @@ public class Board implements Serializable {
 			for(c=0;c<COLS;c++){
 				if(board[r][c] == FREEBLOCK) break;
 			}
-			if(c == COLS-1) killLine(r);
+			if(c >= COLS-2) killLine(r);
 		}
 	}
 
@@ -141,15 +158,6 @@ public class Board implements Serializable {
 	
 	//GETTERS AND SETTERS
 	public int[][] getBoard() {
-		board[0][0] = Color.parseColor("#FFFF0000");
-		board[0][1] = Color.parseColor("#FFFF0000");
-		board[0][2] = Color.parseColor("#FFFF0000");
-		board[1][0] = Color.parseColor("#FFFF0000");
-		
-		board[1][1] = Color.parseColor("#FF0000FF");
-		board[1][2] = Color.parseColor("#FF0000FF");
-		board[2][1] = Color.parseColor("#FF0000FF");
-		board[2][2] = Color.parseColor("#FF0000FF");
 		
 		return board;
 	}

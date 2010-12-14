@@ -269,5 +269,11 @@ public class CtrlDomain {
 	public void updatedPlayers() {
 		handlerUI.sendEmptyMessage(0);
 	}
+	
+	
+	//GAME HOOKS
+	public void cleanBoard(){
+		this.GAME.cleanBoard();
+	}
 
 }
