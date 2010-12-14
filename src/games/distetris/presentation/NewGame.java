@@ -18,6 +18,8 @@ public class NewGame extends Activity {
         setContentView(R.layout.newgame);
         
         final Button button = (Button) findViewById(R.id.newgameButton01);
+        final Button cancel = (Button) findViewById(R.id.newgameButton02);
+        
 		final EditText textNameServer = (EditText) findViewById(R.id.newgameEditText01);
 		final EditText textNumTeams = (EditText) findViewById(R.id.newgameEditText02);
 		final EditText textNumPlayers = (EditText) findViewById(R.id.newgameEditText03);
@@ -37,6 +39,12 @@ public class NewGame extends Activity {
 				i.setClass(v.getContext(), NewGameWaiting.class);
     			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     			startActivity(i);
+            }
+        });
+        
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	finish();
             }
         });
 

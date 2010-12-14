@@ -59,7 +59,6 @@ public class Distetris extends Activity {
 	            }
 	        });
         }
-       
 	}
 
 	@Override

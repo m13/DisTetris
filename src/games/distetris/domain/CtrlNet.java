@@ -18,7 +18,6 @@ public class CtrlNet {
 	public static Integer PORT = 5555;
 	
 	private static CtrlNet INSTANCE = null;
-	private Context CTX = null;
 
 	private Vector<TCPConnection> connections;
 	private Vector<Vector<Integer>> teamPlayer;
@@ -41,14 +40,6 @@ public class CtrlNet {
 		this.connections = new Vector<TCPConnection>();
 		this.teamPlayer = new Vector<Vector<Integer>>();
 	}
-
-	public static CtrlNet getInstance(Context ctx) {
-		if (INSTANCE == null) {
-			INSTANCE = new CtrlNet();
-			INSTANCE.CTX = ctx;
-		}
-		return INSTANCE;
-	}
 	
 	public static CtrlNet getInstance() {
 		return INSTANCE;
@@ -65,10 +56,6 @@ public class CtrlNet {
 		
 		this.threadTCPServer = new TCPServer(connections, numTeams, numPlayers, numTurns, handler);
 		this.threadTCPServer.start();
-		
-		// TODO: we really need this?
-		//this.threadTCPServerSend = new TCPServerSend(connections);
-		//this.threadTCPServerSend.start();
 	}
 
 	
@@ -80,7 +67,7 @@ public class CtrlNet {
 		this.connections.add(threadTCPClient);
 		this.threadTCPClient.start();
 
-		this.threadTCPClient.out(CtrlDomain.getInstance(CTX).getName());
+		this.threadTCPClient.out(CtrlDomain.getInstance().getName());
 	}
 
 	public void serverTCPStop() {

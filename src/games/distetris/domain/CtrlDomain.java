@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
@@ -20,8 +21,6 @@ public class CtrlDomain {
 	private static CtrlDomain INSTANCE = null;
 	private CtrlNet NET = null;
 	private CtrlGame GAME = null;
-	
-	private Context CTX = null;
 
 	private Handler handler;
 	private Handler handlerUI;
@@ -59,9 +58,8 @@ public class CtrlDomain {
 	public static CtrlDomain getInstance(Context ctx) {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlDomain();
-			INSTANCE.NET = CtrlNet.getInstance(ctx);
+			INSTANCE.NET = CtrlNet.getInstance();
 			INSTANCE.GAME = CtrlGame.getInstance(ctx);
-			INSTANCE.CTX = ctx;
 		}
 		return INSTANCE;
 	}
@@ -148,11 +146,19 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("END")) {
 			// 1: serialized Board
 			GAME.setBoard(unserialize(actionContent[1]));
-			GAME.saveScore();
+			GAME.saveScore(numPlayers==numTeams);
 		} else if (actionContent[0].equals("ERROR")) {
 			// 1: String error
 			GAME.showError(actionContent[1]);
 		}
+	}
+	
+	public Cursor getScoreInd() {
+		return GAME.getScoreInd();
+	}
+	
+	public Cursor getScoreTeam() {
+		return GAME.getScoreTeam();
 	}
 
 	// move?
@@ -211,7 +217,11 @@ public class CtrlDomain {
 	}
 
 	public String getPlayerName() {
-		return "Viciado";
+		return GAME.getPlayerName();
+	}
+	
+	public void setPlayerName(String name) {
+		GAME.setPlayerName(name);
 	}
 
 	public void serverConfigure(String name, int numTeams, int numPlayers, int numTurns) {
