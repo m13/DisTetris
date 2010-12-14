@@ -2,16 +2,18 @@ package games.distetris.domain;
 
 import java.io.Serializable;
 
+import android.graphics.Color;
+
 public class Piece implements Serializable {
 	private static final long serialVersionUID = 2L;
 	/*Constants of pieces type and rotation*/
 	
 	
-	int x = 0; 			//Horitzontal pos measured in blocks
-	int y = 0; 			//Vertical pos measured in blocks
-	int type = 0; 		//Piece type, indexed in PieceConstants
-	int rotation = 0; 	//Piece Rotation, indexed in PieceConstants
-	int color = 0;		//Piece Color, Android Color
+	public int x = 0; 			//Horitzontal pos measured in blocks
+	public int y = 0; 			//Vertical pos measured in blocks
+	private int type = 0; 		//Piece type, indexed in PieceConstants
+	private int rotation = 0; 	//Piece Rotation, indexed in PieceConstants
+	public int color = Color.parseColor("#ffff0000");		//Piece Color, Android Color
 	
 	
 	

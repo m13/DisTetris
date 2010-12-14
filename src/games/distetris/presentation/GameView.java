@@ -3,6 +3,7 @@ package games.distetris.presentation;
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
+import games.distetris.domain.PieceConstants;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +18,8 @@ public class GameView extends View implements Listener {
 	Paint fillpaint;
 	Paint strokepaint;
 	CtrlDomain dc;
+	int boardw;
+	int boardh;
 	
 	
 	public GameView(Context context) {
@@ -32,6 +35,11 @@ public class GameView extends View implements Listener {
 		
 		dc = CtrlDomain.getInstance();
 		// TODO Auto-generated constructor stub
+		
+		int[][] board = dc.getBoard();
+		boardw = board[0].length;
+		boardh = board.length;
+		
 	}
 
 	@Override
@@ -51,31 +59,60 @@ public class GameView extends View implements Listener {
 		drawGameBackground(canvas);
 		drawInfoZone(canvas,board,null);
 		drawBoard(canvas,board);
+		drawPiece(canvas);
 	}
 
+	/**
+	 * Draws a piece in its location
+	 * @param canvas
+	 */
+	private void drawPiece(Canvas canvas) {
+		Piece p 			= dc.getCurrentPiece();
+		byte[][] pmatrix 	= p.getPieceMatrix();
+		int psize 			= PieceConstants.PIECESIZE;
+		
+		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
+		strokepaint.setStrokeWidth(1);
+		fillpaint.setColor(Color.RED);
+		
+		for(int r = p.x,pr = 0;r<p.x+psize;r++,pr++){
+			for(int c = p.y,pc = 0;c<p.y+psize;c++,pc++){
+				if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK) drawSquare(canvas,r,c);
+			}
+		}
+
+		
+	}
+
+	/**
+	 * Draws a piece or board square in screen at the correct position
+	 * @param canvas
+	 */
+	private void drawSquare(Canvas canvas,int r,int c){
+		int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
+		int left = c*SQSIZE;
+		int top = linezero + r*SQSIZE;
+		int right = c*SQSIZE+SQSIZE;
+		int bottom = linezero + r*SQSIZE + SQSIZE;
+		
+		canvas.drawRect(left, top, right, bottom, fillpaint);
+		canvas.drawRect(left, top, right, bottom, strokepaint);
+	}
+	
 	private void drawBoard(Canvas canvas, int[][] board) {
-		int screenwidth =  getWidth();
-		int screenheight = getHeight();
-		int bw = board[0].length;
-		int bh = board.length;
 		
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
 		strokepaint.setStrokeWidth(1);
 		
-		int linezero = screenheight - bh*SQSIZE - SQSIZE;
+		int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
 		
 		//the board is draw from left bottom to right top
-		for(int r=0;r<bh;r++){
-			for(int c=0;c<bw;c++){
+		for(int r=0;r<boardh;r++){
+			for(int c=0;c<boardw;c++){
 				//if it's null there's nothing to draw
 				if(board[r][c] != 0){
 					fillpaint.setColor(board[r][c]);
-					int left = c*SQSIZE;
-					int top = linezero + r*SQSIZE;
-					int right = c*SQSIZE+SQSIZE;
-					int bottom = linezero + r*SQSIZE + SQSIZE;
-					canvas.drawRect(left, top, right, bottom, fillpaint);
-					canvas.drawRect(left, top, right, bottom, strokepaint);
+					drawSquare(canvas,r,c);
 				}
 			}
 		}		
@@ -89,15 +126,11 @@ public class GameView extends View implements Listener {
 	 * @param board
 	 */
 	private void drawInfoZone(Canvas canvas, int[][] board,Piece p) {
-		int screenheight = getHeight();
-		int screenwidth = getWidth();
-		int bw = board[0].length;
-		int bh = board.length;
 		
-		int zone_start_left = bw*SQSIZE+SQSIZE + PADDING;
-		int zone_start_top = screenheight - bh*SQSIZE - SQSIZE;
-		int zone_start_right = screenwidth - PADDING;
-		int zone_start_bottom = screenheight;
+		int zone_start_left = boardw*SQSIZE+SQSIZE + PADDING;
+		int zone_start_top = getHeight() - boardh*SQSIZE - SQSIZE;
+		int zone_start_right = getWidth() - PADDING;
+		int zone_start_bottom = getHeight();
 		
 		strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
 		strokepaint.setStrokeWidth(3);
@@ -133,14 +166,11 @@ public class GameView extends View implements Listener {
 	 * @param board
 	 */
 	private void drawSquarePlayerZoneBackground(Canvas canvas, int[][] board) {
-		int bw = board[0].length;
-		int bh = board.length;
-		int screenheight = getHeight();
 		
 		int left = 0; 
-		int top = screenheight - bh*SQSIZE - SQSIZE;
-		int right = bw*SQSIZE+SQSIZE;
-		int bottom = screenheight;
+		int top = getHeight() - boardh*SQSIZE - SQSIZE;
+		int right = boardw*SQSIZE+SQSIZE;
+		int bottom = getHeight();
 		
 		fillpaint.setColor(getResources().getColor(R.color.BG));
 		strokepaint.setColor(getResources().getColor(R.color.PLAYZONESTROKE));

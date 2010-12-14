@@ -275,5 +275,28 @@ public class CtrlDomain {
 	public void cleanBoard(){
 		this.GAME.cleanBoard();
 	}
+	
+	public void setNewRandomPiece(){
+		this.GAME.setNewRandomPiece();
+	}
+	
+	public Piece getCurrentPiece(){
+		if(this.GAME.getCurrentPiece() == null){
+			this.setNewRandomPiece();
+		}
+		return this.GAME.getCurrentPiece();
+	}
+	
+	public void gameStep(){
+		this.GAME.gameStep();
+	}
+	
+	public boolean currentPieceCollision(){
+		return this.GAME.currentPieceCollision();
+	}
+	
+	public void addCurrentPieceToBoard(){
+		this.GAME.addCurrentPieceToBoard();
+	}
 
 }

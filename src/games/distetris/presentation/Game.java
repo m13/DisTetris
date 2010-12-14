@@ -25,11 +25,22 @@ public class Game extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			dc.cleanBoard();
-			v.invalidate();
+			gameLoop();
 		}
+		v.invalidate();
 		return true;
 	}
     
+	
+	private void gameLoop(){
+		dc.cleanBoard();
+		dc.gameStep();
+		//if current piece collides
+		if(dc.currentPieceCollision()){
+			//
+			dc.addCurrentPieceToBoard();
+			dc.setNewRandomPiece();
+		}
+	}
     
 }

@@ -4,6 +4,8 @@ public class PieceConstants {
 	public static int FREEBLOCK = 0;
 	public static int PIVOTBLOCK = 2;
 	public static int PIECEBLOCK = 1;
+	public static int PIECESIZE = 5;
+
 	public static byte[/*Type*/][/*Rotation*/][/*Horitz Blocks*/][/*Vert Blocks*/] cPieces =
 	{
 	// Square
@@ -226,4 +228,5 @@ public class PieceConstants {
 	    }
 	   }
 	};
+	public static int npieces = cPieces.length;
 }

@@ -55,6 +55,11 @@ public class CtrlGame {
 	public Piece getPiece() {
 		return new Piece(1,1);
 	}
+	
+	public Piece getCurrentPiece() {
+		return this.board.getCurrentpiece();
+	}
+
 
 	public void setPiece(Object object) {
 		// check if it's different of the last piece. Then
@@ -70,6 +75,15 @@ public class CtrlGame {
 		return board.getBoard();
 	}
 
+	/**
+	 * Sets a new random piece on the board
+	 */
+	public void setNewRandomPiece(){
+		int pid = new Double(Math.random() * PieceConstants.npieces).intValue();
+		Piece p = new Piece(pid,0);
+		this.board.setCurrentpiece(p);
+	}
+	
 	public void setBoard(Object object) {
 	}
 
@@ -101,5 +115,27 @@ public class CtrlGame {
 	
 	public void setPlayerName(String name) {
 		db.setPlayerName(name);
+	}
+
+	/**
+	 * A step in the game
+	 */
+	public void gameStep() {
+		this.board.getCurrentpiece().x = this.board.getCurrentpiece().x + 1;
+	}
+
+	/**
+	 * Checks if the current piece is colliding
+	 * @return
+	 */
+	public boolean currentPieceCollision() {
+		return !this.board.isMovementPossible(getCurrentPiece());
+	}
+
+	/**
+	 * Adds the current piece to the board
+	 */
+	public void addCurrentPieceToBoard() {
+		this.board.addPiece(getCurrentPiece());
 	}
 }

@@ -20,7 +20,7 @@ public class Board implements Serializable {
 	
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
-	
+	private Piece currentpiece;
 	
 	private void testboard(){
 		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
@@ -126,8 +126,8 @@ public class Board implements Serializable {
 	 * @return false if collides (not possible movement) true otherwise
 	 */
 	public boolean isMovementPossible(Piece p){
-		for(int pr=0,br = p.x;br<p.x+PIECESIZE;pr++,br++){
-			for(int pc=0, bc = p.y;bc<p.x+PIECESIZE;pc++,bc++){
+		for(int pr=0,br = p.x;br<p.x+PieceConstants.PIECESIZE;pr++,br++){
+			for(int pc=0, bc = p.y;bc<p.y+PieceConstants.PIECESIZE;pc++,bc++){
 				//Limit collision check
 				if( pc < 0 ||
 					pc > COLS -1 ||
@@ -138,7 +138,7 @@ public class Board implements Serializable {
 				//Board Collision Check
 				if(bc >= 0){
 					if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK
-							&& this.isFreeBlock(br, bc)){
+							&& !this.isFreeBlock(br, bc)){
 						return false;
 					}
 				}
@@ -160,6 +160,14 @@ public class Board implements Serializable {
 	public int[][] getBoard() {
 		
 		return board;
+	}
+
+	public void setCurrentpiece(Piece currentpiece) {
+		this.currentpiece = currentpiece;
+	}
+
+	public Piece getCurrentpiece() {
+		return currentpiece;
 	}
 	
 }
