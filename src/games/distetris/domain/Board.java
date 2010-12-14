@@ -42,8 +42,8 @@ public class Board implements Serializable {
 	 * @param p
 	 */
 	public void addPiece(Piece p){
-		for(int r=0,br = p.x;r<PIECESIZE;r++,br++){
-			for(int c=0, bc = p.y;c<PIECESIZE;c++,bc++){
+		for(int r=0,br = p.x;r<p.x+PIECESIZE;r++,br++){
+			for(int c=0, bc = p.y;c<p.x+PIECESIZE;c++,bc++){
 				if(p.getBlockType(r, c)!=PieceConstants.FREEBLOCK){
 					board[br][bc] = p.color;
 				}
@@ -87,14 +87,37 @@ public class Board implements Serializable {
 		}
 	}
 	
+	
+	/**
+	 * Checks the board for 'deletable' lines.
+	 * 
+	 * If a line can be deleted this function removes it.
+	 */
 	public void cleanBoard(){
+		for(int r=0;r<ROWS;r++){
+			int c = 0;
+			for(c=0;c<COLS;c++){
+				if(board[r][c] == FREEBLOCK) break;
+			}
+			if(c == COLS-1) killLine(r);
+		}
+	}
+
+	/**
+	 * Given a piece, it checks if it collides with the actual board
+	 * @param p
+	 * @return
+	 */
+	public boolean Collides(Piece p){
 		
+		return true;
 	}
 	
 	public Map<String,Integer> getPlayersScore() {
 		return playersScore;
 	}
 	
+
 	
 	
 	//GETTERS AND SETTERS
