@@ -42,6 +42,9 @@ public class CtrlNet {
 	}
 	
 	public static CtrlNet getInstance() {
+		if(INSTANCE == null){
+			return new CtrlNet();
+		}
 		return INSTANCE;
 	}
 	
