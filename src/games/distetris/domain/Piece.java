@@ -53,6 +53,12 @@ public class Piece implements Serializable {
 		this.rotation = rot;
 	}
 	
+	public void rotateRight(){
+		int rot = this.rotation-1;
+		if(rot<0) rot=4;
+		this.rotation = rot;
+	}
+	
 	//GETTERS & SETTERS
 	public int getType() {
 		return type;

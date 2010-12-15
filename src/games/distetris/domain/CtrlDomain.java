@@ -303,6 +303,10 @@ public class CtrlDomain {
 		this.GAME.rotateLeft();
 	}
 	
+	public void currentPieceRotateRight(){
+		this.GAME.rotateRight();
+	}
+	
 	public boolean currentPieceOffsetCollision(int offset){
 		return this.GAME.currentPieceOffsetCollision(offset);
 	}

@@ -152,10 +152,21 @@ public class CtrlGame {
 	}
 
 	/**
-	 * Rotate the current piece left
+	 * Rotate the current piece left.
+	 * If the rotation is incorrect rotate right again
 	 */
 	public void rotateLeft() {
 		getCurrentPiece().rotateLeft();
+		if(this.currentPieceCollision()) getCurrentPiece().rotateRight();
+	}
+	
+	/**
+	 * Rotate the current piece right.
+	 * If the rotation is incorrect rotate left again
+	 */
+	public void rotateRight() {
+		getCurrentPiece().rotateRight();
+		if(this.currentPieceCollision()) getCurrentPiece().rotateLeft();
 	}
 
 	public boolean currentPieceOffsetCollision(int offset) {
