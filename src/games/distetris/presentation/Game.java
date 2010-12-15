@@ -31,6 +31,9 @@ public class Game extends Activity {
 
 		L.d("End");
 		dc = CtrlDomain.getInstance();
+		//called twice. One for the first piece, next for the second piece
+		dc.setNewRandomPiece();
+		dc.setNewRandomPiece();
     }
 
 	@Override

@@ -81,7 +81,8 @@ public class CtrlGame {
 	public void setNewRandomPiece(){
 		int pid = new Double(Math.random() * PieceConstants.npieces).intValue();
 		Piece p = new Piece(pid,0);
-		this.board.setCurrentpiece(p);
+		this.board.setCurrentpiece(this.board.getNextpiece());
+		this.board.setNextpiece(p);
 	}
 	
 	public void setBoard(Object object) {
@@ -162,5 +163,9 @@ public class CtrlGame {
 		pf.x = getCurrentPiece().x;
 		pf.y = getCurrentPiece().y + offset;
 		return !this.board.isMovementPossible(pf);
+	}
+
+	public Piece getNextPiece() {
+		return this.board.getNextpiece();
 	}
 }

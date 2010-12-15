@@ -310,5 +310,9 @@ public class CtrlDomain {
 	public void addCurrentPieceToBoard(){
 		this.GAME.addCurrentPieceToBoard();
 	}
+	
+	public Piece getNextPiece(){
+		return this.GAME.getNextPiece();
+	}
 
 }

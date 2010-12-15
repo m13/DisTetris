@@ -57,7 +57,7 @@ public class GameView extends View implements Listener {
 		
 		drawSquarePlayerZoneBackground(canvas,board);
 		drawGameBackground(canvas);
-		drawInfoZone(canvas,board,null);
+		drawInfoZone(canvas,board,dc.getNextPiece());
 		drawBoard(canvas,board);
 		drawPiece(canvas);
 	}
@@ -138,18 +138,47 @@ public class GameView extends View implements Listener {
 		int piecesq_left = zone_start_left;
 		int piecesq_top = zone_start_top;
 		int piecesq_right = zone_start_right;
-		int piecesq_bottom = zone_start_top + 2*PADDING + 3*SQSIZE;
+		int piecesq_bottom = zone_start_top + 2*PADDING + 4*SQSIZE;
 		RectF piecesq = new RectF(piecesq_left,piecesq_top,piecesq_right,piecesq_bottom);
-		
-		
-		canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
 
+		canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
+		drawNextPiece(piecesq,canvas,p);
+		
 		strokepaint.setColor(Color.YELLOW);
 		strokepaint.setStrokeWidth(1);
-		canvas.drawText("3553", piecesq_left, piecesq_top + 100, strokepaint);
+		canvas.drawText("3553", piecesq_left, piecesq_bottom + 10, strokepaint);
 		
 	}
 
+
+	/**
+	 * Draws the next piece inside a Rectangle
+	 * @param piecesq
+	 * @param canvas
+	 * @param p
+	 */
+	private void drawNextPiece(RectF piecesq, Canvas canvas, Piece p) {
+		int left  = (int) piecesq.left;
+		int top = (int) piecesq.top;
+		int psize = PieceConstants.PIECESIZE;
+		
+		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
+		strokepaint.setStrokeWidth(1);
+		fillpaint.setColor(Color.RED);
+		
+		for(int r = p.x,pr = 0;r<p.x+psize;r++,pr++){
+			for(int c = p.y,pc = 0;c<p.y+psize;c++,pc++){
+				if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK){
+					int pleft 	= left + pc*SQSIZE;
+					int ptop 	= top + pr*SQSIZE;
+					int pright 	= left + pc*SQSIZE + SQSIZE;
+					int pbott 	= top + pr*SQSIZE + SQSIZE;
+					canvas.drawRect(pleft, ptop, pright, pbott, fillpaint);
+					canvas.drawRect(pleft, ptop, pright, pbott, strokepaint);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Draws the application playing background
