@@ -48,7 +48,7 @@ public class Board implements Serializable {
 			}
 		}
 		
-		testboard();
+		//testboard();
 	}
 
 	/**
