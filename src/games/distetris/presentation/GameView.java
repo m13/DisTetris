@@ -144,12 +144,24 @@ public class GameView extends View implements Listener {
 		canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
 		drawNextPiece(piecesq,canvas,p);
 		
-		strokepaint.setColor(Color.YELLOW);
-		strokepaint.setStrokeWidth(1);
-		canvas.drawText("3553", piecesq_left, piecesq_bottom + 10, strokepaint);
+		drawScores(canvas,piecesq_bottom,zone_start_left);
+		
 		
 	}
 
+	/**
+	 * Draw the scores on screen
+	 * @param canvas
+	 * @param top top position where toTimerTask example start drawing
+	 * @param left left position where to start drawing
+	 */
+	private void drawScores(Canvas canvas, int top, int left) {
+		
+		//foreach Player draw its score
+		strokepaint.setColor(Color.YELLOW);
+		strokepaint.setStrokeWidth(1);
+		canvas.drawText("3553", left, top + PADDING, strokepaint);
+	}
 
 	/**
 	 * Draws the next piece inside a Rectangle
