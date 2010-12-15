@@ -52,13 +52,9 @@ public class Game extends Activity {
 	
 	private void gameLoop(){
 		dc.cleanBoard();
-
+		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
-			//
-
-			//dc.setNewRandomPiece();
-			Log.d("COLLIDES","COLLIDES");
 			dc.addCurrentPieceToBoard();
 			dc.setNewRandomPiece();
 		}
