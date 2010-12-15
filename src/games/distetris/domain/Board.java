@@ -116,7 +116,7 @@ public class Board implements Serializable {
 			for(c=0;c<COLS;c++){
 				if(board[r][c] == FREEBLOCK) break;
 			}
-			if(c >= COLS-2) killLine(r);
+			if(c >= COLS) killLine(r);
 		}
 	}
 
@@ -129,9 +129,9 @@ public class Board implements Serializable {
 		for(int pr=0,br = p.x;br<p.x+PieceConstants.PIECESIZE;pr++,br++){
 			for(int pc=0, bc = p.y;bc<p.y+PieceConstants.PIECESIZE;pc++,bc++){
 				//Limit collision check
-				if( pc < 0 ||
-					pc > COLS -1 ||
-					pr > ROWS -1){
+				if( bc < 0 ||
+					bc > COLS -1 ||
+					br >= ROWS){
 						if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK) return false; //collides with board limits
 				}
 				

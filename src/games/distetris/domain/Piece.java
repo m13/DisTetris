@@ -44,6 +44,12 @@ public class Piece implements Serializable {
 		return PieceConstants.cPieces[type][rotation][x][y];
 	}
 	
+	public void rotateLeft(){
+		int rot = this.rotation+1;
+		if(rot>=4) rot = 0;
+		this.rotation = rot;
+	}
+	
 	//GETTERS & SETTERS
 	public int getType() {
 		return type;

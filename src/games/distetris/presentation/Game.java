@@ -5,6 +5,7 @@ import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class Game extends Activity {
@@ -51,5 +52,28 @@ public class Game extends Activity {
 		}
 		dc.gameStep();
 	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch(keyCode){
+		case KeyEvent.KEYCODE_DPAD_DOWN:
+			gameLoop();
+			break;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
+			break;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
+			break;
+		case KeyEvent.KEYCODE_DPAD_UP:
+			dc.currentPieceRotateLeft();
+			break;
+		}
+
+		v.invalidate();
+		return true;
+	}
+	
+	
     
 }

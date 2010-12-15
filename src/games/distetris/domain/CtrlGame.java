@@ -149,4 +149,11 @@ public class CtrlGame {
 	public void addCurrentPieceToBoard() {
 		this.board.addPiece(getCurrentPiece());
 	}
+
+	/**
+	 * Rotate the current piece left
+	 */
+	public void rotateLeft() {
+		getCurrentPiece().rotateLeft();
+	}
 }

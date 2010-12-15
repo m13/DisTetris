@@ -299,6 +299,10 @@ public class CtrlDomain {
 		return this.GAME.nextStepPieceCollision();
 	}
 	
+	public void currentPieceRotateLeft(){
+		this.GAME.rotateLeft();
+	}
+	
 	public void addCurrentPieceToBoard(){
 		this.GAME.addCurrentPieceToBoard();
 	}
