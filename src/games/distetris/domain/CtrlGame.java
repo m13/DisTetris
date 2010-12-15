@@ -179,4 +179,8 @@ public class CtrlGame {
 	public Piece getNextPiece() {
 		return this.board.getNextpiece();
 	}
+
+	public boolean isGameOver() {
+		return this.board.gameOver();
+	}
 }

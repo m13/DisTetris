@@ -72,7 +72,7 @@ public class Board implements Serializable {
 	
 	/**
 	 * Checks if there's a piece in the first row
-	 * @return
+	 * @return true if the current board is a game over, false otherwise
 	 */
 	public boolean gameOver(){
 		for(int i=0;i<COLS;i++){

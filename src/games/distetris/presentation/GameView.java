@@ -15,11 +15,12 @@ public class GameView extends View implements Listener {
 	private final int SQSIZE = 20;
 	private final int PADDING = 5;
 	
-	Paint fillpaint;
-	Paint strokepaint;
-	CtrlDomain dc;
-	int boardw;
-	int boardh;
+	private Paint fillpaint;
+	private Paint strokepaint;
+	private CtrlDomain dc;
+	private int boardw;
+	private int boardh;
+	public boolean gameover = false;
 	
 	
 	public GameView(Context context) {
@@ -60,6 +61,26 @@ public class GameView extends View implements Listener {
 		drawInfoZone(canvas,board,dc.getNextPiece());
 		drawBoard(canvas,board);
 		drawPiece(canvas);
+		
+		if(gameover) drawGameOverLayer(canvas);
+	}
+
+	/**
+	 * Draw the GameOver Screen
+	 * @param canvas
+	 */
+	private void drawGameOverLayer(Canvas canvas) {
+		int top = 0;
+		int left = 0;
+		int bottom = getHeight();
+		int right = getWidth();
+		
+		fillpaint.setColor(getResources().getColor(R.color.GAMEOVERSCREEN));
+		canvas.drawRect(left, top, right, bottom, fillpaint);
+		
+		strokepaint.setColor(Color.WHITE);
+		strokepaint.setTextSize(12);
+		canvas.drawText("GAME OVER", left + right/3, top + bottom/2, strokepaint);
 	}
 
 	/**

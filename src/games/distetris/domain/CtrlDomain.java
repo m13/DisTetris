@@ -318,5 +318,9 @@ public class CtrlDomain {
 	public Piece getNextPiece(){
 		return this.GAME.getNextPiece();
 	}
+	
+	public boolean isGameOver(){
+		return this.GAME.isGameOver();
+	}
 
 }

@@ -55,6 +55,10 @@ public class Game extends Activity {
 		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
+			if(dc.isGameOver()) {
+				v.gameover = true;
+				this.t.cancel();
+			}
 			dc.addCurrentPieceToBoard();
 			dc.setNewRandomPiece();
 		}
