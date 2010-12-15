@@ -180,7 +180,39 @@ public class GameView extends View implements Listener {
 		canvas.drawRect(left, top, right, bottom, strokepaint);
 	}
 
-	
+
+	/**
+	 * Set the current Piece new position from
+	 * touched screen position
+	 * @param x
+	 * @param y
+	 */
+	public void setPieceBoardPosFromScreenPos(float x, float y){
+		int bc = calcBoardRowFromScreenX(x);
+		if(bc==-1) return;
+		dc.getCurrentPiece().y = bc;
+	}
+
+	/**
+	 * Calculate Board column from screen x
+	 * @param x
+	 * @return
+	 */
+	private int calcBoardRowFromScreenX(float x) {
+		int limitright = boardw*SQSIZE + SQSIZE;
+		
+		if(x>limitright){
+			return -1;
+		}
+		for(int c=0;c<boardw;c++){
+			int left = c*SQSIZE;
+			int right = c*SQSIZE+SQSIZE;
+			if(x<right && x>left){
+				return c;
+			}
+		}
+		return -1;
+	}
 	
 }
 

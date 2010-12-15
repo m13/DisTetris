@@ -131,6 +131,17 @@ public class CtrlGame {
 	public boolean currentPieceCollision() {
 		return !this.board.isMovementPossible(getCurrentPiece());
 	}
+	
+	/**
+	 * Checks if the current piece is colliding on next step
+	 * @return
+	 */
+	public boolean nextStepPieceCollision() {
+		Piece pf = new Piece(getCurrentPiece().getType(),getCurrentPiece().getRotation());
+		pf.x = getCurrentPiece().x + 1;
+		pf.y = getCurrentPiece().y;
+		return !this.board.isMovementPossible(pf);
+	}
 
 	/**
 	 * Adds the current piece to the board

@@ -4,6 +4,7 @@ import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class Game extends Activity {
@@ -27,6 +28,10 @@ public class Game extends Activity {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			gameLoop();
 		}
+		else if(event.getAction() == MotionEvent.ACTION_MOVE){
+			v.setPieceBoardPosFromScreenPos(event.getX(), event.getY());
+		}
+		
 		v.invalidate();
 		return true;
 	}
@@ -34,13 +39,17 @@ public class Game extends Activity {
 	
 	private void gameLoop(){
 		dc.cleanBoard();
-		dc.gameStep();
+
 		//if current piece collides
-		if(dc.currentPieceCollision()){
+		if(dc.nextStepPieceCollision()){
 			//
+
+			//dc.setNewRandomPiece();
+			Log.d("COLLIDES","COLLIDES");
 			dc.addCurrentPieceToBoard();
 			dc.setNewRandomPiece();
 		}
+		dc.gameStep();
 	}
     
 }

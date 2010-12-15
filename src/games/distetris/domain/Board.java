@@ -60,7 +60,7 @@ public class Board implements Serializable {
 	 */
 	public void addPiece(Piece p){
 		for(int r=0,br = p.x;br<p.x+PIECESIZE;r++,br++){
-			for(int c=0, bc = p.y;bc<p.x+PIECESIZE;c++,bc++){
+			for(int c=0, bc = p.y;bc<p.y+PIECESIZE;c++,bc++){
 				if(p.getBlockType(r, c)!=PieceConstants.FREEBLOCK){
 					board[br][bc] = p.color;
 				}
