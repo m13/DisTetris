@@ -127,7 +127,7 @@ public class GameView extends View implements Listener {
 	 */
 	private void drawInfoZone(Canvas canvas, int[][] board,Piece p) {
 		
-		int zone_start_left = boardw*SQSIZE+SQSIZE + PADDING;
+		int zone_start_left = boardw*SQSIZE + PADDING;
 		int zone_start_top = getHeight() - boardh*SQSIZE - SQSIZE;
 		int zone_start_right = getWidth() - PADDING;
 		int zone_start_bottom = getHeight();
@@ -138,7 +138,7 @@ public class GameView extends View implements Listener {
 		int piecesq_left = zone_start_left;
 		int piecesq_top = zone_start_top;
 		int piecesq_right = zone_start_right;
-		int piecesq_bottom = zone_start_top + 2*PADDING + 2*SQSIZE;
+		int piecesq_bottom = zone_start_top + 2*PADDING + 3*SQSIZE;
 		RectF piecesq = new RectF(piecesq_left,piecesq_top,piecesq_right,piecesq_bottom);
 		
 		
@@ -169,7 +169,7 @@ public class GameView extends View implements Listener {
 		
 		int left = 0; 
 		int top = getHeight() - boardh*SQSIZE - SQSIZE;
-		int right = boardw*SQSIZE+SQSIZE;
+		int right = boardw*SQSIZE;
 		int bottom = getHeight();
 		
 		fillpaint.setColor(getResources().getColor(R.color.BG));

@@ -156,4 +156,11 @@ public class CtrlGame {
 	public void rotateLeft() {
 		getCurrentPiece().rotateLeft();
 	}
+
+	public boolean currentPieceOffsetCollision(int offset) {
+		Piece pf = new Piece(getCurrentPiece().getType(),getCurrentPiece().getRotation());
+		pf.x = getCurrentPiece().x;
+		pf.y = getCurrentPiece().y + offset;
+		return !this.board.isMovementPossible(pf);
+	}
 }

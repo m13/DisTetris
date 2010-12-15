@@ -21,6 +21,7 @@ public class Board implements Serializable {
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
 	private Piece currentpiece;
+	private Piece nextpiece;
 	
 	private void testboard(){
 		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
@@ -168,6 +169,14 @@ public class Board implements Serializable {
 
 	public Piece getCurrentpiece() {
 		return currentpiece;
+	}
+
+	public void setNextpiece(Piece nextpiece) {
+		this.nextpiece = nextpiece;
+	}
+
+	public Piece getNextpiece() {
+		return nextpiece;
 	}
 	
 }

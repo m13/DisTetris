@@ -21,6 +21,9 @@ public class Piece implements Serializable {
 		super();
 		this.type = type;
 		this.rotation = rotation;
+		this.x = PieceConstants.startPos[type][rotation][0];
+		this.y = 3 - PieceConstants.startPos[type][rotation][1];
+		
 	}
 	
 	/**
