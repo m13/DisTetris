@@ -10,25 +10,22 @@
 		android:debuggable="true"
 		android:theme="@android:style/Theme.NoTitleBar" >
 		
-		<activity
-			android:name=".Distetris"
-			android:label="@string/app_name" 
-		android:screenOrientation="portrait">
+		<activity android:name=".Distetris" android:label="@string/app_name" android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		
-		<activity android:name="games.distetris.presentation.NewGame" android:label="@string/app_name" />
-		<activity android:name="games.distetris.presentation.JoinGame" android:label="@string/app_name" />
-		<activity android:name="games.distetris.presentation.Statistics" android:label="@string/app_name" />
-		<activity android:name="games.distetris.presentation.Configure" android:label="@string/app_name" />
+		<activity android:name="games.distetris.presentation.NewGame" android:label="@string/app_name" android:screenOrientation="portrait" />
+		<activity android:name="games.distetris.presentation.JoinGame" android:label="@string/app_name" android:screenOrientation="portrait" />
+		<activity android:name="games.distetris.presentation.Statistics" android:label="@string/app_name" android:screenOrientation="portrait" />
+		<activity android:name="games.distetris.presentation.Configure" android:label="@string/app_name" android:screenOrientation="portrait" />
 		
 		<activity android:name="games.distetris.presentation.Game" android:label="@string/app_name" android:screenOrientation="portrait"/>
 
-		<activity android:name="games.distetris.presentation.NewGameWaiting" android:label="@string/app_name" />
-		<activity android:name="games.distetris.presentation.JoinGameWaiting" android:label="@string/app_name" />
+		<activity android:name="games.distetris.presentation.NewGameWaiting" android:label="@string/app_name" android:screenOrientation="portrait" />
+		<activity android:name="games.distetris.presentation.JoinGameWaiting" android:label="@string/app_name" android:screenOrientation="portrait" />
 
 	</application>
 

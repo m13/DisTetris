@@ -2,30 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-	<Button
-		android:id="@+id/mainButton01"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Create game" />
-	<Button
-		android:id="@+id/mainButton02"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Join game" />
-	<Button
-		android:id="@+id/mainButton03"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="View statistics" />
-	<Button
-		android:id="@+id/mainButton04"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Configure" />
-	<Button
-		android:id="@+id/mainButton05"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Single Game" />	    
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" >
+	<Gallery
+	    android:id="@+id/gallery"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:gravity="center_vertical" />
 </LinearLayout>

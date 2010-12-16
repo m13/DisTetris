@@ -9,16 +9,19 @@
 	  android:id="@+id/name"
 	  android:layout_width="150sp"
 	  android:layout_height="wrap_content"
-	  android:textSize="16sp" />
+	  android:textSize="16sp"
+	  android:textColor="#111" />
   <TextView
 	  android:id="@+id/date"
 	  android:layout_width="80sp"
 	  android:layout_height="wrap_content"
-	  android:textSize="12sp" />
+	  android:textSize="12sp"
+	  android:textColor="#111" />
   <TextView
 	  android:id="@+id/score"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
 	  android:gravity="right"
-	  android:textSize="20sp" />
+	  android:textSize="20sp"
+	  android:textColor="#111" />
 </LinearLayout>

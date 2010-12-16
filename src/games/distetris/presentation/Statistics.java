@@ -64,7 +64,7 @@ public class Statistics extends Activity {
 						cal.get(Calendar.HOUR_OF_DAY),
 						cal.get(Calendar.MINUTE),
 						cal.get(Calendar.DATE),
-						cal.get(Calendar.MONTH));
+						cal.get(Calendar.MONTH)+1);
 				
 				((TextView)child.findViewById(R.id.name)).setText(name);
 				((TextView)child.findViewById(R.id.score)).setText(String.valueOf(score));

@@ -8,7 +8,12 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.ImageView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class Distetris extends Activity {
     
@@ -27,77 +32,71 @@ public class Distetris extends Activity {
 		L.d("End");
     }
 
-	private void setButtons() {
+    private void setButtons() {
+        Gallery g = (Gallery) findViewById(R.id.gallery);
+        g.setUnselectedAlpha(1f);
+        g.setSpacing(1);
+        g.setAdapter(new ImageAdapter(this));
+        g.setSelection(1);
 
-        int[] allIdButtons = new int[] { R.id.mainButton01,
-        		R.id.mainButton02, R.id.mainButton03, R.id.mainButton04,R.id.mainButton05 };
-		
-        for (int idButton : allIdButtons) {
-	        Button button = (Button) findViewById(idButton);
-	        button.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View v) {
-	            	Intent i = new Intent();
-	                switch(v.getId()) {
-		                case R.id.mainButton01:
-		                	i.setClass(v.getContext(), NewGame.class);
-		                	break;
-		                case R.id.mainButton02:
-		                	i.setClass(v.getContext(), JoinGame.class);
-		                	break;
-		                case R.id.mainButton03:
-		                	i.setClass(v.getContext(), Statistics.class);
-		                	break;
-		                case R.id.mainButton04:
-		                	i.setClass(v.getContext(), Configure.class);
-		                	break;
-		                case R.id.mainButton05:
-		                	i.setClass(v.getContext(), Game.class);
-		                	break;		                	
-	                }
-					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(i);
-	            }
-	        });
+        g.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            	Intent i = new Intent();
+            	i.setClass(v.getContext(), (Class<?>) v.getTag());
+            	i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(i);
+            }
+        });
+    }
+    
+    public class ImageAdapter extends BaseAdapter {
+        private Context mContext;
+
+        private Integer[] mImageIds = {
+                R.drawable.new_game,
+                R.drawable.join_game,
+                R.drawable.statistics,
+                R.drawable.configure,
+                R.drawable.test
+        };
+
+        private Class<?>[] mImageClass = {
+        	NewGame.class, 
+        	JoinGame.class,
+        	Statistics.class,
+        	Configure.class,
+        	Game.class
+        };
+
+        public ImageAdapter(Context c) {
+            mContext = c;
         }
-	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		L.d("onStart");
-	}
-	
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		L.d("onRestart");
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		L.d("onResume");
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		L.d("onPause");
-	}
+        public int getCount() {
+            return mImageIds.length;
+        }
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		L.d("onStop");
-	}
-    
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		L.d("onDestroy");
-	}
-    
-	
-	
-	
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+        	
+            return position;
+        }
+        
+		public float getScale(boolean focused, int offset) {
+			L.d(":)");
+			return Math.max(0, 1.0f / (float)Math.pow(2, Math.abs(offset)));
+		}
+		
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView i = new ImageView(mContext);
+            i.setTag(mImageClass[position]);
+            i.setImageResource(mImageIds[position]);
+            i.setScaleType(ImageView.ScaleType.FIT_XY);
+            i.setLayoutParams(new Gallery.LayoutParams(200, 200));
+            return i;
+        }
+    }
 }
