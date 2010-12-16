@@ -21,16 +21,15 @@ public class CtrlGame {
 		// TODO: Close db
 	}
 
-	public static CtrlGame getInstance(Context ctx) {
+	public static CtrlGame getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlGame();
-			INSTANCE.db = new DbHelper(ctx);
 		}
 		return INSTANCE;
 	}
-	
-	public static CtrlGame getInstance() {
-		return INSTANCE;
+
+	public void setContext(Context ctx) {
+		INSTANCE.db = new DbHelper(ctx);
 	}
 
 	// show pop-up where choose the team

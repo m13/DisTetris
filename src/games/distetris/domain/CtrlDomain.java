@@ -55,17 +55,17 @@ public class CtrlDomain {
 		};
 	}
 
-	public static CtrlDomain getInstance(Context ctx) {
+	public static CtrlDomain getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlDomain();
 			INSTANCE.NET = CtrlNet.getInstance();
-			INSTANCE.GAME = CtrlGame.getInstance(ctx);
+			INSTANCE.GAME = CtrlGame.getInstance();
 		}
 		return INSTANCE;
 	}
-	
-	public static CtrlDomain getInstance() {
-		return INSTANCE;
+
+	public void setContext(Context ctx) {
+		CtrlGame.getInstance().setContext(ctx);
 	}
 
 	public void startNet() {

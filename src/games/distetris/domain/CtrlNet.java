@@ -7,7 +7,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -42,8 +41,8 @@ public class CtrlNet {
 	}
 	
 	public static CtrlNet getInstance() {
-		if(INSTANCE == null){
-			return new CtrlNet();
+		if (INSTANCE == null) {
+			INSTANCE = new CtrlNet();
 		}
 		return INSTANCE;
 	}

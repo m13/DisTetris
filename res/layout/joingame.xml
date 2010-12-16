@@ -5,14 +5,7 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
     android:padding="10sp"
-	android:gravity="bottom"
     android:background="@drawable/background" >
-
-	<ListView
-		android:id="@+id/ListView01"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-	</ListView>
 	
 	<Button
 		android:id="@+id/Button01"
@@ -20,4 +13,11 @@
 		android:layout_height="wrap_content"
 		android:text="Refresh">
 	</Button>
+	
+	<ListView
+		android:id="@+id/ListView01"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+	</ListView>
+
 </LinearLayout>
