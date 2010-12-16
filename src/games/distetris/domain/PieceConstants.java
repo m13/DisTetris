@@ -1,5 +1,7 @@
 package games.distetris.domain;
 
+import android.graphics.Color;
+
 public class PieceConstants {
 	public static int FREEBLOCK = 0;
 	public static int PIVOTBLOCK = 2;
@@ -283,4 +285,10 @@ public class PieceConstants {
 		 };  
 	
 	public static int npieces = cPieces.length;
+	private static int[] defcolors = {Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.CYAN}; 
+	
+	public static int randomColor() {
+		int x = (int) (Math.random()*100)%defcolors.length;
+		return defcolors[x];
+	}
 }

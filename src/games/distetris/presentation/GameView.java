@@ -94,7 +94,7 @@ public class GameView extends View implements Listener {
 		
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
 		strokepaint.setStrokeWidth(1);
-		fillpaint.setColor(Color.RED);
+		fillpaint.setColor(p.color);
 		
 		for(int r = p.x,pr = 0;r<p.x+psize;r++,pr++){
 			for(int c = p.y,pc = 0;c<p.y+psize;c++,pc++){
@@ -197,7 +197,7 @@ public class GameView extends View implements Listener {
 		
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
 		strokepaint.setStrokeWidth(1);
-		fillpaint.setColor(Color.RED);
+		fillpaint.setColor(p.color);
 		
 		for(int r = p.x,pr = 0;r<p.x+psize;r++,pr++){
 			for(int c = p.y,pc = 0;c<p.y+psize;c++,pc++){

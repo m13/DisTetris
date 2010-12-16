@@ -13,7 +13,7 @@ public class Piece implements Serializable {
 	public int y = 0; 			//Vertical pos measured in blocks
 	private int type = 0; 		//Piece type, indexed in PieceConstants
 	private int rotation = 0; 	//Piece Rotation, indexed in PieceConstants
-	public int color = Color.parseColor("#ffff0000");		//Piece Color, Android Color
+	public int color = PieceConstants.randomColor();		//Piece Color, Android Color
 	
 	
 	
