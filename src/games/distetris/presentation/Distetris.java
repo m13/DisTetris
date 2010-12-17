@@ -2,6 +2,7 @@ package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.L;
+import games.distetris.storage.DbHelper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +24,8 @@ public class Distetris extends Activity {
 		L.d("Start");
 
 		// System Services only can be get from an activity, so the instance is passed to be used later
-		Context ctx = getBaseContext();
-		CtrlDomain.getInstance(ctx).setWifiManager((WifiManager) getSystemService(Context.WIFI_SERVICE));
+		CtrlDomain.getInstance().setWifiManager((WifiManager) getSystemService(Context.WIFI_SERVICE));
+		CtrlDomain.getInstance().setDbHelper(new DbHelper(getBaseContext()));
 
         setContentView(R.layout.main);
         setButtons();

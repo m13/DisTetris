@@ -5,7 +5,6 @@ import games.distetris.storage.DbHelper;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -22,16 +21,15 @@ public class CtrlGame {
 		// TODO: Close db
 	}
 
-	public static CtrlGame getInstance(Context ctx) {
+	public static CtrlGame getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new CtrlGame();
-			INSTANCE.db = new DbHelper(ctx);
 		}
 		return INSTANCE;
 	}
-	
-	public static CtrlGame getInstance() {
-		return INSTANCE;
+
+	public void setDbHelper(DbHelper dbHelper) {
+		INSTANCE.db = dbHelper;
 	}
 
 	// show pop-up where choose the team
