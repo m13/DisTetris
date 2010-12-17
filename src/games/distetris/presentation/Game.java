@@ -12,15 +12,15 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class Game extends Activity {
-	GameView v;
-	CtrlDomain dc;
-	TimerTask gamelooptask;
-	TimerTask refreshviewtask;
-	final Handler handler = new Handler();
-	Timer gamelooptimer = new Timer();
-	Timer refreshviewtimer = new Timer();
-	int mseconds_actualize = 500;
-	int mseconds_viewactualize = 10;
+	private GameView v;
+	private CtrlDomain dc;
+	private TimerTask gamelooptask;
+	private TimerTask refreshviewtask;
+	private final Handler handler = new Handler();
+	private Timer gamelooptimer = new Timer();
+	private Timer refreshviewtimer = new Timer();
+	private int mseconds_actualize = 500;
+	private int mseconds_viewactualize = 10;
 
 	
     @Override
@@ -54,7 +54,7 @@ public class Game extends Activity {
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		v.deletelines = dc.cleanBoard();
+		
 		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
@@ -63,6 +63,7 @@ public class Game extends Activity {
 				this.gamelooptimer.cancel();
 			}
 			dc.addCurrentPieceToBoard();
+			v.deletelines = dc.cleanBoard();
 			dc.setNewRandomPiece();
 		}
 		dc.gameStep();

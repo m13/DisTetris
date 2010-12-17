@@ -33,8 +33,8 @@ public class CtrlDomain {
 	// dynamic configuration (player)
 	private Integer player = 0;
 	private Integer team = 0;
-	private Integer round = 0;
-	private boolean myTurn = false;
+	private Integer round = 0; //Nivel a partir de ronda
+	private boolean myTurn = false; 
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
@@ -280,6 +280,7 @@ public class CtrlDomain {
 	
 	public void setNewRandomPiece(){
 		this.GAME.setNewRandomPiece();
+		
 	}
 	
 	public Piece getCurrentPiece(){

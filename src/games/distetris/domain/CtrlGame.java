@@ -12,7 +12,6 @@ public class CtrlGame {
 
 	private static CtrlGame INSTANCE = null;
 	private DbHelper db = null;
-
 	Board board = new Board();
 
 	private CtrlGame() {
