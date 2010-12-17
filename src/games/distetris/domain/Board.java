@@ -1,6 +1,7 @@
 package games.distetris.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,14 +112,20 @@ public class Board implements Serializable {
 	 * 
 	 * If a line can be deleted this function removes it.
 	 */
-	public void cleanBoard(){
+	public ArrayList<Integer> cleanBoard(){
+		ArrayList<Integer> ret = new ArrayList<Integer>();
 		for(int r=0;r<ROWS;r++){
 			int c = 0;
 			for(c=0;c<COLS;c++){
 				if(board[r][c] == FREEBLOCK) break;
 			}
-			if(c >= COLS) killLine(r);
+			if(c >= COLS) {
+				killLine(r);
+				ret.add(r);
+			}
 		}
+		
+		return ret;
 	}
 
 	/**

@@ -8,7 +8,6 @@ import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -16,9 +15,12 @@ public class Game extends Activity {
 	GameView v;
 	CtrlDomain dc;
 	TimerTask gamelooptask;
+	TimerTask refreshviewtask;
 	final Handler handler = new Handler();
-	Timer t = new Timer();
+	Timer gamelooptimer = new Timer();
+	Timer refreshviewtimer = new Timer();
 	int mseconds_actualize = 500;
+	int mseconds_viewactualize = 10;
 
 	
     @Override
@@ -42,22 +44,23 @@ public class Game extends Activity {
 			gameLoop();
 		}
 		else if(event.getAction() == MotionEvent.ACTION_MOVE){
-			v.setPieceBoardPosFromScreenPos(event.getX(), event.getY());
+			v.setPieceBoardPosFromScreenPos(event.getX(), event.getY());	
 		}
 		
-		v.invalidate();
 		return true;
 	}
     
-	
+	/**
+	 * Main Game Loop executed every x seconds
+	 */
 	private void gameLoop(){
-		dc.cleanBoard();
+		v.deletelines = dc.cleanBoard();
 		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
 			if(dc.isGameOver()) {
 				v.gameover = true;
-				this.t.cancel();
+				this.gamelooptimer.cancel();
 			}
 			dc.addCurrentPieceToBoard();
 			dc.setNewRandomPiece();
@@ -65,6 +68,12 @@ public class Game extends Activity {
 		dc.gameStep();
 	}
 
+	/**
+	 * Hook to control onKeyDown
+	 * 
+	 * @param keyCode	The keyCode pressed
+	 * @param event		The event referring the keycode
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch(keyCode){
@@ -91,25 +100,41 @@ public class Game extends Activity {
 	}
 	
 	
-	
-	public void doInvalidateRepat(){
-
+	/**
+	 * Start Game Loop timer
+	 */
+	public void doGameLoop(){
 		gamelooptask = new TimerTask() {
 		        public void run() {
 		                handler.post(new Runnable() {
 		                        public void run() {
 		                         gameLoop();
-		                         Log.d("TIMER", "Timer set off");
 		                        }
 		               });
 		        }};
-		    t.schedule(gamelooptask, 0, mseconds_actualize); 
+		    gamelooptimer.schedule(gamelooptask, 0, mseconds_actualize); 
 
 		 }
+	
+	/**
+	 * Start view invalidate timer
+	 */
+	public void doViewInvalidate(){
+		this.refreshviewtask = new TimerTask() {
+		        public void run() {
+		                handler.post(new Runnable() {
+		                        public void run() {
+		                    		v.invalidate();
+		                        }
+		               });
+		        }};
+		    this.refreshviewtimer.schedule(refreshviewtask, 0, this.mseconds_viewactualize); 
+
+	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-		if(hasFocus) doInvalidateRepat();
+		if(hasFocus) doGameLoop();
 		
 	}
 

@@ -1,5 +1,7 @@
 package games.distetris.presentation;
 
+import java.util.ArrayList;
+
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
@@ -9,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
 
 public class GameView extends View implements Listener {
@@ -21,6 +24,7 @@ public class GameView extends View implements Listener {
 	private int boardw;
 	private int boardh;
 	public boolean gameover = false;
+	public ArrayList<Integer> deletelines = null;
 	
 	
 	public GameView(Context context) {
@@ -57,12 +61,20 @@ public class GameView extends View implements Listener {
 		int[][] board = dc.getBoard();
 		
 		drawSquarePlayerZoneBackground(canvas,board);
+		if(this.deletelines != null) {
+			deleteLinesAnim();
+		}
+		drawBoard(canvas,board);
 		drawGameBackground(canvas);
 		drawInfoZone(canvas,board,dc.getNextPiece());
-		drawBoard(canvas,board);
 		drawPiece(canvas);
 		
 		if(gameover) drawGameOverLayer(canvas);
+	}
+
+	private void deleteLinesAnim() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
