@@ -4,7 +4,6 @@ import games.distetris.storage.DbHelper;
 
 import java.util.Map.Entry;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -28,8 +27,8 @@ public class CtrlGame {
 		return INSTANCE;
 	}
 
-	public void setContext(Context ctx) {
-		INSTANCE.db = new DbHelper(ctx);
+	public void setDbHelper(DbHelper dbHelper) {
+		INSTANCE.db = dbHelper;
 	}
 
 	// show pop-up where choose the team

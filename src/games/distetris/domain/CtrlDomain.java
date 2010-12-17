@@ -1,11 +1,12 @@
 package games.distetris.domain;
 
+import games.distetris.storage.DbHelper;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -64,8 +65,8 @@ public class CtrlDomain {
 		return INSTANCE;
 	}
 
-	public void setContext(Context ctx) {
-		CtrlGame.getInstance().setContext(ctx);
+	public void setDbHelper(DbHelper dbHelper) {
+		CtrlGame.getInstance().setDbHelper(dbHelper);
 	}
 
 	public void startNet() {
