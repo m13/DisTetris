@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -272,8 +273,8 @@ public class CtrlDomain {
 	
 	
 	//GAME HOOKS
-	public void cleanBoard(){
-		this.GAME.cleanBoard();
+	public ArrayList<Integer> cleanBoard(){
+		return this.GAME.cleanBoard();
 	}
 	
 	public void setNewRandomPiece(){

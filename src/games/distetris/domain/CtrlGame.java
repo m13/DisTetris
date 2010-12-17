@@ -2,6 +2,7 @@ package games.distetris.domain;
 
 import games.distetris.storage.DbHelper;
 
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import android.content.Context;
@@ -67,8 +68,8 @@ public class CtrlGame {
 		// A bit odd... I know. Check the logic of CtrlNet!
 	}
 
-	public void cleanBoard(){
-		this.board.cleanBoard();
+	public ArrayList<Integer> cleanBoard(){
+		return this.board.cleanBoard();
 	}
 	
 	public int[][] getBoard() {
