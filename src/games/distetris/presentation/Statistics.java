@@ -60,18 +60,17 @@ public class Statistics extends Activity {
 				
 				Calendar cal = Calendar.getInstance();
 				cal.setTime( new Date(date) );
-				String strDate = String.format("%02d:%02d %02d/%02d",
-						cal.get(Calendar.HOUR_OF_DAY),
-						cal.get(Calendar.MINUTE),
+				String strDate = String.format("%02d/%02d/%02d",
 						cal.get(Calendar.DATE),
-						cal.get(Calendar.MONTH)+1);
+						cal.get(Calendar.MONTH)+1,
+						cal.get(Calendar.YEAR));
 				
 				((TextView)child.findViewById(R.id.name)).setText(name);
 				((TextView)child.findViewById(R.id.score)).setText(String.valueOf(score));
 				((TextView)child.findViewById(R.id.date)).setText(strDate);
 				
 				color = (color==0) ? 1 : 0;
-				child.setBackgroundColor(0xEEEEEEE * color);
+				child.setBackgroundColor(0x2FFFFFFF * color);
 				
 				ll.addView(child);
 			} while(cr.moveToNext());

@@ -15,8 +15,8 @@
 		    android:layout_height="wrap_content"
 			android:gravity="center"
 		    android:textSize="18sp"
-		    android:background="#666"
-		    android:text="Individuals" />
+		    android:text="INDIVIDUAL"
+		    android:padding="6sp" />
 		    
 			<LinearLayout
 				android:id="@+id/lli"
@@ -29,8 +29,8 @@
 		    android:layout_height="wrap_content"
 		    android:gravity="center_horizontal"
 		    android:textSize="18sp"
-		    android:background="#666"
-		    android:text="Teams" />
+		    android:text="TEAM"
+		    android:padding="6sp" />
 		    
 			<LinearLayout
 				android:id="@+id/llt"
