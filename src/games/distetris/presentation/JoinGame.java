@@ -7,29 +7,47 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class JoinGame extends Activity {
 
-	private ArrayAdapter<String> serverList;
-	ListView lv;
+	private LinearLayout ll;
+	private int color = 0x0F000000;
 	
 	private Handler udpHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-
 			// This function will be called several times in case there are multiple server
 			// The only information returned is the NAME, IP and PORT of the found server
 			// Must update the UI accordingly to allow the user choose a server
-			String str = msg.getData().getString("NAME") + " | " + msg.getData().getString("IP") + " | " + msg.getData().getString("PORT");
+			View child = getLayoutInflater().inflate(R.layout.row_join, null);
+			child.setTag( (Bundle) msg.getData() );
 
-			serverList.add(str);
+			TextView tv;
+			tv = ((TextView) child.findViewById(R.id.Name));
+			tv.setText( msg.getData().getString("NAME") );
+			tv.setBackgroundColor(color);
+			tv = ((TextView) child.findViewById(R.id.Ip));
+			tv.setText( msg.getData().getString("IP") );
+			tv = ((TextView) child.findViewById(R.id.Port));
+			tv.setText( String.valueOf(msg.getData().getInt("PORT")) );
+
+			child.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Intent i = new Intent();
+					i.setClass(view.getContext(), JoinGameWaiting.class);
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.putExtras( (Bundle)view.getTag() );
+					startActivity(i);
+				}
+			});
+			
+			ll.addView( child );
 		}
 	};
 
@@ -42,40 +60,40 @@ public class JoinGame extends Activity {
         super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.joingame);
+		
+		ll = ((LinearLayout) findViewById(R.id.Root));
 
-		this.serverList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-
-		this.lv = ((ListView) findViewById(R.id.ListView01));
-		this.lv.setAdapter(serverList);
-		this.lv.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(view.getContext(), "Connecting to " + serverList.getItem(position).split(" \\| ")[1] + ":" + serverList.getItem(position).split(" \\| ")[2], Toast.LENGTH_SHORT).show();
-
-				Bundle b = new Bundle();
-				b.putString("NAME", serverList.getItem(position).split(" \\| ")[0]);
-				b.putString("IP", serverList.getItem(position).split(" \\| ")[1]);
-				b.putInt("PORT", Integer.parseInt(serverList.getItem(position).split(" \\| ")[2]));
-
-				Intent i = new Intent();
-				i.setClass(view.getContext(), JoinGameWaiting.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.putExtras(b);
-				startActivity(i);
-
-			}
-
-		});
-
-		Button button = (Button) findViewById(R.id.Button01);
+		Button button;
+		button = (Button) findViewById(R.id.Refresh);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				serverList.clear();
+				ll.removeAllViews();
 				CtrlDomain.getInstance().serverUDPFind(udpHandler);
+				
+				Message msgx = new Message();
+				Bundle datax = new Bundle();
+				datax.putString("NAME", "name");
+				datax.putString("IP", "1.1.1.1");
+				datax.putInt("PORT", 10);
+				msgx.setData(datax);
+				udpHandler.sendMessage(msgx);
+				
+				msgx = new Message();
+				datax = new Bundle();
+				datax.putString("NAME", "wifi");
+				datax.putString("IP", "192.168.1.1");
+				datax.putInt("PORT", 10);
+				msgx.setData(datax);
+				udpHandler.sendMessage(msgx);
 			}
 		});
-
+		
+		button = (Button) findViewById(R.id.Back);
+		button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 
 	/**
@@ -84,10 +102,8 @@ public class JoinGame extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		serverList.clear();
+		ll.removeAllViews();
 		CtrlDomain.getInstance().serverUDPFind(udpHandler);
-
 	}
 
 	/**
@@ -96,9 +112,6 @@ public class JoinGame extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-
 		CtrlDomain.getInstance().serverUDPStop();
-
 	}
-
 }

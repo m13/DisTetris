@@ -134,7 +134,7 @@ public class UDPServer extends Thread {
 		Bundle data = new Bundle();
 		data.putString("NAME", name);
 		data.putString("IP", remoteIP.getHostAddress());
-		data.putString("PORT", port);
+		data.putInt("PORT", Integer.valueOf(port));
 		msg.setData(data);
 		handler.sendMessage(msg);
 	}

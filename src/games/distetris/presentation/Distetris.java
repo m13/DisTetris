@@ -54,11 +54,11 @@ public class Distetris extends Activity {
         private Context mContext;
 
         private Integer[] mImageIds = {
-                R.drawable.new_game,
-                R.drawable.join_game,
-                R.drawable.statistics,
-                R.drawable.configure,
-                R.drawable.test
+            R.drawable.new_game,
+            R.drawable.join_game,
+            R.drawable.statistics,
+            R.drawable.configure,
+            R.drawable.test
         };
 
         private Class<?>[] mImageClass = {
@@ -82,14 +82,8 @@ public class Distetris extends Activity {
         }
 
         public long getItemId(int position) {
-        	
             return position;
         }
-        
-		public float getScale(boolean focused, int offset) {
-			L.d(":)");
-			return Math.max(0, 1.0f / (float)Math.pow(2, Math.abs(offset)));
-		}
 		
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView i = new ImageView(mContext);

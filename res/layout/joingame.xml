@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical"
-    android:padding="10sp"
-    android:background="@drawable/background" >
-	
-	<Button
-		android:id="@+id/Button01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+	<LinearLayout
+		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="Refresh">
-	</Button>
+		android:layout_height="fill_parent"
+	    android:padding="10sp"
+		android:gravity="bottom"
+	    android:background="@drawable/background">
+	    
+		<LinearLayout
+			android:id="@+id/Root"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical" />
+		
+		<Button
+			android:id="@+id/Refresh"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="Refresh" />
+			
+		<Button
+			android:id="@+id/Back"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="Back" />
 	
-	<ListView
-		android:id="@+id/ListView01"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-	</ListView>
-
-</LinearLayout>
+	</LinearLayout>
+</ScrollView>
