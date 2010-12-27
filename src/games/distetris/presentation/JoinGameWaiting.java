@@ -13,7 +13,6 @@ public class JoinGameWaiting extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-
 		}
 	};
 
@@ -30,16 +29,9 @@ public class JoinGameWaiting extends Activity {
 		String serverName = bundle.getString("NAME");
 		String serverIP = bundle.getString("IP");
 		int serverPort = bundle.getInt("PORT");
-		Toast.makeText(getBaseContext(), "Received " + serverName + " " + serverIP + " " + serverPort, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getBaseContext(), "Received " + serverName + " " + serverIP + ":" + String.valueOf(serverPort), Toast.LENGTH_SHORT).show();
 
 		CtrlDomain.getInstance().setHandlerUI(handler);
 		CtrlDomain.getInstance().serverTCPConnect(serverIP, serverPort);
 	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-	}
-
 }

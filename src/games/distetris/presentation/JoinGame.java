@@ -21,6 +21,7 @@ public class JoinGame extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+			
 			// This function will be called several times in case there are multiple server
 			// The only information returned is the NAME, IP and PORT of the found server
 			// Must update the UI accordingly to allow the user choose a server
@@ -69,22 +70,6 @@ public class JoinGame extends Activity {
 			public void onClick(View v) {
 				ll.removeAllViews();
 				CtrlDomain.getInstance().serverUDPFind(udpHandler);
-				
-				Message msgx = new Message();
-				Bundle datax = new Bundle();
-				datax.putString("NAME", "name");
-				datax.putString("IP", "1.1.1.1");
-				datax.putInt("PORT", 10);
-				msgx.setData(datax);
-				udpHandler.sendMessage(msgx);
-				
-				msgx = new Message();
-				datax = new Bundle();
-				datax.putString("NAME", "wifi");
-				datax.putString("IP", "192.168.1.1");
-				datax.putInt("PORT", 10);
-				msgx.setData(datax);
-				udpHandler.sendMessage(msgx);
 			}
 		});
 		
