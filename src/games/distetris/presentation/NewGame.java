@@ -17,13 +17,13 @@ public class NewGame extends Activity {
 
         setContentView(R.layout.newgame);
         
-        final Button button = (Button) findViewById(R.id.newgameButton01);
-        final Button cancel = (Button) findViewById(R.id.newgameButton02);
+        final Button button = (Button) findViewById(R.id.NewGameButton01);
+        final Button cancel = (Button) findViewById(R.id.NewGameButton02);
         
-		final EditText textNameServer = (EditText) findViewById(R.id.newgameEditText01);
-		final EditText textNumTeams = (EditText) findViewById(R.id.newgameEditText02);
-		final EditText textNumPlayers = (EditText) findViewById(R.id.newgameEditText03);
-		final EditText textNumTurns = (EditText) findViewById(R.id.newgameEditText04);
+		final EditText textNameServer = (EditText) findViewById(R.id.NewGameEditText01);
+		final EditText textNumTeams = (EditText) findViewById(R.id.NewGameEditText02);
+		final EditText textNumPlayers = (EditText) findViewById(R.id.NewGameEditText03);
+		final EditText textNumTurns = (EditText) findViewById(R.id.NewGameEditText04);
 
 		final String nameServer = textNameServer.getText().toString();
 		final Integer numTeams = Integer.parseInt(textNumTeams.getText().toString());

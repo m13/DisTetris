@@ -22,7 +22,7 @@ public class Statistics extends Activity {
 		L.d("Start");
 
         setContentView(R.layout.statistics);
-        Button b = (Button) findViewById(R.id.back);
+        Button b = (Button) findViewById(R.id.Back);
         
         b.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -40,11 +40,11 @@ public class Statistics extends Activity {
 		L.d("onResume");
 		
 		Cursor cr = CtrlDomain.getInstance().getScoreInd();
-		LinearLayout ll = (LinearLayout) findViewById(R.id.lli);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.LinearLayoutIndividual);
 		addStats(cr, ll);
 		
 		cr = CtrlDomain.getInstance().getScoreTeam();
-		ll = (LinearLayout) findViewById(R.id.llt);
+		ll = (LinearLayout) findViewById(R.id.LinearLayoutTeam);
 		addStats(cr, ll);
 	}
 	
@@ -65,9 +65,9 @@ public class Statistics extends Activity {
 						cal.get(Calendar.MONTH)+1,
 						cal.get(Calendar.YEAR));
 				
-				((TextView)child.findViewById(R.id.name)).setText(name);
-				((TextView)child.findViewById(R.id.score)).setText(String.valueOf(score));
-				((TextView)child.findViewById(R.id.date)).setText(strDate);
+				((TextView)child.findViewById(R.id.Name)).setText(name);
+				((TextView)child.findViewById(R.id.Score)).setText(String.valueOf(score));
+				((TextView)child.findViewById(R.id.Date)).setText(strDate);
 				
 				color = (color==0) ? 1 : 0;
 				child.setBackgroundColor(0x2FFFFFFF * color);

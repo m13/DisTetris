@@ -2,95 +2,91 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
     android:padding="10sp"
 	android:gravity="bottom"
     android:background="@drawable/background" >
     
     <LinearLayout
 	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" >
 	    <TextView
-	    	android:id="@+id/newgameTextView01"
-		    android:layout_width="150sp" 
-		    android:layout_height="wrap_content" 
-		    android:text="Server name"
+		    android:layout_height="wrap_content"
+		    android:layout_width="150sp"
 		    android:textSize="16sp"
-		    android:textColor="#111" />
+		    android:textColor="#111"
+		    android:text="@string/newServername" />
 	   	<EditText
-			android:id="@+id/newgameEditText01"
-		    android:layout_width="fill_parent" 
+			android:id="@+id/NewGameEditText01"
 		    android:layout_height="wrap_content" 
-		    android:text="wifi" />
+		    android:layout_width="fill_parent" 
+		    android:text="@string/newServernameDefault" />
     </LinearLayout>
     
     <LinearLayout
 	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" >
 	    <TextView
-	    	android:id="@+id/newgameTextView02"
+		    android:layout_height="wrap_content"
 		    android:layout_width="150sp" 
-		    android:layout_height="wrap_content" 
-		    android:text="Number of teams"
 		    android:textSize="16sp"
-		    android:textColor="#111" />
+		    android:textColor="#111"
+		    android:text="@string/newNumTeams" />
 	   	<EditText
-			android:id="@+id/newgameEditText02"
+			android:id="@+id/NewGameEditText02"
 		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content" 
-		    android:text="3"
-		    android:gravity="right" />
+		    android:layout_height="wrap_content"
+		    android:gravity="right" 
+		    android:text="@string/newNumTeamsDefault" />
     </LinearLayout>
     
     <LinearLayout
 	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" >
 	    <TextView
-	    	android:id="@+id/newgameTextView03"
+		    android:layout_height="wrap_content"
 		    android:layout_width="150sp" 
-		    android:layout_height="wrap_content" 
-		    android:text="Number of players"
 		    android:textSize="16sp"
-		    android:textColor="#111" />
+		    android:textColor="#111"
+		    android:text="@string/newNumPlayers" />
 	   	<EditText
-			android:id="@+id/newgameEditText03"
-		    android:layout_width="fill_parent" 
+			android:id="@+id/NewGameEditText03"
 		    android:layout_height="wrap_content" 
-		    android:text="6"
-		    android:gravity="right" />
+		    android:layout_width="fill_parent" 
+		    android:gravity="right"
+		    android:text="@string/newNumPlayersDefault" />
     </LinearLayout>
     
     <LinearLayout
 	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" >
 	    <TextView
-	    	android:id="@+id/newgameTextView04"
+		    android:layout_height="wrap_content"
 		    android:layout_width="150sp" 
-		    android:layout_height="wrap_content" 
-		    android:text="Number of turns"
 		    android:textSize="16sp"
-		    android:textColor="#111" />
+		    android:textColor="#111" 
+		    android:text="@string/newNumTurns" />
 	   	<EditText
-			android:id="@+id/newgameEditText04"
-		    android:layout_width="fill_parent" 
+			android:id="@+id/NewGameEditText04"
 		    android:layout_height="wrap_content" 
-		    android:text="5"
-		    android:gravity="right" />
+		    android:layout_width="fill_parent"
+		    android:gravity="right" 
+		    android:text="@string/newNumTurnsDefault" />
     </LinearLayout>
     
 	<Button
-		android:id="@+id/newgameButton01"
-	    android:layout_width="fill_parent" 
+		android:id="@+id/NewGameButton01"
 	    android:layout_height="wrap_content" 
-	    android:text="Create" />
+	    android:layout_width="fill_parent" 
+	    android:text="@string/create" />
 	<Button
-		android:id="@+id/newgameButton02"
-	    android:layout_width="fill_parent" 
+		android:id="@+id/NewGameButton02"
 	    android:layout_height="wrap_content" 
-	    android:text="Back" />
+	    android:layout_width="fill_parent" 
+	    android:text="@string/back" />
 </LinearLayout>

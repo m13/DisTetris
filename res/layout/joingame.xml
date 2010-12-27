@@ -21,13 +21,13 @@
 			android:id="@+id/Refresh"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="Refresh" />
+			android:text="@string/refresh" />
 			
 		<Button
 			android:id="@+id/Back"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="Back" />
+			android:text="@string/back" />
 	
 	</LinearLayout>
 </ScrollView>

@@ -34,7 +34,7 @@ public class Distetris extends Activity {
     }
 
     private void setButtons() {
-        Gallery g = (Gallery) findViewById(R.id.gallery);
+        Gallery g = (Gallery) findViewById(R.id.Gallery);
         g.setUnselectedAlpha(1f);
         g.setSpacing(1);
         g.setAdapter(new ImageAdapter(this));

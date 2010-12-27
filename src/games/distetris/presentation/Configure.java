@@ -18,23 +18,23 @@ public class Configure extends Activity {
         setContentView(R.layout.configure);
         Button b;
         
-        b = (Button) findViewById(R.id.back);
+        b = (Button) findViewById(R.id.Back);
         b.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	finish();
             }
         });
         
-        b = (Button) findViewById(R.id.save);
+        b = (Button) findViewById(R.id.Save);
         b.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	EditText ev = (EditText) findViewById(R.id.playername);
+            	EditText ev = (EditText) findViewById(R.id.PlayerName);
             	CtrlDomain.getInstance().setPlayerName(ev.getText().toString());
             	finish();
             }
         });
         
-        EditText et = (EditText) findViewById(R.id.playername);
+        EditText et = (EditText) findViewById(R.id.PlayerName);
         et.setText(CtrlDomain.getInstance().getPlayerName());
         
 		L.d("End");
