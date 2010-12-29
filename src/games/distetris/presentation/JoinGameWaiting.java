@@ -1,9 +1,6 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
-
-import java.io.IOException;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +20,9 @@ public class JoinGameWaiting extends Activity {
 
 			if (type.equals("WAITING_ROOM")) {
 				updateConnectedClients(b);
+			} else if (type.equals("SHUTDOWN")) {
+				Toast.makeText(getBaseContext(), "The server closed the connection", Toast.LENGTH_SHORT).show();
+				finish();
 			}
 
 		}
@@ -41,14 +41,24 @@ public class JoinGameWaiting extends Activity {
 		String serverName = bundle.getString("NAME");
 		String serverIP = bundle.getString("IP");
 		int serverPort = bundle.getInt("PORT");
-		Toast.makeText(getBaseContext(), "Received " + serverName + " " + serverIP + ":" + String.valueOf(serverPort), Toast.LENGTH_SHORT).show();
 
-		CtrlDomain.getInstance().setHandlerUI(handler);
+
+		
 		try {
+			CtrlDomain.getInstance().setHandlerUI(handler);
 			CtrlDomain.getInstance().serverTCPConnect(serverIP, serverPort);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Toast.makeText(getBaseContext(), "Couldn't connect to the server", Toast.LENGTH_SHORT).show();
+			finish();
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		CtrlDomain.getInstance().serverTCPDisconnect();
+
 	}
 
 	protected void updateConnectedClients(Bundle b) {

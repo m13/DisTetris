@@ -21,6 +21,8 @@ public class TCPServer extends Thread {
 	public TCPServer(Vector<Player> players, Integer numTeams, Integer numTurns) {
 		super();
 
+		setName("TCPServer");
+
 		this.players = players;
 
 		this.numTeams = numTeams;
@@ -48,7 +50,6 @@ public class TCPServer extends Thread {
 			}
 		
 		} catch (Exception e) {
-			L.d("S: Error", e);
 		}
 	}
 

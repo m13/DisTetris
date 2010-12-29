@@ -4,7 +4,6 @@ import games.distetris.storage.DbHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -50,7 +49,12 @@ public class CtrlDomain {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.getData().containsKey("MSG")) {
-					parserController(msg.getData().get("MSG").toString());
+					try {
+						parserController(msg.getData().get("MSG").toString());
+					} catch (Exception e) {
+						// TODO: notify the UI about the disconnection
+						e.printStackTrace();
+					}
 				}
 			}
 		};
@@ -73,12 +77,16 @@ public class CtrlDomain {
 		return GAME.getBoard();
 	}
 
-	private void parserController(String str) {
+	private void parserController(String str) throws Exception {
 		L.d(str);
 		String[] actionContent = str.split(" ", 2);
-		String[] args = actionContent[1].split(",");
+		String[] args = null;
+		if (actionContent.length > 1) {
+			args = actionContent[1].split(",");
+		}
 
 		if (actionContent[0].equals("WAITING_ROOM")) {
+			// The name of the players and the team they belong
 
 			String[] players_array = (String[]) unserialize(args[0]);
 
@@ -87,6 +95,15 @@ public class CtrlDomain {
 			Bundle b = new Bundle();
 			b.putString("type", "WAITING_ROOM");
 			b.putStringArray("players", players_array);
+			msg.setData(b);
+			handlerUI.sendMessage(msg);
+
+		} else if (actionContent[0].equals("SHUTDOWN")) {
+			// The server is closing, notify the UI
+
+			Message msg = new Message();
+			Bundle b = new Bundle();
+			b.putString("type", "SHUTDOWN");
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
@@ -250,19 +267,28 @@ public class CtrlDomain {
 		return this.serverNumTurns;
 	}
 
-	public void serverTCPStart() throws IOException {
+	public void serverTCPStart() throws Exception {
 		this.mode = MODE_SERVER;
 		NET.serverTCPStart(serverNumTeams, serverNumTurns);
 	}
 
 	public void serverTCPStop() {
-		this.mode = 0;
 		NET.serverTCPStop();
 	}
 
-	public void serverTCPConnect(String serverIP, int serverPort) throws IOException {
+	public void serverTCPConnect(String serverIP, int serverPort) throws Exception {
 		this.mode = MODE_CLIENT;
 		NET.serverTCPConnect(serverIP, serverPort);
+	}
+
+	public void serverTCPDisconnect() {
+		this.mode = 0;
+		NET.serverTCPDisconnect();
+	}
+
+	public void serverTCPDisconnectClients() {
+		this.mode = 0;
+		NET.serverTCPDisconnectClients();
 	}
 
 	public void setHandlerUI(Handler hand) {

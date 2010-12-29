@@ -18,6 +18,8 @@ public class TCPConnection extends Thread {
 	private Boolean keepRunning;
 
 	public TCPConnection(String ip, int port) {
+		super();
+
 		try {
 			this.ip = ip;
 			this.port = port;
@@ -28,6 +30,7 @@ public class TCPConnection extends Thread {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			CtrlNet.getInstance().removeConnection(this);
 		}
 	}
 
@@ -50,23 +53,43 @@ public class TCPConnection extends Thread {
 				}
 
 			} catch (Exception e) {
-				L.e("S: Error");
+				L.e("REMOVING ACTIVE CONNECTION");
+				CtrlNet.getInstance().removeConnection(this);
 			} finally {
+				CtrlNet.getInstance().removeConnection(this);
 				socket.close();
 			}
 		} catch (Exception e) {
-			L.e("C: Error");
+			L.e("REMOVING ACTIVE CONNECTION");
+			CtrlNet.getInstance().removeConnection(this);
+		}
+
+		L.d("Thread TCPConnection ended the run()");
+
+	}
+
+	public String in() throws Exception {
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String result = in.readLine();
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+			CtrlNet.getInstance().removeConnection(this);
+			throw new Exception();
 		}
 	}
 
-	public String in() throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		return in.readLine();
-	}
-
-	public void out(String content) throws IOException {
-		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		out.println(content);
+	public void out(String content) throws Exception {
+		PrintWriter out;
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+			out.println(content);
+		} catch (IOException e) {
+			e.printStackTrace();
+			CtrlNet.getInstance().removeConnection(this);
+			throw new Exception();
+		}
 	}
 
 	private void sendMsg(String type, String content) {
@@ -78,11 +101,12 @@ public class TCPConnection extends Thread {
 	}
 
 	public void close() {
+		L.d("Closing TCPConnection");
 		try {
 			this.keepRunning = false;
+			this.socket.shutdownInput();
 			this.socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

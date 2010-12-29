@@ -45,6 +45,7 @@ public class JoinGame extends Activity {
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtras( (Bundle)view.getTag() );
 					startActivity(i);
+					finish();
 				}
 			});
 			

@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class CtrlNet {
 	
-	public static Integer PORT = 5555;
+	public static Integer PORT = 17375;
 	
 	private static CtrlNet INSTANCE = null;
 
@@ -29,7 +29,16 @@ public class CtrlNet {
 
 	private WifiManager wifiManager;
 
-	
+	/*
+	 * 
+	 * 
+	 * 
+	 * CONTROLLER
+	 * 
+	 * 
+	 * 
+	 */
+
 	private CtrlNet() {
 		L.d("Created");
 
@@ -43,8 +52,18 @@ public class CtrlNet {
 		}
 		return INSTANCE;
 	}
-	
-	public void serverTCPStart(int numTeams, int numTurns) throws IOException {
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * SERVER TCP
+	 * 
+	 * 
+	 * 
+	 */
+
+	public void serverTCPStart(int numTeams, int numTurns) throws Exception {
 
 		// TODO: Revisar! Sergio's code
 		this.numTeams = numTeams;
@@ -53,6 +72,10 @@ public class CtrlNet {
 			teamPlayer.add(seq);
 		}
 		
+		// Clear previous connections (if any)
+		serverTCPStop();
+		serverTCPDisconnectClients();
+
 		// Creating server
 		this.threadTCPServer = new TCPServer(players, numTeams, numTurns);
 		this.threadTCPServer.start();
@@ -66,19 +89,7 @@ public class CtrlNet {
 		}
 
 		// Connecting like a normal client
-		this.threadTCPClient = new TCPConnection("127.0.0.1", PORT);
-		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
-		this.threadTCPClient.start();
-	}
-
-	
-	public void serverTCPConnect(String ip, int port) throws IOException {
-		//TODO: check if the connections of the vector are already closed
-		this.players.clear();
-
-		this.threadTCPClient = new TCPConnection(ip, port);
-		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
-		this.threadTCPClient.start();
+		serverTCPConnect("127.0.0.1", PORT);
 	}
 
 	public void serverTCPStop() {
@@ -88,50 +99,59 @@ public class CtrlNet {
 				;
 			}
 		}
+		this.threadTCPServer = null;
 		L.d("Closed");
 	}
 
+	public void serverTCPConnect(String ip, int port) throws Exception {
 
-	public void sendSignal(String string) {
-		try {
-			threadTCPClient.out(string);
-		} catch (IOException e) {
-			// TODO: catch exception correctly
-			e.printStackTrace();
-		}
-	}
-	
-	public void sendSignals(String string) {
-		TCPServerSend threadTCPServerSend = new TCPServerSend(players, string);
-		threadTCPServerSend.start();
+		// Disconnect from previous server (just in case)
+		serverTCPDisconnect();
+
+		this.threadTCPClient = new TCPConnection(ip, port);
+		this.threadTCPClient.setName("TCP client " + CtrlDomain.getInstance().getPlayerName());
+		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
+		this.threadTCPClient.start();
 	}
 
-
-	public void registerPlayer(int posPlayer, int chosenTeam) {
-		Integer pos = new Integer(posPlayer);
-		(teamPlayer.elementAt(chosenTeam)).add(pos);
-	}
-
-
-	public void nextPlayer() {
-		do {
-			pointerTeamPlayer++;
-			if (pointerTeamPlayer>=numTeams) {
-				pointerTeamPlayer = 0;
+	public void serverTCPDisconnect() {
+		L.d("Disconnecting TCP");
+		if (this.threadTCPClient != null && this.threadTCPClient.isAlive()) {
+			this.threadTCPClient.close();
+			while (this.threadTCPClient.isAlive()) {
+				;
 			}
-		} while (teamPlayer.get(pointerTeamPlayer).isEmpty());
-		
-		Integer first = teamPlayer.get(pointerTeamPlayer).remove(0);
-		teamPlayer.get(pointerTeamPlayer).add(first);
-		
-		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
-		try {
-			players.elementAt(firstPlayerPos).out("CONTINUE ");
-		} catch (IOException e) {
-			// TODO: catch disconnection correctly
-			e.printStackTrace();
 		}
+		this.threadTCPClient = null;
 	}
+
+	public void serverTCPDisconnectClients() {
+
+		// Notify all the clients that the server is going to shutdown
+		sendSignals("SHUTDOWN");
+
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+		}
+
+		// Close all the remaining connections
+		for (Player p : players) {
+			p.close();
+		}
+
+		players.clear();
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * SERVER UDP
+	 * 
+	 * 
+	 * 
+	 */
 
 	public void serverUDPStart() {
 		// If a previous server is already running, stop it
@@ -159,8 +179,114 @@ public class CtrlNet {
 				;
 			}
 		}
+		this.threadUDPServer = null;
 		L.d("Closed");
 	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * TCP COMMUNICATION / INFORMATION
+	 * 
+	 * 
+	 * 
+	 */
+
+	public void sendSignal(String string) throws Exception {
+		try {
+			threadTCPClient.out(string);
+		} catch (IOException e) {
+			// TODO: catch exception correctly
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendSignals(String string) {
+		TCPServerSend threadTCPServerSend = new TCPServerSend(players, string);
+		threadTCPServerSend.start();
+	}
+
+	public String[] serverTCPGetConnectedPlayersInfo() {
+		Vector<String> n = new Vector<String>();
+
+		for (int i = 0; i < players.size(); i++) {
+			n.add(players.get(i).getName() + "|" + players.get(i).getTeam());
+		}
+
+		String[] st = new String[n.size()];
+		n.toArray(st);
+
+		return st;
+	}
+
+	public Integer serverTCPGetConnectedPlayersNum() {
+		return this.players.size();
+	}
+
+	/**
+	 * ONLY call this function when a closed socket is found (exception),
+	 * because it will only remove the player from the game, it WON'T close the
+	 * connection.
+	 */
+	public void removeConnection(TCPConnection c) {
+
+		for (Player p : players) {
+			if (p.getConnection().equals(c)) {
+				this.players.remove(p);
+			}
+		}
+
+		// TODO: alert the UI that something wrong happened
+
+		CtrlDomain.getInstance().updatedPlayers();
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * OTHER
+	 * 
+	 * 
+	 * 
+	 */
+
+	public void registerPlayer(int posPlayer, int chosenTeam) {
+		Integer pos = new Integer(posPlayer);
+		(teamPlayer.elementAt(chosenTeam)).add(pos);
+	}
+
+
+	public void nextPlayer() {
+		do {
+			pointerTeamPlayer++;
+			if (pointerTeamPlayer>=numTeams) {
+				pointerTeamPlayer = 0;
+			}
+		} while (teamPlayer.get(pointerTeamPlayer).isEmpty());
+		
+		Integer first = teamPlayer.get(pointerTeamPlayer).remove(0);
+		teamPlayer.get(pointerTeamPlayer).add(first);
+		
+		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
+		try {
+			players.elementAt(firstPlayerPos).out("CONTINUE ");
+		} catch (Exception e) {
+			// TODO: finish game or try next player
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * NETWORK UTILITIES
+	 * 
+	 * 
+	 * 
+	 */
 
 	public InetAddress getBroadcastAddress() throws IOException {
 		DhcpInfo dhcp = wifiManager.getDhcpInfo();
@@ -197,21 +323,5 @@ public class CtrlNet {
 		this.wifiManager = systemService;
 	}
 
-	public String[] serverTCPGetConnectedPlayersInfo() {
-		Vector<String> n = new Vector<String>();
-
-		for (int i = 0; i < players.size(); i++) {
-			n.add(players.get(i).getName() + "|" + players.get(i).getTeam());
-		}
-
-		String[] st = new String[n.size()];
-		n.toArray(st);
-
-		return st;
-	}
-
-	public Integer serverTCPGetConnectedPlayersNum() {
-		return this.players.size();
-	}
 
 }

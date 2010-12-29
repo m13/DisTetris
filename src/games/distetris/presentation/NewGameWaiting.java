@@ -1,13 +1,11 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
-
-import java.io.IOException;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,15 @@ public class NewGameWaiting extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			updateConnectedClients(msg);
+
+			Bundle b = msg.getData();
+			String type = b.getString("type");
+
+			if (type.equals("WAITING_ROOM")) {
+				updateConnectedClients(b);
+			} else if (type.equals("SHUTDOWN")) {
+				Toast.makeText(getBaseContext(), "The server was closed", Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	};
@@ -40,8 +46,9 @@ public class NewGameWaiting extends Activity {
 		try {
 			CtrlDomain.getInstance().serverTCPStart();
 			CtrlDomain.getInstance().serverUDPStart();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Toast.makeText(getBaseContext(), "Couldn't create the server", Toast.LENGTH_SHORT).show();
+			finish();
 		}
 
 	}
@@ -55,12 +62,20 @@ public class NewGameWaiting extends Activity {
 
 	}
 
-	private void updateConnectedClients(Message msg) {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			CtrlDomain.getInstance().serverTCPDisconnectClients();
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void updateConnectedClients(Bundle b) {
 
 		// Each string contains the name of the player and the "id" of the team separated by |
 		// For example user viciado playing in team 3 would result in the string viciado|3
 
-		Bundle b = msg.getData();
 		String[] users = b.getStringArray("players");
 
 		String str = "";

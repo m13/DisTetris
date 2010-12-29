@@ -1,6 +1,5 @@
 package games.distetris.domain;
 
-import java.io.IOException;
 import java.util.Vector;
 
 public class TCPServerSend extends Thread {
@@ -10,17 +9,20 @@ public class TCPServerSend extends Thread {
 
 	public TCPServerSend(Vector<Player> players, String data) {
 		super();
+
+		setName("TCPServerSend");
+
 		this.players = players;
 		this.data = data;
 	}
 
 	public void run() {
 
-		for (Player p : players) {
+		for (int i = (players.size() - 1); i >= 0; i--) {
 			try {
-				p.out(data);
-			} catch (IOException e) {
-				// TODO: check for disconnection
+				players.get(i).out(data);
+			} catch (Exception e) {
+				// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
 			}
 		}
 

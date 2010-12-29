@@ -40,6 +40,7 @@ public class NewGame extends Activity {
 				i.setClass(v.getContext(), NewGameWaiting.class);
     			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     			startActivity(i);
+				finish();
             }
         });
         

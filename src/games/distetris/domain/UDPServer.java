@@ -1,15 +1,14 @@
 package games.distetris.domain;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.security.InvalidParameterException;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 public class UDPServer extends Thread {
 
@@ -30,6 +29,9 @@ public class UDPServer extends Thread {
 	 * answers (in case there are multiple servers)
 	 */
 	public UDPServer(int mode, Handler handler) {
+		super();
+
+		setName("UPDServer");
 
 		if (mode != MODE_SERVER && mode != MODE_CLIENT) {
 			throw new InvalidParameterException();
@@ -43,9 +45,10 @@ public class UDPServer extends Thread {
 		try {
 			socket = new DatagramSocket(CtrlNet.PORT);
 			socket.setBroadcast(true);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (SocketException e) {
+			L.e("Exception creating socket", e);
 		}
+
 	}
 
 	public void run() {
@@ -99,7 +102,6 @@ public class UDPServer extends Thread {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -115,7 +117,7 @@ public class UDPServer extends Thread {
 			socket.send(packet);
 			L.d("Datagram sent");
 		} catch (Exception e) {
-			Log.e("UDPServer", "Exception during sendBroadcast", e);
+			L.e("Exception during sendBroadcast", e);
 		}
 	}
 
@@ -125,7 +127,7 @@ public class UDPServer extends Thread {
 			socket.send(packet);
 			L.d("Datagram sent");
 		} catch (Exception e) {
-			Log.e("UDPServer", "Exception during sendIP", e);
+			L.e("Exception during sendIP", e);
 		}
 	}
 
