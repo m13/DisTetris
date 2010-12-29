@@ -18,15 +18,13 @@ public class CtrlNet {
 	
 	private static CtrlNet INSTANCE = null;
 
-	private Vector<TCPConnection> connections;
+	private Vector<Player> players;
 	private Vector<Vector<Integer>> teamPlayer;
 	private Integer pointerTeamPlayer = 0;
 	
-	private Integer numPlayers;
 	private Integer numTeams;
 	
 	private TCPServer threadTCPServer;
-	private TCPServerSend threadTCPServerSend;
 	private TCPConnection threadTCPClient;
 	private UDPServer threadUDPServer;
 
@@ -36,7 +34,7 @@ public class CtrlNet {
 	private CtrlNet() {
 		L.d("Created");
 
-		this.connections = new Vector<TCPConnection>();
+		this.players = new Vector<Player>();
 		this.teamPlayer = new Vector<Vector<Integer>>();
 	}
 	
@@ -47,29 +45,41 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 	
-	public void serverTCPStart(int numTeams, int numPlayers, int numTurns, Handler handler) {
-		this.numPlayers = numPlayers;
+	public void serverTCPStart(int numTeams, int numTurns, Handler handler) {
+
+		// TODO: Revisar! Sergio's code
 		this.numTeams = numTeams;
-		
 		for (int i = 0; i<(numTeams); i++) {
 			Vector<Integer> seq = new Vector<Integer>();
 			teamPlayer.add(seq);
 		}
 		
-		this.threadTCPServer = new TCPServer(connections, numTeams, numPlayers, numTurns, handler);
+		// Creating server
+		this.threadTCPServer = new TCPServer(players, numTeams, numTurns);
 		this.threadTCPServer.start();
+
+		// Waiting for the server to start
+		while (!this.threadTCPServer.isAlive()) {
+			;
+		}
+		while (!this.threadTCPServer.isListening()) {
+			;
+		}
+
+		// Connecting like a normal client
+		this.threadTCPClient = new TCPConnection("127.0.0.1", PORT, handler);
+		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
+		this.threadTCPClient.start();
 	}
 
 	
 	public void serverTCPConnect(String ip, int port, Handler handler) {
 		//TODO: check if the connections of the vector are already closed
-		this.connections.clear();
+		this.players.clear();
 
 		this.threadTCPClient = new TCPConnection(ip, port, handler);
-		this.connections.add(threadTCPClient);
+		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
 		this.threadTCPClient.start();
-
-		this.threadTCPClient.out(CtrlDomain.getInstance().getServerName());
 	}
 
 	public void serverTCPStop() {
@@ -88,17 +98,14 @@ public class CtrlNet {
 	}
 	
 	public void sendSignals(String string) {
-		for (TCPConnection conn : connections) {
-			conn.out(string);
-		}
+		TCPServerSend threadTCPServerSend = new TCPServerSend(players, string);
+		threadTCPServerSend.start();
 	}
 
 
-	public int registerPlayer(int posPlayer, int chosenTeam) {
+	public void registerPlayer(int posPlayer, int chosenTeam) {
 		Integer pos = new Integer(posPlayer);
 		(teamPlayer.elementAt(chosenTeam)).add(pos);
-		numPlayers--;
-		return numPlayers;
 	}
 
 
@@ -114,7 +121,7 @@ public class CtrlNet {
 		teamPlayer.get(pointerTeamPlayer).add(first);
 		
 		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
-		connections.elementAt(firstPlayerPos).out("CONTINUE ");
+		players.elementAt(firstPlayerPos).out("CONTINUE ");
 	}
 
 	public void serverUDPStart() {
@@ -184,13 +191,11 @@ public class CtrlNet {
 		this.wifiManager = systemService;
 	}
 
-	public String[] serverTCPGetConnectedUsers() {
+	public String[] serverTCPGetConnectedPlayers() {
 		Vector<String> n = new Vector<String>();
 
-		for (int i = 0; i < connections.size(); i++) {
-			//TODO: real player name
-			//n.add(connections.get(i).getName());
-			n.add(i + "");
+		for (int i = 0; i < players.size(); i++) {
+			n.add(players.get(i).getName());
 		}
 
 		String[] st = new String[n.size()];

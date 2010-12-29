@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 
 public class CtrlDomain {
 
@@ -24,7 +24,7 @@ public class CtrlDomain {
 	private CtrlNet NET = null;
 	private CtrlGame GAME = null;
 
-	private Handler handler;
+	private Handler handlerDomain;
 	private Handler handlerUI;
 
 	// dynamic configuration
@@ -39,15 +39,13 @@ public class CtrlDomain {
 
 	// dynamic configuration (server)
 	private String serverName;
-	private Integer numPlayers = 1;
-	private Integer freeSlots = 1;
-	private Integer numTeams = 2;
-	private Integer numTurns = 2;
+	private Integer serverNumTeams;
+	private Integer serverNumTurns;
 
 	private CtrlDomain() {
 		L.d("Created");
 
-		this.handler = new Handler() {
+		this.handlerDomain = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.getData().containsKey("MSG")) {
@@ -70,11 +68,6 @@ public class CtrlDomain {
 		CtrlGame.getInstance().setDbHelper(dbHelper);
 	}
 
-	public void startNet() {
-		NET.serverTCPStart(numTeams, numPlayers, numTurns, handler);
-		NET.serverTCPConnect("10.0.2.2", CtrlNet.PORT, handler);
-	}
-
 	public int[][] getBoard() {
 		return GAME.getBoard();
 	}
@@ -84,7 +77,19 @@ public class CtrlDomain {
 		String[] actionContent = str.split(" ", 2);
 		String[] args = actionContent[1].split(",");
 
-		if (actionContent[0].equals("WAITING")) {
+		if (actionContent[0].equals("WAITING_ROOM")) {
+
+			String[] players_array = (String[]) unserialize(args[0]);
+
+			// Update the client UI
+			Message msg = new Message();
+			Bundle b = new Bundle();
+			b.putString("type", "WAITING_ROOM");
+			b.putStringArray("players", players_array);
+			msg.setData(b);
+			handlerUI.sendMessage(msg);
+
+		} else if (actionContent[0].equals("WAITING")) {
 			// 1: assigned idPlayer
 			// 2: number of teams
 			// 3: num of turns
@@ -95,11 +100,14 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("JOIN")) {
 			// 1: idPlayer == element position @ vector connections
 			// 2: chosen team
-			freeSlots = NET.registerPlayer(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
+			NET.registerPlayer(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
+			// TODO: fix it?
+			/*
 			if (freeSlots == 0) {
 				NET.sendSignals("START " + serialize(GAME.getBoard()));
 				NET.nextPlayer();
 			}
+			*/
 		} else if (actionContent[0].equals("START")) {
 			// 1: serialized Board
 			round++;
@@ -148,7 +156,8 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("END")) {
 			// 1: serialized Board
 			GAME.setBoard(unserialize(actionContent[1]));
-			GAME.saveScore(numPlayers==numTeams);
+			// TODO: fix it?
+			// GAME.saveScore(numPlayers==numTeams);
 		} else if (actionContent[0].equals("ERROR")) {
 			// 1: String error
 			GAME.showError(actionContent[1]);
@@ -178,13 +187,13 @@ public class CtrlDomain {
 			return new String();
 		}
 
-		return Base64.encodeToString(result, Base64.NO_WRAP);
+		return games.distetris.domain.Base64.encodeToString(result, games.distetris.domain.Base64.NO_WRAP);
 	}
 
 	// move?
 	private Object unserialize(String str) {
 		Object object = null;
-		byte[] bytes = Base64.decode(str, Base64.NO_WRAP);
+		byte[] bytes = games.distetris.domain.Base64.decode(str, games.distetris.domain.Base64.NO_WRAP);
 
 		try {
 			ByteArrayInputStream bs = new ByteArrayInputStream(bytes);
@@ -214,10 +223,6 @@ public class CtrlDomain {
 		NET.setWifiManager(systemService);
 	}
 
-	public String[] serverTCPGetConnectedUsers() {
-		return NET.serverTCPGetConnectedUsers();
-	}
-
 	public String getPlayerName() {
 		return GAME.getPlayerName();
 	}
@@ -226,32 +231,27 @@ public class CtrlDomain {
 		GAME.setPlayerName(name);
 	}
 
-	public void serverConfigure(String name, int numTeams, int numPlayers, int numTurns) {
+	public void serverConfigure(String name, int numTeams, int numTurns) {
 		this.serverName = name;
-		this.numTeams = numTeams;
-		this.numPlayers = numPlayers;
-		this.numTurns = numTurns;
+		this.serverNumTeams = numTeams;
+		this.serverNumTurns = numTurns;
 	}
 
 	public String getServerName() {
 		return this.serverName;
 	}
 
-	public Integer getNumTeams() {
-		return this.numTeams;
+	public Integer getServerNumTeams() {
+		return this.serverNumTeams;
 	}
 
-	public Integer getNumPlayers() {
-		return this.numPlayers;
-	}
-
-	public Integer getNumTurns() {
-		return this.numTurns;
+	public Integer getServerNumTurns() {
+		return this.serverNumTurns;
 	}
 
 	public void serverTCPStart() {
 		this.mode = MODE_SERVER;
-		NET.serverTCPStart(numTeams, numPlayers, numTurns, handler);
+		NET.serverTCPStart(serverNumTeams, serverNumTurns, handlerDomain);
 	}
 
 	public void serverTCPStop() {
@@ -261,7 +261,7 @@ public class CtrlDomain {
 
 	public void serverTCPConnect(String serverIP, int serverPort) {
 		this.mode = MODE_CLIENT;
-		NET.serverTCPConnect(serverIP, serverPort, handler);
+		NET.serverTCPConnect(serverIP, serverPort, handlerDomain);
 	}
 
 	public void setHandlerUI(Handler hand) {
@@ -269,7 +269,13 @@ public class CtrlDomain {
 	}
 
 	public void updatedPlayers() {
-		handlerUI.sendEmptyMessage(0);
+
+		//new_player.out("WAITING " + (players.size()) + "," + (numTeams - 1) + "," + numTurns);
+
+		String[] players_array = NET.serverTCPGetConnectedPlayers();
+
+		// Send the info to all the connected clients
+		NET.sendSignals("WAITING_ROOM " + serialize(players_array));
 	}
 	
 	

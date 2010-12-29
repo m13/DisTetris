@@ -12,10 +12,24 @@ public class L {
 		}
 	}
 
+	public static void d(String s, Exception e) {
+		if (VERBOSE) {
+			StackTraceElement element = Thread.currentThread().getStackTrace()[3];
+			android.util.Log.d(TAG, "[" + element.getFileName() + "][" + element.getMethodName() + "] " + s, e);
+		}
+	}
+
 	public static void e(String s) {
 		if (VERBOSE) {
 			StackTraceElement element = Thread.currentThread().getStackTrace()[3];
 			android.util.Log.d(TAG, "[" + element.getFileName() + "][" + element.getMethodName() + "] " + s);
+		}
+	}
+
+	public static void e(String s, Exception e) {
+		if (VERBOSE) {
+			StackTraceElement element = Thread.currentThread().getStackTrace()[3];
+			android.util.Log.d(TAG, "[" + element.getFileName() + "][" + element.getMethodName() + "] " + s, e);
 		}
 	}
 }

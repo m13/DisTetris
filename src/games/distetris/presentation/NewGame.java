@@ -34,7 +34,7 @@ public class NewGame extends Activity {
 				Integer numPlayers = Integer.parseInt(textNumPlayers.getText().toString());
 				Integer numTurns = Integer.parseInt(textNumTurns.getText().toString());
 
-				CtrlDomain.getInstance().serverConfigure(nameServer, numTeams, numPlayers, numTurns);
+				CtrlDomain.getInstance().serverConfigure(nameServer, numTeams, numTurns);
 
                 Intent i = new Intent();
 				i.setClass(v.getContext(), NewGameWaiting.class);
