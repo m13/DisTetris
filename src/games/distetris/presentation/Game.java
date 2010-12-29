@@ -16,7 +16,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-public class Game extends Activity implements GestureDetector.OnGestureListener {
+public class Game extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 	private GameView v;
 	private CtrlDomain dc;
 	private TimerTask gamelooptask;
@@ -205,6 +205,24 @@ public class Game extends Activity implements GestureDetector.OnGestureListener 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 
+		return false;
+	}
+
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onDoubleTapEvent(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapConfirmed(MotionEvent e) {
+		dc.currentPieceRotateLeft();
 		return false;
 	}
     
