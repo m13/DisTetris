@@ -4,18 +4,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import games.distetris.domain.CtrlDomain;
-import games.distetris.domain.L;
 import android.app.Activity;
-import android.gesture.GestureOverlayView;
-import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
+
+/**
+ * Game activity. Player's zone
+ * 
+ * @author Jordi Castells
+ *
+ */
 public class Game extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 	private GameView v;
 	private CtrlDomain dc;
@@ -182,7 +184,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		Log.d("FLING","vx: "+velocityX+" vy: "+velocityY);
 		if(velocityY>threshold_vy){
 			dc.currentPieceFastFall();
 		}
@@ -211,7 +212,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
