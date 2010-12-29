@@ -14,7 +14,7 @@ public class NewGameWaiting extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			updateConnectedClients();
+			updateConnectedClients(msg);
 		}
 
 	};
@@ -47,8 +47,11 @@ public class NewGameWaiting extends Activity {
 
 	}
 
-	private void updateConnectedClients() {
-		String[] users = CtrlDomain.getInstance().serverTCPGetConnectedUsers();
+	private void updateConnectedClients(Message msg) {
+		
+		Bundle b = msg.getData();
+		String[] users = b.getStringArray("players");
+
 		String str = "";
 		for (int i = 0; i < users.length; i++) {
 			str += users[i] + "\n";

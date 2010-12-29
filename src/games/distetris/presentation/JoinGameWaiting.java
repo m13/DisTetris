@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class JoinGameWaiting extends Activity {
@@ -13,6 +14,14 @@ public class JoinGameWaiting extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+
+			Bundle b = msg.getData();
+			String type = b.getString("type");
+
+			if (type.equals("WAITING_ROOM")) {
+				updateConnectedClients(b);
+			}
+
 		}
 	};
 
@@ -33,5 +42,16 @@ public class JoinGameWaiting extends Activity {
 
 		CtrlDomain.getInstance().setHandlerUI(handler);
 		CtrlDomain.getInstance().serverTCPConnect(serverIP, serverPort);
+	}
+
+	protected void updateConnectedClients(Bundle b) {
+		String[] users = b.getStringArray("players");
+
+		String str = "";
+		for (int i = 0; i < users.length; i++) {
+			str += users[i] + "\n";
+		}
+		TextView tv = ((TextView) findViewById(R.id.TextView01));
+		tv.setText("Usuarios conectados:\n" + str);
 	}
 }

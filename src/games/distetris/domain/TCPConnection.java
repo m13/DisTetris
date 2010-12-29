@@ -40,13 +40,13 @@ public class TCPConnection extends Thread {
 		}
 	}
 
-	public TCPConnection(Socket socket, Handler handler) {
+	public TCPConnection(Socket socket) {
 		try {
 			this.socket = socket;
 			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			this.out = new PrintWriter(socket.getOutputStream(), true);
 
-			this.handler = handler;
+			this.handler = null;
 			this.keepRunning = true;
 
 		} catch (IOException e) {

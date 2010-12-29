@@ -5,53 +5,47 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import android.os.Handler;
-import android.util.Log;
-
 public class TCPServer extends Thread {
 	
 	ServerSocket serverSocket;
 
-	private Vector<TCPConnection> connections;
+	private Vector<Player> players;
 
 	private Integer numTeams;
-	private Integer numPlayers;
 	private Integer numTurns;
 
 	private Boolean keepRunning;
-
-	private Handler handler;
+	private Boolean listening;
 	
-	public TCPServer(Vector<TCPConnection> connections, int numTeams, int numPlayers, int numTurns, Handler handler) {
+	public TCPServer(Vector<Player> players, int numTeams, int numTurns) {
 		super();
 
-		this.connections = connections;
+		this.players = players;
 
 		this.numTeams = numTeams;
-		this.numPlayers = numPlayers;
 		this.numTurns = numTurns;
 
-		this.handler = handler;
-
 		this.keepRunning = true;
+		this.listening = false;
 	}
 	
 	public void run() {
 	
 		try {
-			Log.d("TCP", "S: Connecting...");
+			L.d("S: Connecting...");
 			serverSocket = new ServerSocket(CtrlNet.PORT);
+
+			this.listening = true;
 			
 			while (keepRunning) {
 				Socket client = serverSocket.accept();
-				TCPConnection conn = new TCPConnection(client, handler);
-				connections.add(conn);
-				conn.out("WAITING " + (connections.size()) + "," + (numTeams - 1) + "," + numTurns);
+				Player new_player = new Player(new TCPConnection(client));
+				players.add(new_player);
 				CtrlDomain.getInstance().updatedPlayers();
 			}
 		
 		} catch (Exception e) {
-			Log.e("TCP", "S: Error", e);
+			L.d("S: Error", e);
 		}
 	}
 
@@ -62,5 +56,9 @@ public class TCPServer extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Boolean isListening() {
+		return this.listening;
 	}
 }
