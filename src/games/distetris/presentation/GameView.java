@@ -101,7 +101,6 @@ public class GameView extends View implements Listener {
 	 */
 	private void drawPiece(Canvas canvas) {
 		Piece p 			= dc.getCurrentPiece();
-		byte[][] pmatrix 	= p.getPieceMatrix();
 		int psize 			= PieceConstants.PIECESIZE;
 		
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
@@ -132,6 +131,11 @@ public class GameView extends View implements Listener {
 		canvas.drawRect(left, top, right, bottom, strokepaint);
 	}
 	
+	/**
+	 * Draws All the board
+	 * @param canvas
+	 * @param board
+	 */
 	private void drawBoard(Canvas canvas, int[][] board) {
 		
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
@@ -262,7 +266,7 @@ public class GameView extends View implements Listener {
 	 * @param y
 	 */
 	public void setPieceBoardPosFromScreenPos(float x, float y){
-		int bc = calcBoardRowFromScreenX(x);
+		int bc = calcBoardColFromScreenX(x);
 		if(bc==-1) return;
 		dc.getCurrentPiece().y = bc;
 	}
@@ -271,8 +275,9 @@ public class GameView extends View implements Listener {
 	 * Calculate Board column from screen x
 	 * @param x
 	 * @return
+	 * @NOTE Needs optimize (like calcBoardRowFromScreenY)
 	 */
-	private int calcBoardRowFromScreenX(float x) {
+	public int calcBoardColFromScreenX(float x) {
 		int limitright = boardw*SQSIZE + SQSIZE;
 		
 		if(x>limitright){
@@ -286,6 +291,64 @@ public class GameView extends View implements Listener {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Calcs the row position from an y in screen pixels
+	 * 
+	 * @param y Screen pixels vertical
+	 * @return board row number
+	 */
+	public int calcBoardRowFromScreenY(float y){
+		
+		int limitbottom = getHeight();
+		int limittop	= limitbottom - boardh*SQSIZE;
+		int boardhinpx = boardh*SQSIZE;
+		
+		if(y>limitbottom || y<limittop) return -1;
+		
+		return (int) (((y-limittop)/boardhinpx)*boardh);
+	}
+	
+	/**
+	 * Checks if an x,y pair of values is inside the touch zone of the
+	 * current playing piece
+	 * 
+	 * @param x x screen value
+	 * @param y y screen value
+	 * @return True/false 
+	 */
+	public boolean touchedInPlayPiece(float x, float y) {
+		/*Piece p				= dc.getCurrentPiece();
+		int psize 			= PieceConstants.PIECESIZE;
+		
+		int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
+		int cc = 5;
+		int left = p.x * SQSIZE;
+		int top = linezero + p.y *SQSIZE;
+		int right = p.x * SQSIZE+ psize*SQSIZE;
+		int bottom = linezero + p.y * SQSIZE + psize*SQSIZE;
+		
+		if(x>left && x<right && y>top && y<bottom) return true;
+		
+		return false;*/
+		
+		int tc = calcBoardColFromScreenX(x);
+		int tr = calcBoardRowFromScreenY(y);
+		Piece p				= dc.getCurrentPiece();
+		int psize 			= PieceConstants.PIECESIZE;
+		int left 	= p.y;
+		int right 	= p.y + psize;
+		int top		= p.x;
+		int bott	= p.x + psize;
+		
+		Log.d("touchedInPlayPiece","tr:"+tr+" tc:"+tc);
+		Log.d("PiecePosition","x:"+left+" y:"+top);
+		
+		if(tc >= left && tc <= right
+			&& tr<=bott && tr>=top	) return true;
+		
+		return false;
 	}
 	
 }

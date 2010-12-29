@@ -24,6 +24,9 @@ public class Board implements Serializable {
 	private Piece currentpiece;
 	private Piece nextpiece;
 	
+	/**
+	 * Creates a Board for testing
+	 */
 	private void testboard(){
 		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
 		board[ROWS-3][1] = Color.parseColor("#FFFF0000");

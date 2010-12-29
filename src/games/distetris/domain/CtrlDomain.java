@@ -326,4 +326,8 @@ public class CtrlDomain {
 		return this.GAME.isGameOver();
 	}
 
+	public boolean currentPieceCollisionRC(int row, int col) {
+		return this.GAME.currentPieceCollisionRC(row,col);
+	}
+
 }

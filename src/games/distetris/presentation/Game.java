@@ -8,6 +8,7 @@ import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -21,6 +22,7 @@ public class Game extends Activity {
 	private Timer refreshviewtimer = new Timer();
 	private int mseconds_actualize = 500;
 	private int mseconds_viewactualize = 10;
+	private boolean movepiece = false;
 
 	
     @Override
@@ -39,12 +41,25 @@ public class Game extends Activity {
     }
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			gameLoop();
+	public boolean onTouchEvent(MotionEvent event) {		
+		int action = event.getAction();
+
+		if(action == MotionEvent.ACTION_DOWN){	
+			if(v.touchedInPlayPiece(event.getX(),event.getY())){
+				this.movepiece = true;
+			}
 		}
-		else if(event.getAction() == MotionEvent.ACTION_MOVE){
-			v.setPieceBoardPosFromScreenPos(event.getX(), event.getY());	
+		else if(action == MotionEvent.ACTION_MOVE){			
+			if(this.movepiece){
+				int piece_col = v.calcBoardColFromScreenX(event.getX());
+				
+				if(piece_col!=-1 && dc.currentPieceCollisionRC(dc.getCurrentPiece().y,piece_col)==false){
+					dc.getCurrentPiece().y = piece_col;	
+				}
+			}
+		}
+		else if(action == MotionEvent.ACTION_UP){
+			this.movepiece = false;
 		}
 		
 		return true;
@@ -54,8 +69,6 @@ public class Game extends Activity {
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		
-		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
 			if(dc.isGameOver()) {

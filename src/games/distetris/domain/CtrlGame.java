@@ -181,4 +181,11 @@ public class CtrlGame {
 	public boolean isGameOver() {
 		return this.board.gameOver();
 	}
+
+	public boolean currentPieceCollisionRC(int row, int col) {
+		Piece pf = new Piece(getCurrentPiece().getType(),getCurrentPiece().getRotation());
+		pf.x = row;
+		pf.y = col;
+		return !this.board.isMovementPossible(pf);
+	}
 }
