@@ -363,4 +363,15 @@ public class CtrlDomain {
 		return this.handlerDomain;
 	}
 
+	public boolean currentPieceCollisionRC(int row, int col) {
+		return this.GAME.currentPieceCollisionRC(row,col);
+	}
+
+	/**
+	 * Drop The piece to the bottom
+	 */
+	public void currentPieceFastFall() {
+		this.GAME.currentPieceFastFall();	
+	}
+
 }

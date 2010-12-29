@@ -4,14 +4,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import games.distetris.domain.CtrlDomain;
-import games.distetris.domain.L;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-public class Game extends Activity {
+
+/**
+ * Game activity. Player's zone
+ * 
+ * @author Jordi Castells
+ *
+ */
+public class Game extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 	private GameView v;
 	private CtrlDomain dc;
 	private TimerTask gamelooptask;
@@ -21,17 +28,20 @@ public class Game extends Activity {
 	private Timer refreshviewtimer = new Timer();
 	private int mseconds_actualize = 500;
 	private int mseconds_viewactualize = 10;
-
+	private boolean movepiece = false;
+	private GestureDetector gestureScanner;
+	private static int threshold_vy = 800;
+	private static int threshold_vx = 500;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		L.d("Start");
 
         v = new GameView(getBaseContext());
         setContentView(v);
-
-		L.d("End");
+        
+        gestureScanner = new GestureDetector(this);
+		
 		dc = CtrlDomain.getInstance();
 		//called twice. One for the first piece, next for the second piece
 		dc.setNewRandomPiece();
@@ -39,23 +49,37 @@ public class Game extends Activity {
     }
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			gameLoop();
+	public boolean onTouchEvent(MotionEvent event) {		
+		int action = event.getAction();
+
+		if(action == MotionEvent.ACTION_DOWN){	
+			if(v.touchedInPlayPiece(event.getX(),event.getY())){
+				this.movepiece = true;
+			}
 		}
-		else if(event.getAction() == MotionEvent.ACTION_MOVE){
-			v.setPieceBoardPosFromScreenPos(event.getX(), event.getY());	
+		else if(action == MotionEvent.ACTION_MOVE){			
+			if(this.movepiece){
+				int piece_col = v.calcBoardColFromScreenX(event.getX());
+				
+				if(piece_col!=-1 && !dc.currentPieceCollisionRC(dc.getCurrentPiece().x,piece_col)){
+					dc.getCurrentPiece().y = piece_col;	
+				}
+				else{
+					this.movepiece = false;
+				}
+			}
+		}
+		else if(action == MotionEvent.ACTION_UP){
+			this.movepiece = false;
 		}
 		
-		return true;
+		return gestureScanner.onTouchEvent(event);
 	}
     
 	/**
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		
-		
 		//if current piece collides
 		if(dc.nextStepPieceCollision()){
 			if(dc.isGameOver()) {
@@ -145,6 +169,62 @@ public class Game extends Activity {
 		super.onStop();
 	}
 
-	
+
+	public void onLongPress(MotionEvent e)
+	{
+
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		if(velocityY>threshold_vy){
+			dc.currentPieceFastFall();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+
+		return false;
+	}
+
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean onDoubleTapEvent(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapConfirmed(MotionEvent e) {
+		dc.currentPieceRotateLeft();
+		return false;
+	}
     
 }

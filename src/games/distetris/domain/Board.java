@@ -24,6 +24,9 @@ public class Board implements Serializable {
 	private Piece currentpiece;
 	private Piece nextpiece;
 	
+	/**
+	 * Creates a Board for testing
+	 */
 	private void testboard(){
 		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
 		board[ROWS-3][1] = Color.parseColor("#FFFF0000");
@@ -161,7 +164,24 @@ public class Board implements Serializable {
 		return playersScore;
 	}
 	
-
+	/**
+	 * FastFall the current piece to the last position where
+	 * it can be and add it to the board
+	 */
+	public void currentPieceFastFall() {
+		int cx = this.currentpiece.x;
+		int r;
+		
+		for(r=cx;r<ROWS;r++){
+			currentpiece.x++;
+			if(!isMovementPossible(currentpiece)){
+				currentpiece.x--;
+				this.addPiece(currentpiece);
+				break;
+			}
+		}	
+	}
+	
 	
 	
 	//GETTERS AND SETTERS
@@ -185,5 +205,6 @@ public class Board implements Serializable {
 	public Piece getNextpiece() {
 		return nextpiece;
 	}
-	
+
+
 }
