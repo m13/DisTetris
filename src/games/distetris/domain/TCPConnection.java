@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 
 public class TCPConnection extends Thread {
@@ -16,23 +15,15 @@ public class TCPConnection extends Thread {
 	private int port;
 	private Socket socket;
 
-	private PrintWriter out;
-	private BufferedReader in;
-
-	private Handler handler;
-
 	private Boolean keepRunning;
 
-	public TCPConnection(String ip, int port, Handler handler) {
+	public TCPConnection(String ip, int port) {
 		try {
 			this.ip = ip;
 			this.port = port;
 
 			this.socket = new Socket(ip, port);
-			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			this.out = new PrintWriter(socket.getOutputStream(), true);
 
-			this.handler = handler;
 			this.keepRunning = true;
 
 		} catch (IOException e) {
@@ -41,19 +32,10 @@ public class TCPConnection extends Thread {
 	}
 
 	public TCPConnection(Socket socket) {
-		try {
-			this.socket = socket;
-			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			this.out = new PrintWriter(socket.getOutputStream(), true);
+		this.socket = socket;
 
-			this.handler = null;
-			this.keepRunning = true;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.keepRunning = true;
 	}
-
 
 	@Override
 	public void run() {
@@ -78,10 +60,12 @@ public class TCPConnection extends Thread {
 	}
 
 	public String in() throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		return in.readLine();
 	}
 
-	public void out(String content) {
+	public void out(String content) throws IOException {
+		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		out.println(content);
 	}
 
@@ -90,7 +74,7 @@ public class TCPConnection extends Thread {
 		Bundle data = new Bundle();
 		data.putString(type, content);
 		msg.setData(data);
-		handler.sendMessage(msg);
+		CtrlDomain.getInstance().getHandlerDomain().sendMessage(msg);
 	}
 
 	public void close() {

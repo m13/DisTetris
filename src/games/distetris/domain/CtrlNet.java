@@ -3,7 +3,6 @@ package games.distetris.domain;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -45,7 +44,7 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 	
-	public void serverTCPStart(int numTeams, int numTurns, Handler handler) {
+	public void serverTCPStart(int numTeams, int numTurns) throws IOException {
 
 		// TODO: Revisar! Sergio's code
 		this.numTeams = numTeams;
@@ -67,17 +66,17 @@ public class CtrlNet {
 		}
 
 		// Connecting like a normal client
-		this.threadTCPClient = new TCPConnection("127.0.0.1", PORT, handler);
+		this.threadTCPClient = new TCPConnection("127.0.0.1", PORT);
 		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
 		this.threadTCPClient.start();
 	}
 
 	
-	public void serverTCPConnect(String ip, int port, Handler handler) {
+	public void serverTCPConnect(String ip, int port) throws IOException {
 		//TODO: check if the connections of the vector are already closed
 		this.players.clear();
 
-		this.threadTCPClient = new TCPConnection(ip, port, handler);
+		this.threadTCPClient = new TCPConnection(ip, port);
 		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
 		this.threadTCPClient.start();
 	}
@@ -94,7 +93,12 @@ public class CtrlNet {
 
 
 	public void sendSignal(String string) {
-		threadTCPClient.out(string);
+		try {
+			threadTCPClient.out(string);
+		} catch (IOException e) {
+			// TODO: catch exception correctly
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendSignals(String string) {
@@ -121,7 +125,12 @@ public class CtrlNet {
 		teamPlayer.get(pointerTeamPlayer).add(first);
 		
 		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
-		players.elementAt(firstPlayerPos).out("CONTINUE ");
+		try {
+			players.elementAt(firstPlayerPos).out("CONTINUE ");
+		} catch (IOException e) {
+			// TODO: catch disconnection correctly
+			e.printStackTrace();
+		}
 	}
 
 	public void serverUDPStart() {
@@ -170,19 +179,16 @@ public class CtrlNet {
 
 	public InetAddress getLocalAddress() throws IOException {
 
-		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
-						return inetAddress;
-					}
+		for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+			NetworkInterface intf = en.nextElement();
+			for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+				InetAddress inetAddress = enumIpAddr.nextElement();
+				if (!inetAddress.isLoopbackAddress()) {
+					return inetAddress;
 				}
 			}
-		} catch (SocketException e) {
-			Log.e("NET", e.toString());
 		}
+
 		return null;
 	}
 
@@ -191,17 +197,21 @@ public class CtrlNet {
 		this.wifiManager = systemService;
 	}
 
-	public String[] serverTCPGetConnectedPlayers() {
+	public String[] serverTCPGetConnectedPlayersInfo() {
 		Vector<String> n = new Vector<String>();
 
 		for (int i = 0; i < players.size(); i++) {
-			n.add(players.get(i).getName());
+			n.add(players.get(i).getName() + "|" + players.get(i).getTeam());
 		}
 
 		String[] st = new String[n.size()];
 		n.toArray(st);
 
 		return st;
+	}
+
+	public Integer serverTCPGetConnectedPlayersNum() {
+		return this.players.size();
 	}
 
 }

@@ -4,6 +4,7 @@ import games.distetris.storage.DbHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -249,9 +250,9 @@ public class CtrlDomain {
 		return this.serverNumTurns;
 	}
 
-	public void serverTCPStart() {
+	public void serverTCPStart() throws IOException {
 		this.mode = MODE_SERVER;
-		NET.serverTCPStart(serverNumTeams, serverNumTurns, handlerDomain);
+		NET.serverTCPStart(serverNumTeams, serverNumTurns);
 	}
 
 	public void serverTCPStop() {
@@ -259,9 +260,9 @@ public class CtrlDomain {
 		NET.serverTCPStop();
 	}
 
-	public void serverTCPConnect(String serverIP, int serverPort) {
+	public void serverTCPConnect(String serverIP, int serverPort) throws IOException {
 		this.mode = MODE_CLIENT;
-		NET.serverTCPConnect(serverIP, serverPort, handlerDomain);
+		NET.serverTCPConnect(serverIP, serverPort);
 	}
 
 	public void setHandlerUI(Handler hand) {
@@ -272,7 +273,7 @@ public class CtrlDomain {
 
 		//new_player.out("WAITING " + (players.size()) + "," + (numTeams - 1) + "," + numTurns);
 
-		String[] players_array = NET.serverTCPGetConnectedPlayers();
+		String[] players_array = NET.serverTCPGetConnectedPlayersInfo();
 
 		// Send the info to all the connected clients
 		NET.sendSignals("WAITING_ROOM " + serialize(players_array));
@@ -330,6 +331,10 @@ public class CtrlDomain {
 	
 	public boolean isGameOver(){
 		return this.GAME.isGameOver();
+	}
+
+	public Handler getHandlerDomain() {
+		return this.handlerDomain;
 	}
 
 }

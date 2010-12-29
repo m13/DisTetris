@@ -1,5 +1,6 @@
 package games.distetris.domain;
 
+import java.io.IOException;
 import java.util.Vector;
 
 public class TCPServerSend extends Thread {
@@ -16,7 +17,11 @@ public class TCPServerSend extends Thread {
 	public void run() {
 
 		for (Player p : players) {
-			p.out(data);
+			try {
+				p.out(data);
+			} catch (IOException e) {
+				// TODO: check for disconnection
+			}
 		}
 
 	}

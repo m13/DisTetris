@@ -13,17 +13,19 @@ public class TCPServer extends Thread {
 
 	private Integer numTeams;
 	private Integer numTurns;
+	private Integer numTeamLastAssigned;
 
 	private Boolean keepRunning;
 	private Boolean listening;
 	
-	public TCPServer(Vector<Player> players, int numTeams, int numTurns) {
+	public TCPServer(Vector<Player> players, Integer numTeams, Integer numTurns) {
 		super();
 
 		this.players = players;
 
 		this.numTeams = numTeams;
 		this.numTurns = numTurns;
+		this.numTeamLastAssigned = 0;
 
 		this.keepRunning = true;
 		this.listening = false;
@@ -39,7 +41,8 @@ public class TCPServer extends Thread {
 			
 			while (keepRunning) {
 				Socket client = serverSocket.accept();
-				Player new_player = new Player(new TCPConnection(client));
+				Player new_player = new Player(new TCPConnection(client), this.numTeamLastAssigned);
+				this.numTeamLastAssigned = (++this.numTeamLastAssigned) % numTeams;
 				players.add(new_player);
 				CtrlDomain.getInstance().updatedPlayers();
 			}
