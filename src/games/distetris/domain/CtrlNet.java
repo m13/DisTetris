@@ -69,7 +69,7 @@ public class CtrlNet {
 		this.connections.add(threadTCPClient);
 		this.threadTCPClient.start();
 
-		this.threadTCPClient.out(CtrlDomain.getInstance().getName());
+		this.threadTCPClient.out(CtrlDomain.getInstance().getServerName());
 	}
 
 	public void serverTCPStop() {

@@ -25,13 +25,14 @@ public class NewGame extends Activity {
 		final EditText textNumPlayers = (EditText) findViewById(R.id.NewGameEditText03);
 		final EditText textNumTurns = (EditText) findViewById(R.id.NewGameEditText04);
 
-		final String nameServer = textNameServer.getText().toString();
-		final Integer numTeams = Integer.parseInt(textNumTeams.getText().toString());
-		final Integer numPlayers = Integer.parseInt(textNumPlayers.getText().toString());
-		final Integer numTurns = Integer.parseInt(textNumTurns.getText().toString());
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+				String nameServer = textNameServer.getText().toString();
+				Integer numTeams = Integer.parseInt(textNumTeams.getText().toString());
+				Integer numPlayers = Integer.parseInt(textNumPlayers.getText().toString());
+				Integer numTurns = Integer.parseInt(textNumTurns.getText().toString());
 
 				CtrlDomain.getInstance().serverConfigure(nameServer, numTeams, numPlayers, numTurns);
 

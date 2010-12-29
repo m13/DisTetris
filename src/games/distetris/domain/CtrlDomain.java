@@ -38,7 +38,7 @@ public class CtrlDomain {
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
-	private String name;
+	private String serverName;
 	private Integer numPlayers = 1;
 	private Integer freeSlots = 1;
 	private Integer numTeams = 2;
@@ -227,14 +227,14 @@ public class CtrlDomain {
 	}
 
 	public void serverConfigure(String name, int numTeams, int numPlayers, int numTurns) {
-		this.name = name;
+		this.serverName = name;
 		this.numTeams = numTeams;
 		this.numPlayers = numPlayers;
 		this.numTurns = numTurns;
 	}
 
-	public String getName() {
-		return this.name;
+	public String getServerName() {
+		return this.serverName;
 	}
 
 	public Integer getNumTeams() {
