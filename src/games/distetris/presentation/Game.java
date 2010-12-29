@@ -6,13 +6,17 @@ import java.util.TimerTask;
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.L;
 import android.app.Activity;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
-public class Game extends Activity {
+public class Game extends Activity implements GestureDetector.OnGestureListener {
 	private GameView v;
 	private CtrlDomain dc;
 	private TimerTask gamelooptask;
@@ -23,17 +27,19 @@ public class Game extends Activity {
 	private int mseconds_actualize = 500;
 	private int mseconds_viewactualize = 10;
 	private boolean movepiece = false;
-
+	private GestureDetector gestureScanner;
+	private static int threshold_vy = 800;
+	private static int threshold_vx = 500;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		L.d("Start");
 
         v = new GameView(getBaseContext());
         setContentView(v);
-
-		L.d("End");
+        
+        gestureScanner = new GestureDetector(this);
+		
 		dc = CtrlDomain.getInstance();
 		//called twice. One for the first piece, next for the second piece
 		dc.setNewRandomPiece();
@@ -56,13 +62,16 @@ public class Game extends Activity {
 				if(piece_col!=-1 && !dc.currentPieceCollisionRC(dc.getCurrentPiece().x,piece_col)){
 					dc.getCurrentPiece().y = piece_col;	
 				}
+				else{
+					this.movepiece = false;
+				}
 			}
 		}
 		else if(action == MotionEvent.ACTION_UP){
 			this.movepiece = false;
 		}
 		
-		return true;
+		return gestureScanner.onTouchEvent(event);
 	}
     
 	/**
@@ -158,6 +167,45 @@ public class Game extends Activity {
 		super.onStop();
 	}
 
-	
+
+	public void onLongPress(MotionEvent e)
+	{
+
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		Log.d("FLING","vx: "+velocityX+" vy: "+velocityY);
+		if(velocityY>threshold_vy){
+			dc.currentPieceFastFall();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+
+		return false;
+	}
     
 }

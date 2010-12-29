@@ -188,4 +188,13 @@ public class CtrlGame {
 		pf.y = col;
 		return !this.board.isMovementPossible(pf);
 	}
+
+	/**
+	 * Drop the current piece to the bottom
+	 * And prepare the new pieces
+	 */
+	public void currentPieceFastFall() {
+		this.board.currentPieceFastFall();
+		setNewRandomPiece();
+	}
 }

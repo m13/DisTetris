@@ -330,4 +330,11 @@ public class CtrlDomain {
 		return this.GAME.currentPieceCollisionRC(row,col);
 	}
 
+	/**
+	 * Drop The piece to the bottom
+	 */
+	public void currentPieceFastFall() {
+		this.GAME.currentPieceFastFall();	
+	}
+
 }
