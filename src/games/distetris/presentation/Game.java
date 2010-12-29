@@ -53,7 +53,7 @@ public class Game extends Activity {
 			if(this.movepiece){
 				int piece_col = v.calcBoardColFromScreenX(event.getX());
 				
-				if(piece_col!=-1 && dc.currentPieceCollisionRC(dc.getCurrentPiece().y,piece_col)==false){
+				if(piece_col!=-1 && !dc.currentPieceCollisionRC(dc.getCurrentPiece().x,piece_col)){
 					dc.getCurrentPiece().y = piece_col;	
 				}
 			}
