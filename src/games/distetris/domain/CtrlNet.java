@@ -218,6 +218,15 @@ public class CtrlNet {
 		}
 	}
 	
+	public void sendSignal(Integer client, String string) throws Exception {
+		try {
+			players.get(client).out(string);
+		} catch (IOException e) {
+			// TODO: catch exception correctly
+			e.printStackTrace();
+		}
+	}
+
 	public void sendSignals(String string) {
 		TCPServerSend threadTCPServerSend = new TCPServerSend(players, string);
 		threadTCPServerSend.start();
@@ -245,6 +254,23 @@ public class CtrlNet {
 
 	public Integer serverTCPGetConnectedPlayersNum() {
 		return this.players.size();
+	}
+
+	public void sendUpdatedBoard() {
+		Board b = CtrlGame.getInstance().getBoardToSend();
+		CtrlNet.getInstance().sendSignals("UPDATEBOARD " + CtrlDomain.getInstance().serialize(b));
+	}
+
+	public void sendTurns(Integer serverTurnPointer) {
+		sendSignals("UPDATEMYTURN false");
+		
+		// TODO: proper fix
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+
+		sendSignal("UPDATEMYTURN true");
 	}
 
 	/**

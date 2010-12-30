@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,9 +61,15 @@ public class JoinGameWaiting extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
 
-		CtrlDomain.getInstance().serverTCPDisconnect();
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			CtrlDomain.getInstance().serverTCPDisconnect();
+		}
 
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
