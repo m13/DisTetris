@@ -69,6 +69,16 @@ public class CtrlGame {
 		return this.board.cleanBoard();
 	}
 	
+	/**
+	 * Creates a new board initializing the
+	 * new random pieces
+	 */
+	public void createNewCleanBoard(){
+		this.board = new Board();
+		this.setNewRandomPiece();
+		this.setNewRandomPiece();
+	}
+	
 	public int[][] getBoard() {
 		return board.getBoard();
 	}
