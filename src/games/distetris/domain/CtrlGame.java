@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 
 public class CtrlGame {
@@ -115,6 +116,15 @@ public class CtrlGame {
 	public void setPlayerName(String name) {
 		db.setPlayerName(name);
 	}
+
+	public Bundle getConfCreate() {
+		return db.getConfCreate();
+	}
+
+	public void setConfCreate(Bundle b) {
+		db.setConfCreate(b);
+	}
+	
 
 	/**
 	 * A step in the game

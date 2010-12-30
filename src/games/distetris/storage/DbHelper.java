@@ -3,6 +3,7 @@ package games.distetris.storage;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 public class DbHelper {
 	
@@ -54,5 +55,27 @@ public class DbHelper {
 	public void setPlayerName(String name) {
 		String sql = "UPDATE config SET value='"+name+"' WHERE key='playername'";
 		db.execSQL(sql);
+	}
+	
+	public Bundle getConfCreate() {
+		Bundle b = new Bundle();
+		String[] requests = new String[]{ "servername", "numteams", "numturns" };
+		for (String request : requests) {
+			String sql = "SELECT value FROM config WHERE key='"+request+"' LIMIT 1";
+			Cursor cr = db.rawQuery(sql, null);
+			b.putString(request, 
+					(cr.moveToFirst()) ? cr.getString(cr.getColumnIndex("value")) : ""
+				);
+			cr.close();
+		}		
+		return b; 
+	}
+	
+	public void setConfCreate(Bundle b) {
+		String[] requests = new String[]{ "servername", "numteams", "numturns" };
+		for (String request : requests) {
+			String sql = "UPDATE config SET value='"+b.getString(request)+"' WHERE key='"+request+"'";
+			db.execSQL(sql);
+		}
 	}
 }

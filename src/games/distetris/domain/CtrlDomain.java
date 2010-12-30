@@ -257,19 +257,29 @@ public class CtrlDomain {
 		NET.setWifiManager(systemService);
 	}
 
+	
+	// DB HOOKS
+	
 	public String getPlayerName() {
-		return GAME.getPlayerName();
+		return this.GAME.getPlayerName();
 	}
 	
 	public void setPlayerName(String name) {
-		GAME.setPlayerName(name);
+		this.GAME.setPlayerName(name);
+	}
+	
+	public Bundle getConfCreate() {
+		return this.GAME.getConfCreate();
 	}
 
-	public void serverConfigure(String name, int numTeams, int numTurns) {
-		this.serverName = name;
-		this.serverNumTeams = numTeams;
-		this.serverNumTurns = numTurns;
+	public void setConfCreate(Bundle b) {
+		this.serverName = b.getString("servername");
+		this.serverNumTeams = Integer.valueOf(b.getString("numteams"));
+		this.serverNumTurns = Integer.valueOf(b.getString("numturns"));
+		this.GAME.setConfCreate(b);
 	}
+	
+	//
 
 	public String getServerName() {
 		return this.serverName;
