@@ -93,7 +93,8 @@ public class CtrlGame {
 		this.board.setNextpiece(p);
 	}
 	
-	public void setBoard(Object object) {
+	public void setBoard(Board object) {
+		this.board = object;
 	}
 
 
