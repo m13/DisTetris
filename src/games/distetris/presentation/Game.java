@@ -123,7 +123,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		}
 
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			CtrlDomain.getInstance().serverTCPDisconnectClients();
+			finish();
 		}
 		
 		v.invalidate();
