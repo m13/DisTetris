@@ -133,7 +133,7 @@ public class CtrlDomain {
 			}
 
 		} else if (actionContent[0].equals("UPDATEMYTURN")) {
-			this.myTurn = (Boolean) unserialize(args[0]);
+			this.myTurn = Boolean.parseBoolean(((String) unserialize(args[0])));
 		}
 
 			
