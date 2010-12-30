@@ -1,6 +1,7 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.WaitingRoom;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,21 +74,22 @@ public class NewGameWaiting extends Activity {
 
 	private void updateConnectedClients(Bundle b) {
 
-		// Each string contains the name of the player and the "id" of the team separated by |
-		// For example user viciado playing in team 3 would result in the string viciado|3
-
-		String[] users = b.getStringArray("players");
+		WaitingRoom room = (WaitingRoom) b.getSerializable("room");
 
 		String str = "";
-		for (int i = 0; i < users.length; i++) {
+		str += "Name: " + room.name + "\n";
+		str += "Number of teams: " + room.numTeams + "\n";
+		str += "Number of turns: " + room.numTurns + "\n";
+		str += "\n";
+		str += "Players:\n";
 
-			String name = users[i].split("\\|")[0];
-			Integer team_id = Integer.parseInt(users[i].split("\\|")[1]);
-			str += "[" + team_id + "] " + name + "\n";
-
+		for (int i = 0; i < room.players.size(); i++) {
+			str += "[" + room.players.get(i).team + "] " + room.players.get(i).name + "\n";
 		}
+
 		TextView tv = ((TextView) findViewById(R.id.TextView01));
-		tv.setText("Usuarios conectados:\n" + str);
+		tv.setText(str);
+
 	}
 
 }

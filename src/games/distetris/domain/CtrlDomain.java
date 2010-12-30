@@ -88,13 +88,13 @@ public class CtrlDomain {
 		if (actionContent[0].equals("WAITING_ROOM")) {
 			// The name of the players and the team they belong
 
-			String[] players_array = (String[]) unserialize(args[0]);
+			WaitingRoom room = (WaitingRoom) unserialize(args[0]);
 
 			// Update the client UI
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString("type", "WAITING_ROOM");
-			b.putStringArray("players", players_array);
+			b.putSerializable("room", room);
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
@@ -299,10 +299,10 @@ public class CtrlDomain {
 
 		//new_player.out("WAITING " + (players.size()) + "," + (numTeams - 1) + "," + numTurns);
 
-		String[] players_array = NET.serverTCPGetConnectedPlayersInfo();
+		WaitingRoom r = new WaitingRoom();
 
 		// Send the info to all the connected clients
-		NET.sendSignals("WAITING_ROOM " + serialize(players_array));
+		NET.sendSignals("WAITING_ROOM " + serialize(r));
 	}
 	
 	

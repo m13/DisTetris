@@ -207,17 +207,24 @@ public class CtrlNet {
 		threadTCPServerSend.start();
 	}
 
-	public String[] serverTCPGetConnectedPlayersInfo() {
-		Vector<String> n = new Vector<String>();
+	public Vector<String> serverTCPGetConnectedPlayersName() {
+		Vector<String> result = new Vector<String>(players.size());
 
 		for (int i = 0; i < players.size(); i++) {
-			n.add(players.get(i).getName() + "|" + players.get(i).getTeam());
+			result.add(players.get(i).getName());
 		}
 
-		String[] st = new String[n.size()];
-		n.toArray(st);
+		return result;
+	}
 
-		return st;
+	public Vector<Integer> serverTCPGetConnectedPlayersTeam() {
+		Vector<Integer> result = new Vector<Integer>(players.size());
+
+		for (int i = 0; i < players.size(); i++) {
+			result.add(players.get(i).getTeam());
+		}
+
+		return result;
 	}
 
 	public Integer serverTCPGetConnectedPlayersNum() {
