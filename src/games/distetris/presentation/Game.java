@@ -80,7 +80,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		if(true){
+		if(dc.isMyTurn()){
 			//if current piece collides
 			if(dc.nextStepPieceCollision()){
 				if(dc.isGameOver()) {
@@ -122,6 +122,10 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 			break;
 		}
 
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			CtrlDomain.getInstance().serverTCPDisconnectClients();
+		}
+		
 		v.invalidate();
 		return true;
 	}
@@ -242,5 +246,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		
 		return false;
 	}
+
+
+
     
 }
