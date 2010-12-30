@@ -5,12 +5,14 @@
 	android:layout_width="fill_parent"
     android:padding="10sp"
 	android:gravity="bottom"
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    android:orientation="vertical">
 
-	<TextView
-		android:text="@+id/TextView01"
-		android:id="@+id/TextView01"
-		android:layout_height="fill_parent"
+	<TextView android:text="@+id/TextView01" android:id="@+id/TextView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:textSize="22sp" /><Button
+		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:textSize="22sp" />
+		android:text="Start!"
+		android:id="@+id/Start"></Button>
+	
+
 </LinearLayout>

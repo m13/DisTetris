@@ -13,6 +13,7 @@ public class TCPServer extends Thread {
 
 	private Integer numTeams;
 	private Integer numTurns;
+	private Integer numPlayerLastAssigned;
 	private Integer numTeamLastAssigned;
 
 	private Boolean keepRunning;
@@ -27,6 +28,7 @@ public class TCPServer extends Thread {
 
 		this.numTeams = numTeams;
 		this.numTurns = numTurns;
+		this.numPlayerLastAssigned = 0;
 		this.numTeamLastAssigned = 0;
 
 		this.keepRunning = true;
@@ -43,7 +45,8 @@ public class TCPServer extends Thread {
 			
 			while (keepRunning) {
 				Socket client = serverSocket.accept();
-				Player new_player = new Player(new TCPConnection(client), this.numTeamLastAssigned);
+				Player new_player = new Player(new TCPConnection(client), this.numPlayerLastAssigned, this.numTeamLastAssigned);
+				this.numPlayerLastAssigned++;
 				this.numTeamLastAssigned = (++this.numTeamLastAssigned) % numTeams;
 				players.add(new_player);
 				CtrlDomain.getInstance().updatedPlayers();

@@ -31,13 +31,14 @@ public class CtrlDomain {
 	private int mode = 0;
 
 	// dynamic configuration (player)
-	private Integer player = 0;
-	private Integer team = 0;
+	private Integer playerID = 0;
+	private Integer teamID = 0;
 	private Integer round = 0; //Nivel a partir de ronda
 	private boolean myTurn = false; 
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
+	// configured by function serverConfigure()
 	private String serverName;
 	private Integer serverNumTeams;
 	private Integer serverNumTurns;
@@ -85,25 +86,40 @@ public class CtrlDomain {
 			args = actionContent[1].split(",");
 		}
 
-		if (actionContent[0].equals("WAITING_ROOM")) {
+		if (actionContent[0].equals("WAITINGROOM")) {
 			// The name of the players and the team they belong
+			// Only used in the *Waiting classes (JoinGameWaiting and NewGameWaiting)
+			// The class sent with the info is WaitingRoom
 
 			WaitingRoom room = (WaitingRoom) unserialize(args[0]);
+
+			// Populate the remaining info that the server left blank
+			room.currentPlayerID = this.playerID;
+			room.currentTeamID = this.teamID;
 
 			// Update the client UI
 			Message msg = new Message();
 			Bundle b = new Bundle();
-			b.putString("type", "WAITING_ROOM");
+			b.putString("type", "WAITINGROOM");
 			b.putSerializable("room", room);
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
 		} else if (actionContent[0].equals("SHUTDOWN")) {
-			// The server is closing, notify the UI
+			// The server is closing the connection
 
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString("type", "SHUTDOWN");
+			msg.setData(b);
+			handlerUI.sendMessage(msg);
+		} else if (actionContent[0].equals("STARTGAME")) {
+			// The server started the game
+			// Clients must leave the *Waiting view and change it to the Game
+
+			Message msg = new Message();
+			Bundle b = new Bundle();
+			b.putString("type", "STARTGAME");
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
@@ -111,10 +127,10 @@ public class CtrlDomain {
 			// 1: assigned idPlayer
 			// 2: number of teams
 			// 3: num of turns
-			player = (player == -1) ? player : Integer.valueOf(args[0]);
-			team = GAME.windowChoiceTeam(Integer.valueOf(args[1]));
+			playerID = (playerID == -1) ? playerID : Integer.valueOf(args[0]);
+			teamID = GAME.windowChoiceTeam(Integer.valueOf(args[1]));
 			myTurns = Integer.valueOf(args[2]);
-			NET.sendSignal("JOIN " + String.valueOf(player) + "," + String.valueOf(team));
+			NET.sendSignal("JOIN " + String.valueOf(playerID) + "," + String.valueOf(teamID));
 		} else if (actionContent[0].equals("JOIN")) {
 			// 1: idPlayer == element position @ vector connections
 			// 2: chosen team
@@ -278,7 +294,9 @@ public class CtrlDomain {
 
 	public void serverTCPConnect(String serverIP, int serverPort) throws Exception {
 		this.mode = MODE_CLIENT;
-		NET.serverTCPConnect(serverIP, serverPort);
+		String result = NET.serverTCPConnect(serverIP, serverPort);
+		this.playerID = Integer.parseInt(result.split("\\|")[0]);
+		this.teamID = Integer.parseInt(result.split("\\|")[1]);
 	}
 
 	public void serverTCPDisconnect() {
@@ -302,11 +320,28 @@ public class CtrlDomain {
 		WaitingRoom r = new WaitingRoom();
 
 		// Send the info to all the connected clients
-		NET.sendSignals("WAITING_ROOM " + serialize(r));
+		NET.sendSignals("WAITINGROOM " + serialize(r));
+	}
+	
+	/**
+	 * Send to all the connected clients that the game is going to start. The
+	 * clients must be on *Waiting views.
+	 */
+	public void startGame() {
+		this.NET.sendSignals("STARTGAME");
 	}
 	
 	
-	//GAME HOOKS
+	/*
+	 * 
+	 * 
+	 * 
+	 * GAME HOOKS
+	 * 
+	 * 
+	 * 
+	 */
+
 	public ArrayList<Integer> cleanBoard(){
 		return this.GAME.cleanBoard();
 	}

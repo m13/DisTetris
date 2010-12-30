@@ -3,6 +3,7 @@ package games.distetris.presentation;
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.WaitingRoom;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,8 +20,10 @@ public class JoinGameWaiting extends Activity {
 			Bundle b = msg.getData();
 			String type = b.getString("type");
 
-			if (type.equals("WAITING_ROOM")) {
-				updateConnectedClients(b);
+			if (type.equals("WAITINGROOM")) {
+				updateWaitingRoom(b);
+			} else if (type.equals("STARTGAME")) {
+				startGame();
 			} else if (type.equals("SHUTDOWN")) {
 				Toast.makeText(getBaseContext(), "The server closed the connection", Toast.LENGTH_SHORT).show();
 				finish();
@@ -62,7 +65,13 @@ public class JoinGameWaiting extends Activity {
 
 	}
 
-	protected void updateConnectedClients(Bundle b) {
+	/**
+	 * Parse a newly received WaitingRoom class
+	 * 
+	 * @param b
+	 *            Bundle containing the WaitingRoom class
+	 */
+	protected void updateWaitingRoom(Bundle b) {
 
 		WaitingRoom room = (WaitingRoom) b.getSerializable("room");
 
@@ -70,6 +79,9 @@ public class JoinGameWaiting extends Activity {
 		str += "Name: " + room.name + "\n";
 		str += "Number of teams: " + room.numTeams + "\n";
 		str += "Number of turns: " + room.numTurns + "\n";
+		str += "\n";
+		str += "PlayerID: " + room.currentPlayerID + "\n";
+		str += "TeamID: " + room.currentTeamID + "\n";
 		str += "\n";
 		str += "Players:\n";
 
@@ -79,5 +91,16 @@ public class JoinGameWaiting extends Activity {
 
 		TextView tv = ((TextView) findViewById(R.id.TextView01));
 		tv.setText(str);
+	}
+
+	/**
+	 * Change the view to Game because the server started the game
+	 */
+	protected void startGame() {
+		Intent i = new Intent();
+		i.setClass(getBaseContext(), Game.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+		finish();
 	}
 }

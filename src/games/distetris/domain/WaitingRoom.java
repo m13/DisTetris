@@ -12,6 +12,12 @@ public class WaitingRoom implements Serializable {
 	public Integer numTurns;
 	public Vector<WaitingRoomPlayer> players;
 
+	// Dynamic configuration about the player
+	// MUST be blank when sending from the server
+	// It will be populated when received by the client before sending it to the UI 
+	public Integer currentPlayerID;
+	public Integer currentTeamID;
+
 	public WaitingRoom() {
 
 		CtrlDomain DOM = CtrlDomain.getInstance();

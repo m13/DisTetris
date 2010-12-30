@@ -103,15 +103,31 @@ public class CtrlNet {
 		L.d("Closed");
 	}
 
-	public void serverTCPConnect(String ip, int port) throws Exception {
+	/**
+	 * Connects to the specified server.
+	 * 
+	 * @param ip
+	 *            The IP of the server
+	 * @param port
+	 *            The port of the server
+	 * @return The player id and the team id assigned by the server as a string
+	 *         like 7|3
+	 * @throws Exception
+	 */
+	public String serverTCPConnect(String ip, int port) throws Exception {
 
 		// Disconnect from previous server (just in case)
 		serverTCPDisconnect();
 
 		this.threadTCPClient = new TCPConnection(ip, port);
 		this.threadTCPClient.setName("TCP client " + CtrlDomain.getInstance().getPlayerName());
+		// The first thing we send is the player name
 		this.threadTCPClient.out(CtrlDomain.getInstance().getPlayerName());
+		// The first thing we receive is the player id
+		String player_assigned_info = this.threadTCPClient.in();
 		this.threadTCPClient.start();
+
+		return player_assigned_info;
 	}
 
 	public void serverTCPDisconnect() {

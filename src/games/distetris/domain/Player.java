@@ -4,13 +4,19 @@ package games.distetris.domain;
 public class Player {
 
 	private String name;
+	private Integer numPlayer;
 	private Integer numTeam;
 	private TCPConnection connection;
 
-	public Player(TCPConnection connection, Integer numTeam) throws Exception {
+	public Player(TCPConnection connection, Integer numPlayer, Integer numTeam) throws Exception {
 		this.connection = connection;
-		this.name = connection.in();
+		// The first thing we receive is the player name
+		this.name = in();
+		this.numPlayer = numPlayer;
 		this.numTeam = numTeam;
+
+		// The first thing we send is the player id and the team id assigned
+		out(this.numPlayer.toString() + "|" + this.numTeam.toString());
 
 		this.connection.setName("TCP server " + this.name);
 		this.connection.start();
