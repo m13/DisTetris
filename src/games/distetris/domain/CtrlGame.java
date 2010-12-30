@@ -13,7 +13,7 @@ public class CtrlGame {
 
 	private static CtrlGame INSTANCE = null;
 	private DbHelper db = null;
-	Board board = new Board();
+	Board board;
 
 	private CtrlGame() {
 		L.d("Created");
@@ -70,6 +70,20 @@ public class CtrlGame {
 		return this.board.cleanBoard();
 	}
 	
+	/**
+	 * Creates a new board initializing the
+	 * new random pieces
+	 */
+	public void createNewCleanBoard(){
+		this.board = new Board();
+		this.setNewRandomPiece();
+		this.setNewRandomPiece();
+	}
+	
+	public Board getBoardToSend(){
+		return board;
+	}
+	
 	public int[][] getBoard() {
 		return board.getBoard();
 	}
@@ -84,7 +98,8 @@ public class CtrlGame {
 		this.board.setNextpiece(p);
 	}
 	
-	public void setBoard(Object object) {
+	public void setBoard(Board object) {
+		this.board = object;
 	}
 
 

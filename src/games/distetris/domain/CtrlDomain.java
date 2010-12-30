@@ -34,7 +34,7 @@ public class CtrlDomain {
 	private Integer playerID = 0;
 	private Integer teamID = 0;
 	private Integer round = 0; //Nivel a partir de ronda
-	private boolean myTurn = false; 
+	private boolean myTurn = false;
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
@@ -42,6 +42,7 @@ public class CtrlDomain {
 	private String serverName;
 	private Integer serverNumTeams;
 	private Integer serverNumTurns;
+	private Integer serverTurnPointer;
 
 	private CtrlDomain() {
 		L.d("Created");
@@ -123,79 +124,103 @@ public class CtrlDomain {
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
-		} else if (actionContent[0].equals("WAITING")) {
-			// 1: assigned idPlayer
-			// 2: number of teams
-			// 3: num of turns
-			playerID = (playerID == -1) ? playerID : Integer.valueOf(args[0]);
-			teamID = GAME.windowChoiceTeam(Integer.valueOf(args[1]));
-			myTurns = Integer.valueOf(args[2]);
-			NET.sendSignal("JOIN " + String.valueOf(playerID) + "," + String.valueOf(teamID));
-		} else if (actionContent[0].equals("JOIN")) {
-			// 1: idPlayer == element position @ vector connections
-			// 2: chosen team
-			NET.registerPlayer(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
-			// TODO: fix it?
-			/*
-			if (freeSlots == 0) {
-				NET.sendSignals("START " + serialize(GAME.getBoard()));
-				NET.nextPlayer();
-			}
-			*/
-		} else if (actionContent[0].equals("START")) {
-			// 1: serialized Board
-			round++;
-			GAME.setBoard(unserialize(actionContent[1]));
-			L.d("START");
-		} else if (actionContent[0].equals("CONTINUE")) {
-			// NULL
-			String result = "DO";
-			myTurn = true;
-			for (int i = myTurns; i > 0; i--) {
-				do {
-					result = GAME.playPiece();
-					NET.sendSignal("PING " + serialize(GAME.getPiece()));
+		} else if (actionContent[0].equals("UPDATEBOARD")) {
+			// The server sent a new board
+			// Update the UI
 
-				} while (result.equals("DO"));
-			}
-
-			// testing!
-			if (round > 3)
-				result = "END";
-
-			myTurn = false;
-			NET.sendSignal("FINISHED " + result);
-		} else if (actionContent[0].equals("PING")) {
-			// 1: serialized Piece
-			NET.sendSignals("PONG " + actionContent[1]);
-		} else if (actionContent[0].equals("PONG")) {
-			// 1: serialized Piece
 			if (!myTurn) {
-				GAME.setPiece(unserialize(actionContent[1]));
+				GAME.setBoard((Board) unserialize(args[0]));
 			}
-		} else if (actionContent[0].equals("FINISHED")) {
-			// 1: String result
-			// 2: (if error) String error
-			if (args[0].equals("END")) {
-				NET.sendSignals("END " + serialize(GAME.getBoard()));
-			} else if (args[0].equals("NEXT")) {
-				GAME.setPiece(args[0]);
-				NET.sendSignals("START " + serialize(GAME.getBoard()));
-				NET.nextPlayer();
-			} else if (args[0].equals("ERROR")) {
-				NET.sendSignals("ERROR " + args[1]);
-			} else {
-				// nothing
-			}
-		} else if (actionContent[0].equals("END")) {
-			// 1: serialized Board
-			GAME.setBoard(unserialize(actionContent[1]));
-			// TODO: fix it?
-			// GAME.saveScore(numPlayers==numTeams);
-		} else if (actionContent[0].equals("ERROR")) {
-			// 1: String error
-			GAME.showError(actionContent[1]);
+
+		} else if (actionContent[0].equals("UPDATEMYTURN")) {
+			this.myTurn = Boolean.parseBoolean(((String) unserialize(args[0])));
 		}
+
+			
+		/*
+		 * 
+		 * 
+		 * 
+		 * SERGIO
+		 * 
+		 * 
+		 * 
+		 */
+			
+//		} else if (actionContent[0].equals("WAITING")) {
+//			// 1: assigned idPlayer
+//			// 2: number of teams
+//			// 3: num of turns
+//			playerID = (playerID == -1) ? playerID : Integer.valueOf(args[0]);
+//			teamID = GAME.windowChoiceTeam(Integer.valueOf(args[1]));
+//			myTurns = Integer.valueOf(args[2]);
+//			NET.sendSignal("JOIN " + String.valueOf(playerID) + "," + String.valueOf(teamID));
+//		} else if (actionContent[0].equals("JOIN")) {
+//			// 1: idPlayer == element position @ vector connections
+//			// 2: chosen team
+//			NET.registerPlayer(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
+//			// TODO: fix it?
+//			/*
+//			if (freeSlots == 0) {
+//				NET.sendSignals("START " + serialize(GAME.getBoard()));
+//				NET.nextPlayer();
+//			}
+//			*/
+//		} else if (actionContent[0].equals("START")) {
+//			// 1: serialized Board
+//			round++;
+//			GAME.setBoard(unserialize(actionContent[1]));
+//			L.d("START");
+//		} else if (actionContent[0].equals("CONTINUE")) {
+//			// NULL
+//			String result = "DO";
+//			myTurn = true;
+//			for (int i = myTurns; i > 0; i--) {
+//				do {
+//					result = GAME.playPiece();
+//					NET.sendSignal("PING " + serialize(GAME.getPiece()));
+//
+//				} while (result.equals("DO"));
+//			}
+//
+//			// testing!
+//			if (round > 3)
+//				result = "END";
+//
+//			myTurn = false;
+//			NET.sendSignal("FINISHED " + result);
+//		} else if (actionContent[0].equals("PING")) {
+//			// 1: serialized Piece
+//			NET.sendSignals("PONG " + actionContent[1]);
+//		} else if (actionContent[0].equals("PONG")) {
+//			// 1: serialized Piece
+//			if (!myTurn) {
+//				GAME.setPiece(unserialize(actionContent[1]));
+//			}
+//		} else if (actionContent[0].equals("FINISHED")) {
+//			// 1: String result
+//			// 2: (if error) String error
+//			if (args[0].equals("END")) {
+//				NET.sendSignals("END " + serialize(GAME.getBoard()));
+//			} else if (args[0].equals("NEXT")) {
+//				GAME.setPiece(args[0]);
+//				NET.sendSignals("START " + serialize(GAME.getBoard()));
+//				NET.nextPlayer();
+//			} else if (args[0].equals("ERROR")) {
+//				NET.sendSignals("ERROR " + args[1]);
+//			} else {
+//				// nothing
+//			}
+//		} else if (actionContent[0].equals("END")) {
+//			// 1: serialized Board
+//			GAME.setBoard(unserialize(actionContent[1]));
+//			// TODO: fix it?
+//			// GAME.saveScore(numPlayers==numTeams);
+//		} else if (actionContent[0].equals("ERROR")) {
+//			// 1: String error
+//			GAME.showError(actionContent[1]);
+//		}
+			
 	}
 	
 	public Cursor getScoreInd() {
@@ -207,7 +232,7 @@ public class CtrlDomain {
 	}
 
 	// move?
-	private String serialize(Object object) {
+	public String serialize(Object object) {
 		byte[] result = null;
 
 		try {
@@ -225,7 +250,7 @@ public class CtrlDomain {
 	}
 
 	// move?
-	private Object unserialize(String str) {
+	public Object unserialize(String str) {
 		Object object = null;
 		byte[] bytes = games.distetris.domain.Base64.decode(str, games.distetris.domain.Base64.NO_WRAP);
 
@@ -276,6 +301,7 @@ public class CtrlDomain {
 		this.serverName = b.getString("servername");
 		this.serverNumTeams = Integer.valueOf(b.getString("numteams"));
 		this.serverNumTurns = Integer.valueOf(b.getString("numturns"));
+		this.serverTurnPointer = 0;
 		this.GAME.setConfCreate(b);
 	}
 	
@@ -338,6 +364,9 @@ public class CtrlDomain {
 	 * clients must be on *Waiting views.
 	 */
 	public void startGame() {
+		this.GAME.createNewCleanBoard();
+		this.NET.sendTurns(this.serverTurnPointer);
+		this.NET.sendUpdatedBoard();
 		this.NET.sendSignals("STARTGAME");
 	}
 	
@@ -394,6 +423,7 @@ public class CtrlDomain {
 	
 	public void addCurrentPieceToBoard(){
 		this.GAME.addCurrentPieceToBoard();
+		this.NET.sendUpdatedBoard();
 	}
 	
 	public Piece getNextPiece(){
@@ -410,6 +440,10 @@ public class CtrlDomain {
 
 	public boolean currentPieceCollisionRC(int row, int col) {
 		return this.GAME.currentPieceCollisionRC(row,col);
+	}
+
+	public boolean isMyTurn() {
+		return this.myTurn;
 	}
 
 	/**
