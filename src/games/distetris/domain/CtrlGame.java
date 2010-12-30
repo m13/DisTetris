@@ -12,7 +12,7 @@ public class CtrlGame {
 
 	private static CtrlGame INSTANCE = null;
 	private DbHelper db = null;
-	Board board = new Board();
+	Board board;
 
 	private CtrlGame() {
 		L.d("Created");
