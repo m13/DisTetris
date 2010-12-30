@@ -79,6 +79,10 @@ public class CtrlGame {
 		this.setNewRandomPiece();
 	}
 	
+	public Board getBoardToSend(){
+		return board;
+	}
+	
 	public int[][] getBoard() {
 		return board.getBoard();
 	}
