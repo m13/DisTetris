@@ -145,7 +145,7 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("START")) {
 			// 1: serialized Board
 			round++;
-			GAME.setBoard(unserialize(actionContent[1]));
+			GAME.setBoard((Board) unserialize(actionContent[1]));
 			L.d("START");
 		} else if (actionContent[0].equals("CONTINUE")) {
 			// NULL
@@ -189,7 +189,7 @@ public class CtrlDomain {
 			}
 		} else if (actionContent[0].equals("END")) {
 			// 1: serialized Board
-			GAME.setBoard(unserialize(actionContent[1]));
+			GAME.setBoard((Board) unserialize(actionContent[1]));
 			// TODO: fix it?
 			// GAME.saveScore(numPlayers==numTeams);
 		} else if (actionContent[0].equals("ERROR")) {
@@ -384,6 +384,7 @@ public class CtrlDomain {
 	
 	public void addCurrentPieceToBoard(){
 		this.GAME.addCurrentPieceToBoard();
+		
 	}
 	
 	public Piece getNextPiece(){

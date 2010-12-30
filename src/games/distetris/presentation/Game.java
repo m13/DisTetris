@@ -44,8 +44,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		
 		dc = CtrlDomain.getInstance();
 		//called twice. One for the first piece, next for the second piece
-		dc.setNewRandomPiece();
-		dc.setNewRandomPiece();
+		//dc.setNewRandomPiece();
+		//dc.setNewRandomPiece();
     }
 
 	@Override
@@ -80,17 +80,19 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		//if current piece collides
-		if(dc.nextStepPieceCollision()){
-			if(dc.isGameOver()) {
-				v.gameover = true;
-				this.gamelooptimer.cancel();
+		if(true){
+			//if current piece collides
+			if(dc.nextStepPieceCollision()){
+				if(dc.isGameOver()) {
+					v.gameover = true;
+					this.gamelooptimer.cancel();
+				}
+				dc.addCurrentPieceToBoard();
+				v.deletelines = dc.cleanBoard();
+				dc.setNewRandomPiece();
 			}
-			dc.addCurrentPieceToBoard();
-			v.deletelines = dc.cleanBoard();
-			dc.setNewRandomPiece();
+			dc.gameStep();
 		}
-		dc.gameStep();
 	}
 
 	/**
@@ -137,8 +139,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		                        }
 		               });
 		        }};
-		    gamelooptimer.schedule(gamelooptask, 0, mseconds_actualize); 
-
 		 }
 	
 	/**
@@ -223,7 +223,23 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent e) {
-		dc.currentPieceRotateLeft();
+		int x = (int) e.getX();
+		
+		if(x<50){
+			if(!dc.currentPieceOffsetCollision(-1)){
+				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
+			}
+		}
+		else if(x>v.getWidth()-50){
+			if(!dc.currentPieceOffsetCollision(+1)){
+				dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
+			}
+		}
+		else{
+			dc.currentPieceRotateLeft();	
+		}
+		
+		
 		return false;
 	}
     
