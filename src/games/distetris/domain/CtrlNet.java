@@ -270,7 +270,12 @@ public class CtrlNet {
 		} catch (InterruptedException e) {
 		}
 
-		sendSignal("UPDATEMYTURN true");
+		try {
+			sendSignal(serverTurnPointer,"UPDATEMYTURN true");
+		} catch (Exception e) {
+			// TODO: FixIt */
+			e.printStackTrace();
+		}
 	}
 
 	/**
