@@ -6,13 +6,14 @@
     <string name="catTeam">TEAM</string>
     
     <string name="newServername">Server name</string>
-    <string name="newServernameDefault">Wifi</string>
     <string name="newNumTeams">Number of teams</string>
-    <string name="newNumTeamsDefault">3</string>
-    <string name="newNumPlayers">Number of players</string>
-    <string name="newNumPlayersDefault">6</string>
     <string name="newNumTurns">Number of turns</string>
-    <string name="newNumTurnsDefault">5</string>
+    
+    <string name="playerID">PlayerID</string>
+    <string name="teamID">TeamID</string>
+    <string name="start">Start</string>
+    <string name="catSettings">SETTINGS</string>
+    <string name="catPlayers">PLAYERS</string>
     
     <string name="confPlayername">Player Name</string>
     

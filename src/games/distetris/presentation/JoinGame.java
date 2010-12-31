@@ -3,6 +3,7 @@ package games.distetris.presentation;
 import games.distetris.domain.CtrlDomain;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,7 @@ public class JoinGame extends Activity {
 			child.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					view.setBackgroundColor(Color.YELLOW);
 					Intent i = new Intent();
 					i.setClass(view.getContext(), JoinGameWaiting.class);
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

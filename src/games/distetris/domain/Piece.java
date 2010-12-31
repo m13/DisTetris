@@ -2,8 +2,6 @@ package games.distetris.domain;
 
 import java.io.Serializable;
 
-import android.graphics.Color;
-
 public class Piece implements Serializable {
 	private static final long serialVersionUID = 2L;
 	/*Constants of pieces type and rotation*/

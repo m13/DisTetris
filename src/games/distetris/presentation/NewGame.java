@@ -17,24 +17,25 @@ public class NewGame extends Activity {
 
         setContentView(R.layout.newgame);
         
-        final Button button = (Button) findViewById(R.id.NewGameButton01);
-        final Button cancel = (Button) findViewById(R.id.NewGameButton02);
+        final Button button = (Button) findViewById(R.id.Create);
+        final Button cancel = (Button) findViewById(R.id.Back);
         
-		final EditText textNameServer = (EditText) findViewById(R.id.NewGameEditText01);
-		final EditText textNumTeams = (EditText) findViewById(R.id.NewGameEditText02);
-		final EditText textNumPlayers = (EditText) findViewById(R.id.NewGameEditText03);
-		final EditText textNumTurns = (EditText) findViewById(R.id.NewGameEditText04);
-
+        Bundle b = CtrlDomain.getInstance().getConfCreate();
+        
+		final EditText textNameServer = (EditText) findViewById(R.id.NewGameServername);
+		textNameServer.setText(b.getString("servername"));
+		final EditText textNumTeams = (EditText) findViewById(R.id.NewGameNumTeams);
+		textNumTeams.setText(b.getString("numteams"));
+		final EditText textNumTurns = (EditText) findViewById(R.id.NewGameNumTurns);
+		textNumTurns.setText(b.getString("numturns"));
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-				String nameServer = textNameServer.getText().toString();
-				Integer numTeams = Integer.parseInt(textNumTeams.getText().toString());
-				Integer numPlayers = Integer.parseInt(textNumPlayers.getText().toString());
-				Integer numTurns = Integer.parseInt(textNumTurns.getText().toString());
-
-				CtrlDomain.getInstance().serverConfigure(nameServer, numTeams, numTurns);
+            	Bundle b = new Bundle();
+				b.putString("servername", textNameServer.getText().toString());
+				b.putString("numteams", textNumTeams.getText().toString());
+				b.putString("numturns", textNumTurns.getText().toString());
+				CtrlDomain.getInstance().setConfCreate(b);
 
                 Intent i = new Intent();
 				i.setClass(v.getContext(), NewGameWaiting.class);

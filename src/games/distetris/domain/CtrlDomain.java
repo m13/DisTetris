@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
@@ -77,6 +78,14 @@ public class CtrlDomain {
 
 	public int[][] getBoard() {
 		return GAME.getBoard();
+	}
+	
+	/**
+	 * it returns all the players
+	 * @return Vector of Bundle
+	 */
+	public Vector<Bundle> getPlayers() {
+		return this.GAME.getPlayers();
 	}
 
 	private void parserController(String str) throws Exception {
@@ -297,20 +306,30 @@ public class CtrlDomain {
 		NET.setWifiManager(systemService);
 	}
 
+	
+	// DB HOOKS
+	
 	public String getPlayerName() {
-		return GAME.getPlayerName();
+		return this.GAME.getPlayerName();
 	}
 	
 	public void setPlayerName(String name) {
-		GAME.setPlayerName(name);
+		this.GAME.setPlayerName(name);
+	}
+	
+	public Bundle getConfCreate() {
+		return this.GAME.getConfCreate();
 	}
 
-	public void serverConfigure(String name, int numTeams, int numTurns) {
-		this.serverName = name;
-		this.serverNumTeams = numTeams;
-		this.serverNumTurns = numTurns;
+	public void setConfCreate(Bundle b) {
+		this.serverName = b.getString("servername");
+		this.serverNumTeams = Integer.valueOf(b.getString("numteams"));
+		this.serverNumTurns = Integer.valueOf(b.getString("numturns"));
 		this.serverTurnPointer = 0;
+		this.GAME.setConfCreate(b);
 	}
+	
+	//
 
 	public String getServerName() {
 		return this.serverName;
@@ -371,6 +390,8 @@ public class CtrlDomain {
 	public void startGame() {
 		this.myTurns = this.serverNumTurns;
 		this.GAME.createNewCleanBoard();
+		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
+				this.NET.serverTCPGetConnectedPlayersName());
 		
 		this.NET.sendSignalsStartGame();
 		

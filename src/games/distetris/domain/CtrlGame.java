@@ -3,9 +3,12 @@ package games.distetris.domain;
 import games.distetris.storage.DbHelper;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Vector;
 
 import android.database.Cursor;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 
 public class CtrlGame {
@@ -100,18 +103,47 @@ public class CtrlGame {
 	public void setBoard(Board object) {
 		this.board = object;
 	}
+	
+	
+	/**
+	 * it returns all the players
+	 * @return Vector of Bundle
+	 */
+	public Vector<Bundle> getPlayers() {
+		return this.board.getPlayers();
+	}
 
+	/**
+	 * Initialize the players of the boards
+	 * @param teams Vector of the team-name
+	 * @param names Vector of the names
+	 */
+	public void setPlayers(Vector<Integer> teams, Vector<String> names){
+		for (int i=0; i<teams.size(); i++) {
+			Bundle b = new Bundle();
+			b.putInt("team", teams.get(i).intValue());
+			b.putString("name", names.get(i).toString());
+			b.putInt("score", 0);
+			Random color = new Random();
+			b.putInt("color", Color.rgb(color.nextInt(256), color.nextInt(256), color.nextInt(256)));
+			this.board.setPlayer(b);
+		}
+	}
 
-	// save the score in the DB
-	public void saveScore(boolean ratioType) {
-		int type = (ratioType) ? 0 : 1;
+	/**
+	 * Saves the scores into the database
+	 */
+	public void saveScore() {
+		// TODO: call
+		Vector<Bundle> players = this.board.getPlayers();
+		int playersSize = players.size();
+		int type = (playersSize==1) ? 0 : 1;
 		Long date = System.currentTimeMillis();
 		
-		for ( Entry<String, Integer> x : board.getPlayersScore().entrySet()) {
-			String name = String.valueOf(x.getKey());
-			Integer puntuation = x.getValue();
-
-			db.insertValues(type, name, puntuation, date);
+		for (int i=0; i<playersSize; i++) {
+			String name = players.get(i).getString("name");
+			Integer score = players.get(i).getInt("score");
+			db.insertValues(type, name, score, date);
 		}
 	}
 	
@@ -130,6 +162,15 @@ public class CtrlGame {
 	public void setPlayerName(String name) {
 		db.setPlayerName(name);
 	}
+
+	public Bundle getConfCreate() {
+		return db.getConfCreate();
+	}
+
+	public void setConfCreate(Bundle b) {
+		db.setConfCreate(b);
+	}
+	
 
 	/**
 	 * A step in the game

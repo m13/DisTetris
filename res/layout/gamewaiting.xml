@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:padding="8dip"
+	android:gravity="bottom"
+    android:background="@drawable/background" >
+    
+    <TextView
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+		android:gravity="center"
+	    android:padding="8dip"
+	    android:textSize="18dip"
+	    android:text="@string/catSettings"
+	    android:background="#22111111" />
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:padding="4dip" >
+	    <TextView
+		    android:layout_height="wrap_content"
+		    android:layout_width="150dip"
+		    android:textSize="18dip"
+		    android:textColor="#111"
+		    android:text="@string/newServername" />
+	   	<TextView
+			android:id="@+id/WaitingServername"
+		    android:layout_height="wrap_content" 
+		    android:layout_width="fill_parent"
+		    android:gravity="center"
+		    android:textSize="18dip"
+		    android:textColor="#000"
+		    android:singleLine="true"
+	    	android:background="#22EEEEEE"  />
+    </LinearLayout>
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:padding="4dip" >
+	    <TextView
+		    android:layout_height="wrap_content"
+		    android:layout_width="150dip" 
+		    android:textSize="18dip"
+		    android:textColor="#111"
+		    android:text="@string/newNumTeams" />
+	   	<TextView
+			android:id="@+id/WaitingNumTeams"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:textSize="18dip"
+		    android:textColor="#000"
+		    android:gravity="right" />
+    </LinearLayout>
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:padding="4dip" >
+	    <TextView
+		    android:layout_height="wrap_content"
+		    android:layout_width="150dip"  
+		    android:textSize="18dip"
+		    android:textColor="#111" 
+		    android:text="@string/newNumTurns" />
+	   	<TextView
+			android:id="@+id/WaitingNumTurns"
+		    android:layout_height="wrap_content" 
+		    android:layout_width="fill_parent" 
+		    android:textSize="18dip"
+		    android:textColor="#000"
+		    android:gravity="right" />
+    </LinearLayout>
+
+    
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:padding="4dip"
+	    android:background="#22EEEEEE" >
+	    <TextView
+		    android:layout_height="wrap_content"
+		    android:layout_width="120dip" 
+		    android:textSize="18dip"
+		    android:textColor="#111"
+		    android:text="@string/playerID" />
+	   	<TextView
+			android:id="@+id/PlayerID"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:textSize="18dip"
+		    android:textColor="#000"
+		    android:gravity="right" />
+    </LinearLayout>
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:padding="4dip"
+	    android:background="#22EEEEEE" >
+	    <TextView
+		    android:layout_height="wrap_content"
+		    android:layout_width="120dip" 
+		    android:textSize="18dip"
+		    android:textColor="#111" 
+		    android:text="@string/teamID" />
+	   	<TextView
+			android:id="@+id/TeamID"
+		    android:layout_height="wrap_content" 
+		    android:layout_width="fill_parent"
+		    android:textSize="18dip"
+		    android:textColor="#000"
+		    android:gravity="right" />
+    </LinearLayout>
+    
+    <TextView
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+		android:gravity="center"
+	    android:padding="8dip"
+	    android:textSize="18dip"
+	    android:text="@string/catPlayers"
+	    android:background="#22111111" />
+    <ScrollView
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:layout_weight="1"
+		android:fillViewport="true" >
+		<LinearLayout
+			android:id="@+id/Players"
+		    android:orientation="vertical"
+		    android:layout_height="fill_parent"
+		    android:layout_width="fill_parent" />
+	</ScrollView>
+    
+	<Button
+		android:id="@+id/Start"
+	    android:layout_height="wrap_content" 
+	    android:layout_width="fill_parent" 
+	    android:visibility="invisible"
+	    android:text="@string/start" />
+	<Button
+		android:id="@+id/Back"
+	    android:layout_height="wrap_content" 
+	    android:layout_width="fill_parent" 
+	    android:text="@string/back" />
+</LinearLayout>

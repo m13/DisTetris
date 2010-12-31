@@ -25,6 +25,14 @@ public class Player {
 	public String getName() {
 		return name;
 	}
+	
+	public Integer getNumPlayer() {
+		return numPlayer;
+	}
+
+	public Integer getTeam() {
+		return this.numTeam;
+	}
 
 	public String in() throws Exception {
 		return connection.in();
@@ -32,10 +40,6 @@ public class Player {
 
 	public void out(String content) throws Exception {
 		connection.out(content);
-	}
-
-	public Integer getTeam() {
-		return this.numTeam;
 	}
 
 	public TCPConnection getConnection() {

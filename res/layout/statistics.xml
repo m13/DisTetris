@@ -2,43 +2,50 @@
 <ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
-    android:layout_width="fill_parent" >
+    android:layout_width="fill_parent"
+	android:fillViewport="true" >
 	<LinearLayout
 	    android:orientation="vertical"
 	    android:layout_height="fill_parent"
 	    android:layout_width="fill_parent"
-		android:padding="10sp"
+		android:padding="8dip"
 		android:gravity="bottom"
 		android:background="@drawable/background" >
-	
-		<TextView
+		
+		<LinearLayout
+		    android:orientation="vertical"
 		    android:layout_height="wrap_content"
 		    android:layout_width="fill_parent"
-			android:gravity="center"
-		    android:padding="6sp"
-		    android:textSize="18sp"
-		    android:text="@string/catIndividual" />
+		    android:layout_weight="1" >
 		    
-			<LinearLayout
-				android:id="@+id/LinearLayoutIndividual"
-			    android:orientation="vertical"
+			<TextView
 			    android:layout_height="wrap_content"
-			    android:layout_width="fill_parent" />
-			
-		<TextView
-		    android:layout_height="wrap_content"
-		    android:layout_width="fill_parent"
-		    android:gravity="center_horizontal"
-		    android:padding="6sp"
-		    android:textSize="18sp"
-		    android:text="@string/catTeam" />
-		    
-			<LinearLayout
-				android:id="@+id/LinearLayoutTeam"
-			    android:orientation="vertical"
+			    android:layout_width="fill_parent"
+				android:gravity="center"
+			    android:padding="8dip"
+			    android:textSize="18dip"
+			    android:background="#22111111"
+			    android:text="@string/catIndividual" />
+				<LinearLayout
+					android:id="@+id/LinearLayoutIndividual"
+				    android:orientation="vertical"
+				    android:layout_height="wrap_content"
+				    android:layout_width="fill_parent" />
+				
+			<TextView
 			    android:layout_height="wrap_content"
-			    android:layout_width="fill_parent" />
-		    
+			    android:layout_width="fill_parent"
+			    android:gravity="center_horizontal"
+			    android:padding="8dip"
+			    android:textSize="18dip"
+			    android:background="#22111111"
+			    android:text="@string/catTeam" />
+				<LinearLayout
+					android:id="@+id/LinearLayoutTeam"
+				    android:orientation="vertical"
+				    android:layout_height="wrap_content"
+				    android:layout_width="fill_parent" />
+		</LinearLayout>
 		<Button
 			android:id="@+id/Back"
 		    android:layout_height="wrap_content"

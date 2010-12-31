@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,20 +42,18 @@ public class JoinGameWaiting extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.joingamewaiting);
+		setContentView(R.layout.gamewaiting);
 
 		Bundle bundle = this.getIntent().getExtras();
 		String serverName = bundle.getString("NAME");
 		String serverIP = bundle.getString("IP");
 		int serverPort = bundle.getInt("PORT");
-
-
 		
 		try {
 			CtrlDomain.getInstance().setHandlerUI(handler);
 			CtrlDomain.getInstance().serverTCPConnect(serverIP, serverPort);
 		} catch (Exception e) {
-			Toast.makeText(getBaseContext(), "Couldn't connect to the server", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getBaseContext(), "Couldn't connect to the server "+serverName, Toast.LENGTH_SHORT).show();
 			finish();
 		}
 	}
@@ -82,22 +82,30 @@ public class JoinGameWaiting extends Activity {
 
 		WaitingRoom room = (WaitingRoom) b.getSerializable("room");
 
-		String str = "";
-		str += "Name: " + room.name + "\n";
-		str += "Number of teams: " + room.numTeams + "\n";
-		str += "Number of turns: " + room.numTurns + "\n";
-		str += "\n";
-		str += "PlayerID: " + room.currentPlayerID + "\n";
-		str += "TeamID: " + room.currentTeamID + "\n";
-		str += "\n";
-		str += "Players:\n";
+		TextView tv;
+		tv = (TextView) findViewById(R.id.WaitingServername);
+		tv.setText(String.valueOf(room.name));
+		tv = (TextView) findViewById(R.id.WaitingNumTeams);
+		tv.setText(String.valueOf(room.numTeams));
+		tv = (TextView) findViewById(R.id.WaitingNumTurns);
+		tv.setText(String.valueOf(room.numTurns));
 
+		tv = (TextView) findViewById(R.id.PlayerID);
+		tv.setText(String.valueOf(room.currentPlayerID));
+		tv = (TextView) findViewById(R.id.TeamID);
+		tv.setText(String.valueOf(room.currentTeamID));
+	
+		LinearLayout ll = (LinearLayout) findViewById(R.id.Players);
+		
 		for (int i = 0; i < room.players.size(); i++) {
-			str += "[" + room.players.get(i).team + "] " + room.players.get(i).name + "\n";
-		}
+			View child = getLayoutInflater().inflate(R.layout.row_player, null);
 
-		TextView tv = ((TextView) findViewById(R.id.TextView01));
-		tv.setText(str);
+			tv = (TextView) child.findViewById(R.id.Team);
+			tv.setText(String.valueOf(room.players.get(i).team));
+			tv = (TextView) child.findViewById(R.id.Player);
+			tv.setText(String.valueOf(room.players.get(i).name));
+			ll.addView(child);
+		}
 	}
 
 	/**
@@ -111,3 +119,4 @@ public class JoinGameWaiting extends Activity {
 		finish();
 	}
 }
+

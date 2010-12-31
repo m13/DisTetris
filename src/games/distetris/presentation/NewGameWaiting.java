@@ -10,6 +10,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +42,22 @@ public class NewGameWaiting extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.newgamewaiting);
+		setContentView(R.layout.gamewaiting);
 
-		Button b = (Button) findViewById(R.id.Start);
-
+		Button b;
+		b = (Button) findViewById(R.id.Start);
+		b.setVisibility(View.VISIBLE);
 		b.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				startGameButton();
+			}
+		});
+		
+		b = (Button) findViewById(R.id.Back);
+		b.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				CtrlDomain.getInstance().serverTCPDisconnectClients();
+				finish();
 			}
 		});
 
@@ -97,23 +107,31 @@ public class NewGameWaiting extends Activity {
 
 		this.room = (WaitingRoom) b.getSerializable("room");
 
-		String str = "";
-		str += "Name: " + this.room.name + "\n";
-		str += "Number of teams: " + this.room.numTeams + "\n";
-		str += "Number of turns: " + this.room.numTurns + "\n";
-		str += "\n";
-		str += "PlayerID: " + this.room.currentPlayerID + "\n";
-		str += "TeamID: " + this.room.currentTeamID + "\n";
-		str += "\n";
-		str += "Players:\n";
+		TextView tv;
+		tv = (TextView) findViewById(R.id.WaitingServername);
+		tv.setText(String.valueOf(room.name));
+		tv = (TextView) findViewById(R.id.WaitingNumTeams);
+		tv.setText(String.valueOf(room.numTeams));
+		tv = (TextView) findViewById(R.id.WaitingNumTurns);
+		tv.setText(String.valueOf(room.numTurns));
 
-		for (int i = 0; i < this.room.players.size(); i++) {
-			str += "[" + this.room.players.get(i).team + "] " + this.room.players.get(i).name + "\n";
+		tv = (TextView) findViewById(R.id.PlayerID);
+		tv.setText(String.valueOf(room.currentPlayerID));
+		tv = (TextView) findViewById(R.id.TeamID);
+		tv.setText(String.valueOf(room.currentTeamID));
+	
+		LinearLayout ll = (LinearLayout) findViewById(R.id.Players);
+		ll.removeAllViews();
+		
+		for (int i = 0; i < room.players.size(); i++) {
+			View child = getLayoutInflater().inflate(R.layout.row_player, null);
+
+			tv = (TextView) child.findViewById(R.id.Team);
+			tv.setText(String.valueOf(room.players.get(i).team));
+			tv = (TextView) child.findViewById(R.id.Player);
+			tv.setText(String.valueOf(room.players.get(i).name));
+			ll.addView(child);
 		}
-
-		TextView tv = ((TextView) findViewById(R.id.TextView01));
-		tv.setText(str);
-
 	}
 
 	/**
