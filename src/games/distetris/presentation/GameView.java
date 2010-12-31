@@ -1,16 +1,19 @@
 package games.distetris.presentation;
 
-import java.util.ArrayList;
-
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
 import games.distetris.domain.PieceConstants;
+
+import java.util.ArrayList;
+import java.util.Vector;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -141,7 +144,7 @@ public class GameView extends View implements Listener {
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
 		strokepaint.setStrokeWidth(1);
 		
-		int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
+		// int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
 		
 		//the board is draw from left bottom to right top
 		for(int r=0;r<boardh;r++){
@@ -163,11 +166,11 @@ public class GameView extends View implements Listener {
 	 * @param board
 	 */
 	private void drawInfoZone(Canvas canvas, int[][] board,Piece p) {
-		
+
 		int zone_start_left = boardw*SQSIZE + PADDING;
 		int zone_start_top = getHeight() - boardh*SQSIZE - SQSIZE;
 		int zone_start_right = getWidth() - PADDING;
-		int zone_start_bottom = getHeight();
+		// int zone_start_bottom = getHeight();
 		
 		strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
 		strokepaint.setStrokeWidth(3);
@@ -176,14 +179,12 @@ public class GameView extends View implements Listener {
 		int piecesq_top = zone_start_top;
 		int piecesq_right = zone_start_right;
 		int piecesq_bottom = zone_start_top + 2*PADDING + 4*SQSIZE;
+		
 		RectF piecesq = new RectF(piecesq_left,piecesq_top,piecesq_right,piecesq_bottom);
-
 		canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
 		drawNextPiece(piecesq,canvas,p);
 		
-		drawScores(canvas,piecesq_bottom,zone_start_left);
-		
-		
+		drawScores(canvas, piecesq_bottom + 2*PADDING , zone_start_left, piecesq_right);
 	}
 
 	/**
@@ -192,12 +193,45 @@ public class GameView extends View implements Listener {
 	 * @param top top position where toTimerTask example start drawing
 	 * @param left left position where to start drawing
 	 */
-	private void drawScores(Canvas canvas, int top, int left) {
+	private void drawScores(Canvas canvas, int top, int left, int right) {
+		Vector<Bundle> vb = dc.getPlayers();
+		Vector<Vector<Integer>> pos = new Vector<Vector<Integer>>();
 		
-		//foreach Player draw its score
-		strokepaint.setColor(Color.YELLOW);
-		strokepaint.setStrokeWidth(1);
-		canvas.drawText("3553", left, top + PADDING, strokepaint);
+		for (int i=0; i<vb.size(); i++) {
+			pos.add(new Vector<Integer>());
+		}
+		
+		for (int i=0; i<vb.size(); i++) {
+			pos.get(vb.get(i).getInt("team")).addElement(i);
+		}
+		
+		for (int i=0; i<pos.size(); i++) {
+			if (pos.get(i).isEmpty()) { continue; }
+			Vector<Integer> vi = pos.get(i);
+			
+			strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
+			strokepaint.setStrokeWidth(3);
+			
+			RectF piecesq = new RectF(left, top, right, top + 3*PADDING*(vi.size()+1)+PADDING);
+			canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
+			
+			int score = 0;
+			for (int j=0; j<vi.size(); j++) {
+				top = top + 3*PADDING;
+				strokepaint.setColor(vb.get(vi.get(j)).getInt("color"));
+				strokepaint.setStrokeWidth(1);
+				canvas.drawText(vb.get(vi.get(j)).getString("name"), left+PADDING, top, strokepaint);
+				canvas.drawText(String.valueOf((vb.get(vi.get(j)).getInt("score"))), left+80, top, strokepaint);
+				score += vb.get(vi.get(j)).getInt("score");
+			}
+			
+			top = top + 3*PADDING;
+			strokepaint.setColor(Color.DKGRAY);
+			strokepaint.setStrokeWidth(1);
+			canvas.drawText(String.valueOf(score), left+70, top, strokepaint);
+			
+			top = top + 2*PADDING;
+		}
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
@@ -77,6 +78,14 @@ public class CtrlDomain {
 
 	public int[][] getBoard() {
 		return GAME.getBoard();
+	}
+	
+	/**
+	 * it returns all the players
+	 * @return Vector of Bundle
+	 */
+	public Vector<Bundle> getPlayers() {
+		return this.GAME.getPlayers();
 	}
 
 	private void parserController(String str) throws Exception {
@@ -365,6 +374,8 @@ public class CtrlDomain {
 	 */
 	public void startGame() {
 		this.GAME.createNewCleanBoard();
+		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
+				this.NET.serverTCPGetConnectedPlayersName());
 		this.NET.sendTurns(this.serverTurnPointer);
 		this.NET.sendUpdatedBoard();
 		this.NET.sendSignals("STARTGAME");

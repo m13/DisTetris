@@ -18,14 +18,14 @@ public class DbHelper {
 		db.close();
 	}
 
-	public void insertValues(int type, String name, Integer puntuation, Long date) {
+	public void insertValues(int type, String name, Integer score, Long date) {
 		String[] types = new String[] {
 				"individual",
 				"team" };
 		
 		String sql = "INSERT INTO "+types[type]+" (name, score, date)" +
 				"VALUES (?, " +
-				String.valueOf(puntuation) + ", " + 
+				String.valueOf(score) + ", " + 
 				String.valueOf(date)+")";
 		db.execSQL(sql, new String[]{ name });
 	}

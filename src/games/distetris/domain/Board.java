@@ -2,10 +2,10 @@ package games.distetris.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Vector;
 
 import android.graphics.Color;
+import android.os.Bundle;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -16,8 +16,8 @@ public class Board implements Serializable {
 	private int PIECESIZE = 5;
 	
 
-	// players
-	Map<String,Integer> playersScore = new HashMap<String,Integer>();
+	// players: team, name, score, color
+	private Vector<Bundle> players = new Vector<Bundle>();
 	
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
@@ -160,8 +160,20 @@ public class Board implements Serializable {
 		return true;
 	}
 	
-	public Map<String,Integer> getPlayersScore() {
-		return playersScore;
+	/**
+	 * it returns all the players
+	 * @return Vector of Bundle
+	 */
+	public Vector<Bundle> getPlayers() {
+		return players;
+	}
+	
+	/**
+	 * it adds a new player to the board
+	 * @param b A bundle containing a player
+	 */
+	public void setPlayer(Bundle b) {
+		players.add(b);
 	}
 	
 	/**

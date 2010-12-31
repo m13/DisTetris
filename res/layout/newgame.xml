@@ -4,61 +4,68 @@
     android:orientation="vertical"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
-    android:padding="10sp"
+    android:padding="8dip"
 	android:gravity="bottom"
     android:background="@drawable/background" >
     
-    <LinearLayout
-	    android:orientation="horizontal"
+	<LinearLayout
+	    android:orientation="vertical"
 	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent" >
-	    <TextView
+	    android:layout_width="fill_parent"
+	    android:layout_weight="1" >
+	    
+	    <LinearLayout
+		    android:orientation="horizontal"
 		    android:layout_height="wrap_content"
-		    android:layout_width="150sp"
-		    android:textSize="16sp"
-		    android:textColor="#111"
-		    android:text="@string/newServername" />
-	   	<EditText
-			android:id="@+id/NewGameServername"
-		    android:layout_height="wrap_content" 
-		    android:layout_width="fill_parent"
-			android:inputType="textPersonName" />
-    </LinearLayout>
-    
-    <LinearLayout
-	    android:orientation="horizontal"
-	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent" >
-	    <TextView
+		    android:layout_width="fill_parent" >
+		    <TextView
+			    android:layout_height="wrap_content"
+			    android:layout_width="150dip"
+			    android:textSize="18dip"
+			    android:textColor="#111"
+			    android:text="@string/newServername" />
+		   	<EditText
+				android:id="@+id/NewGameServername"
+			    android:layout_height="wrap_content" 
+			    android:layout_width="fill_parent"
+				android:inputType="textPersonName" />
+	    </LinearLayout>
+	    
+	    <LinearLayout
+		    android:orientation="horizontal"
 		    android:layout_height="wrap_content"
-		    android:layout_width="150sp" 
-		    android:textSize="16sp"
-		    android:textColor="#111"
-		    android:text="@string/newNumTeams" />
-	   	<EditText
-			android:id="@+id/NewGameNumTeams"
-		    android:layout_width="fill_parent" 
+		    android:layout_width="fill_parent" >
+		    <TextView
+			    android:layout_height="wrap_content"
+			    android:layout_width="150dip" 
+			    android:textSize="18sp"
+			    android:textColor="#111"
+			    android:text="@string/newNumTeams" />
+		   	<EditText
+				android:id="@+id/NewGameNumTeams"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:inputType="number" />
+	    </LinearLayout>
+	    
+	    <LinearLayout
+		    android:orientation="horizontal"
 		    android:layout_height="wrap_content"
-		    android:gravity="right"
-		    android:inputType="number" />
-    </LinearLayout>
-    
-    <LinearLayout
-	    android:orientation="horizontal"
-	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent" >
-	    <TextView
-		    android:layout_height="wrap_content"
-		    android:layout_width="150sp" 
-		    android:textSize="16sp"
-		    android:textColor="#111" 
-		    android:text="@string/newNumTurns" />
-	   	<EditText
-			android:id="@+id/NewGameNumTurns"
-		    android:layout_height="wrap_content" 
-		    android:layout_width="fill_parent"
-		    android:gravity="right"
-		    android:inputType="number"  />
+		    android:layout_width="fill_parent" >
+		    <TextView
+			    android:layout_height="wrap_content"
+			    android:layout_width="150dip" 
+			    android:textSize="18dip"
+			    android:textColor="#111" 
+			    android:text="@string/newNumTurns" />
+		   	<EditText
+				android:id="@+id/NewGameNumTurns"
+			    android:layout_height="wrap_content" 
+			    android:layout_width="fill_parent"
+			    android:gravity="right"
+			    android:inputType="number" />
+	    </LinearLayout>
     </LinearLayout>
     
 	<Button

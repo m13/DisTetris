@@ -8,20 +8,20 @@
   <TextView
 	  android:id="@+id/Name"
 	  android:layout_height="wrap_content"
-	  android:layout_width="150sp"
-	  android:textSize="16sp"
+	  android:layout_width="150dip"
+	  android:textSize="18dip"
 	  android:textColor="#111" />
   <TextView
 	  android:id="@+id/Date"
 	  android:layout_height="wrap_content"
-	  android:layout_width="80sp"
-	  android:textSize="12sp"
+	  android:layout_width="80dip"
+	  android:textSize="12dip"
 	  android:textColor="#111" />
   <TextView
 	  android:id="@+id/Score"
 	  android:layout_height="wrap_content"
 	  android:layout_width="fill_parent"
 	  android:gravity="right"
-	  android:textSize="20sp"
+	  android:textSize="20dip"
 	  android:textColor="#111" />
 </LinearLayout>
