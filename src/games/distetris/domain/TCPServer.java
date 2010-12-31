@@ -38,8 +38,10 @@ public class TCPServer extends Thread {
 	public void run() {
 	
 		try {
-			L.d("S: Connecting...");
+
 			serverSocket = new ServerSocket(CtrlNet.PORT);
+
+			L.d("TCPServer Started");
 
 			this.listening = true;
 			

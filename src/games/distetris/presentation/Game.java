@@ -1,9 +1,10 @@
 package games.distetris.presentation;
 
+import games.distetris.domain.CtrlDomain;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
-import games.distetris.domain.CtrlDomain;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -134,17 +135,19 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	/**
 	 * Start Game Loop timer
 	 */
-	public void doGameLoop(){
+	public void doGameLoop() {
 		gamelooptask = new TimerTask() {
-		        public void run() {
-		                handler.post(new Runnable() {
-		                        public void run() {
-		                         gameLoop();
-		                        }
-		               });
-		        }};
-		 }
-	
+			public void run() {
+				handler.post(new Runnable() {
+					public void run() {
+						gameLoop();
+					}
+				});
+			}
+		};
+		gamelooptimer.schedule(gamelooptask, 0, mseconds_actualize);
+	}
+
 	/**
 	 * Start view invalidate timer
 	 */

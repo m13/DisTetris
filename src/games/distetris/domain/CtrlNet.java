@@ -100,7 +100,7 @@ public class CtrlNet {
 			}
 		}
 		this.threadTCPServer = null;
-		L.d("Closed");
+		L.d("TCPServer Closed");
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class CtrlNet {
 			}
 		}
 		this.threadUDPServer = null;
-		L.d("Closed");
+		L.d("UPDServer Closed");
 	}
 
 	/*
@@ -232,6 +232,16 @@ public class CtrlNet {
 		threadTCPServerSend.start();
 	}
 
+	public void sendSignals(Vector<String> vector_string) {
+		TCPServerSend threadTCPServerSend = new TCPServerSend(players, vector_string);
+		threadTCPServerSend.start();
+	}
+
+	public void sendSignalsStartGame() {
+		TCPServerSend threadTCPServerSend = new TCPServerSend(players);
+		threadTCPServerSend.start();
+	}
+
 	public Vector<String> serverTCPGetConnectedPlayersName() {
 		Vector<String> result = new Vector<String>(players.size());
 
@@ -256,13 +266,27 @@ public class CtrlNet {
 		return this.players.size();
 	}
 
-	public void sendUpdatedBoard() {
+	public void sendUpdatedBoardServer() {
 		Board b = CtrlGame.getInstance().getBoardToSend();
-		CtrlNet.getInstance().sendSignals("UPDATEBOARD " + CtrlDomain.getInstance().serialize(b));
+		try {
+			sendSignal("UPDATEDBOARD " + CtrlDomain.getInstance().serialize(b));
+		} catch (Exception e) {
+			// TODO :do something
+			e.printStackTrace();
+		}
+	}
+
+	public void sendUpdatedBoardClients(Board b) {
+		try {
+			sendSignals("UPDATEBOARD " + CtrlDomain.getInstance().serialize(b));
+		} catch (Exception e) {
+			// TODO :do something
+			e.printStackTrace();
+		}
 	}
 
 	public void sendTurns(Integer serverTurnPointer) {
-		sendSignals("UPDATEMYTURN false");
+		sendSignals("UPDATEMYTURN 0");
 		
 		// TODO: proper fix
 		try {
@@ -271,9 +295,18 @@ public class CtrlNet {
 		}
 
 		try {
-			sendSignal(serverTurnPointer,"UPDATEMYTURN true");
+			sendSignal(serverTurnPointer, "UPDATEMYTURN " + CtrlDomain.getInstance().getServerNumTurns());
 		} catch (Exception e) {
 			// TODO: FixIt */
+			e.printStackTrace();
+		}
+	}
+
+	public void sendTurnFinished() {
+		try {
+			sendSignal("TURNFINISHED");
+		} catch (Exception e) {
+			// TODO check this
 			e.printStackTrace();
 		}
 	}

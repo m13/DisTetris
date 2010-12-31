@@ -124,6 +124,14 @@ public class CtrlDomain {
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
 
+		} else if (actionContent[0].equals("UPDATEDBOARD")) {
+			// A client sent a new board
+			// Send this new board to all the clients
+
+			Board b = (Board) unserialize(args[0]);
+			NET.sendUpdatedBoardClients(b);
+			//NET.sendSignals(serialize(b));
+
 		} else if (actionContent[0].equals("UPDATEBOARD")) {
 			// The server sent a new board
 			// Update the UI
@@ -133,7 +141,14 @@ public class CtrlDomain {
 			}
 
 		} else if (actionContent[0].equals("UPDATEMYTURN")) {
-			this.myTurn = Boolean.parseBoolean(((String) unserialize(args[0])));
+			this.myTurns = Integer.parseInt(((String) args[0]));
+			this.myTurn = (this.myTurns > 0) ? true : false;
+			L.d("Turns updated. myTurn " + this.myTurn + " myTurns " + this.myTurns);
+
+		} else if (actionContent[0].equals("TURNFINISHED")) {
+			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
+			L.d("Nuevo turn: " + this.serverTurnPointer);
+			NET.sendTurns(this.serverTurnPointer);
 		}
 
 			
@@ -354,10 +369,11 @@ public class CtrlDomain {
 	 * clients must be on *Waiting views.
 	 */
 	public void startGame() {
+		this.myTurns = this.serverNumTurns;
 		this.GAME.createNewCleanBoard();
-		this.NET.sendTurns(this.serverTurnPointer);
-		this.NET.sendUpdatedBoard();
-		this.NET.sendSignals("STARTGAME");
+		
+		this.NET.sendSignalsStartGame();
+		
 	}
 	
 	
@@ -412,8 +428,22 @@ public class CtrlDomain {
 	}
 	
 	public void addCurrentPieceToBoard(){
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+
+		// Add the piece to the game logic
 		this.GAME.addCurrentPieceToBoard();
-		this.NET.sendUpdatedBoard();
+
+		// Update the server with the new board
+		this.NET.sendUpdatedBoardServer();
+
+		// If it was my last turn, notify the server
+		if (!this.myTurn) {
+			this.NET.sendTurnFinished();
+		}
 	}
 	
 	public Piece getNextPiece(){
@@ -434,6 +464,10 @@ public class CtrlDomain {
 
 	public boolean isMyTurn() {
 		return this.myTurn;
+	}
+
+	public Integer getCurrentTurn() {
+		return this.serverTurnPointer;
 	}
 
 	/**
