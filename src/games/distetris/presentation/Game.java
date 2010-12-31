@@ -1,9 +1,10 @@
 package games.distetris.presentation;
 
+import games.distetris.domain.CtrlDomain;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
-import games.distetris.domain.CtrlDomain;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
