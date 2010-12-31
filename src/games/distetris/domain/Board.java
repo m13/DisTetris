@@ -17,7 +17,7 @@ public class Board implements Serializable {
 	
 
 	// players: team, name, score, color
-	private Vector<Bundle> players = new Vector<Bundle>();
+	//private Vector<Bundle> players = new Vector<Bundle>();
 	
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
@@ -165,7 +165,8 @@ public class Board implements Serializable {
 	 * @return Vector of Bundle
 	 */
 	public Vector<Bundle> getPlayers() {
-		return players;
+		//return players;
+		return new Vector<Bundle>();
 	}
 	
 	/**
@@ -173,7 +174,7 @@ public class Board implements Serializable {
 	 * @param b A bundle containing a player
 	 */
 	public void setPlayer(Bundle b) {
-		players.add(b);
+		//players.add(b);
 	}
 	
 	/**
