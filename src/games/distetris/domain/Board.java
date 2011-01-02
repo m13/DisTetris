@@ -14,7 +14,9 @@ public class Board implements Serializable {
 	private int COLS = 10;
 	private int PIECESIZE = 5;
 	
-
+	// who is playing now?
+	private String playerName = null;
+	
 	// playerData: HashMap of (String) player name + (Data) player data
 	private HashMap<String, Data> playerData = new HashMap<String, Data>();
 	
@@ -160,11 +162,27 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Get the current player playing
+	 * @return Name of the player
+	 */
+	public String getPlayerName(){
+		return this.playerName;
+	}
+	
+	/**
+	 * Set the new current player playing
+	 * @param playername Name of the player
+	 */
+	public void setPlayerName(String playername){
+		this.playerName = playername;
+	}
+	
+	/**
 	 * Returns all the players
 	 * @return HashMap of (name -> (Class)Score)
 	 */
 	public HashMap<String,Data> getPlayers() {
-		return playerData;
+		return this.playerData;
 	}
 	
 	/**
@@ -173,7 +191,7 @@ public class Board implements Serializable {
 	 * @param score the necessary values
 	 */
 	public void setPlayer(String name, Data data) {
-		playerData.put(name, data);
+		this.playerData.put(name, data);
 	}
 	
 	/**
@@ -183,6 +201,10 @@ public class Board implements Serializable {
 	 */
 	public void addScore(String name, Integer value) {
 		playerData.get(name).incrScore(value);
+	}
+	
+	public Integer color() {
+		return playerData.get(playerName).getColor();
 	}
 	
 	/**

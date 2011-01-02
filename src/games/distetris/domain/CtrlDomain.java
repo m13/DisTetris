@@ -43,7 +43,7 @@ public class CtrlDomain {
 	private String serverName;
 	private Integer serverNumTeams;
 	private Integer serverNumTurns;
-	private Integer serverTurnPointer;
+	private Integer serverTurnPointer = 0;
 
 	private CtrlDomain() {
 		L.d("Created");
@@ -157,6 +157,9 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("TURNFINISHED")) {
 			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
 			L.d("Nuevo turn: " + this.serverTurnPointer);
+			// FIXME (Guardamos en board que jugador tendra el turno para saber su color) (Revisalo y borra el FIX)
+			GAME.getBoardToSend().setPlayerName(NET.serverTCPGetConnectedPlayersName().get(this.serverTurnPointer));
+			// --
 			NET.sendTurns(this.serverTurnPointer);
 		}
 
@@ -387,14 +390,12 @@ public class CtrlDomain {
 	 * Send to all the connected clients that the game is going to start. The
 	 * clients must be on *Waiting views.
 	 */
-	public void startGame() {
+	public void startGame() {		
 		this.myTurns = this.serverNumTurns;
 		this.GAME.createNewCleanBoard();
 		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
 				this.NET.serverTCPGetConnectedPlayersName());
-		
 		this.NET.sendSignalsStartGame();
-		
 	}
 	
 	

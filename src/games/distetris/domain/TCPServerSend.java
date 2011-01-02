@@ -2,6 +2,8 @@ package games.distetris.domain;
 
 import java.util.Vector;
 
+import android.util.Log;
+
 public class TCPServerSend extends Thread {
 
 	private Vector<Player> players;
@@ -70,6 +72,13 @@ public class TCPServerSend extends Thread {
 		} else if (mode == 3) {
 			// Send the startGame
 
+			// FIXME (Guardamos en board que jugador tendra el turno para saber su color) (Revisalo y borra el FIX)
+			Integer turn = CtrlDomain.getInstance().getCurrentTurn(); // 
+			CtrlGame.getInstance().getBoardToSend().setPlayerName(this.players.get(turn).getName());
+			Log.d(" ", String.valueOf(CtrlGame.getInstance().getBoardToSend().color()));
+			// --
+			
+			
 			String board = "UPDATEBOARD " + CtrlDomain.getInstance().serialize(CtrlGame.getInstance().getBoardToSend());
 
 			for (int i = 0; i < this.players.size(); i++) {
@@ -88,7 +97,7 @@ public class TCPServerSend extends Thread {
 
 
 			Vector<String> turns = new Vector<String>();
-			Integer turn = CtrlDomain.getInstance().getCurrentTurn();
+			// Integer turn = CtrlDomain.getInstance().getCurrentTurn();
 
 			for (int i = 0; i < this.players.size(); i++) {
 				if (i == turn) {

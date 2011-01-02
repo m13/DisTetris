@@ -8,6 +8,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -98,6 +99,7 @@ public class CtrlGame {
 		Piece p = new Piece(pid,0);
 		this.board.setCurrentpiece(this.board.getNextpiece());
 		this.board.setNextpiece(p);
+		
 	}
 	
 	public void setBoard(Board object) {
@@ -131,7 +133,7 @@ public class CtrlGame {
 	 * Saves all the scores into the database
 	 */
 	public void saveScore() {
-		// TODO: call
+		// TODO: call @ isGameOver()
 		HashMap<String,Data> playerData = this.board.getPlayers();
 		
 		int scoresSize = playerData.size();
@@ -172,6 +174,12 @@ public class CtrlGame {
 	 * A step in the game
 	 */
 	public void gameStep() {
+
+		// FIXME (Ponemos el color que toca en la pieza) (Revisalo y borra el FIX)
+		this.board.getCurrentpiece().color = this.board.color();
+		this.board.getNextpiece().color = Color.BLACK; // unknown
+		// --
+		
 		this.board.getCurrentpiece().x = this.board.getCurrentpiece().x + 1;
 	}
 
