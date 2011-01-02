@@ -20,8 +20,6 @@ public class CtrlGame {
 
 	private CtrlGame() {
 		L.d("Created");
-
-		// TODO: Close db
 	}
 
 	public static CtrlGame getInstance() {
@@ -33,6 +31,10 @@ public class CtrlGame {
 
 	public void setDbHelper(DbHelper dbHelper) {
 		INSTANCE.db = dbHelper;
+	}
+	
+	public void closeDb() {
+		INSTANCE.db.close();
 	}
 
 	// show pop-up where choose the team

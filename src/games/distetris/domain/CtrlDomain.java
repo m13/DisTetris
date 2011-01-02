@@ -75,6 +75,10 @@ public class CtrlDomain {
 	public void setDbHelper(DbHelper dbHelper) {
 		CtrlGame.getInstance().setDbHelper(dbHelper);
 	}
+	
+	public void closeDb() {
+		CtrlGame.getInstance().closeDb();
+	}
 
 	public int[][] getBoard() {
 		return GAME.getBoard();

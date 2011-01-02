@@ -32,6 +32,11 @@ public class Distetris extends Activity {
 		//CtrlDomain.getInstance().startNet();
 		L.d("End");
     }
+    
+    public void onDestroy(){
+    	CtrlDomain.getInstance().closeDb();
+    	super.onDestroy();
+    }
 
     private void setButtons() {
         Gallery g = (Gallery) findViewById(R.id.Gallery);
