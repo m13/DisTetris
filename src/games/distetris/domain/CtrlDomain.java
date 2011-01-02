@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.HashMap;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
@@ -82,9 +82,9 @@ public class CtrlDomain {
 	
 	/**
 	 * it returns all the players
-	 * @return Vector of Bundle
+	 * @return HashMap of (name -> (Class)Score)
 	 */
-	public Vector<Bundle> getPlayers() {
+	public HashMap<String,Data> getPlayers() {
 		return this.GAME.getPlayers();
 	}
 

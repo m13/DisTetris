@@ -2,10 +2,9 @@ package games.distetris.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.HashMap;
 
 import android.graphics.Color;
-import android.os.Bundle;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -16,8 +15,8 @@ public class Board implements Serializable {
 	private int PIECESIZE = 5;
 	
 
-	// players: team, name, score, color
-	//private Vector<Bundle> players = new Vector<Bundle>();
+	// playerData: HashMap of (String) player name + (Data) player data
+	private HashMap<String, Data> playerData = new HashMap<String, Data>();
 	
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
@@ -161,20 +160,29 @@ public class Board implements Serializable {
 	}
 	
 	/**
-	 * it returns all the players
-	 * @return Vector of Bundle
+	 * Returns all the players
+	 * @return HashMap of (name -> (Class)Score)
 	 */
-	public Vector<Bundle> getPlayers() {
-		//return players;
-		return new Vector<Bundle>();
+	public HashMap<String,Data> getPlayers() {
+		return playerData;
 	}
 	
 	/**
-	 * it adds a new player to the board
-	 * @param b A bundle containing a player
+	 * Adds a new player
+	 * @param name the name of the player
+	 * @param score the necessary values
 	 */
-	public void setPlayer(Bundle b) {
-		//players.add(b);
+	public void setPlayer(String name, Data data) {
+		playerData.put(name, data);
+	}
+	
+	/**
+	 * Increase the score of a player
+	 * @param name Player name
+	 * @param value Value to be increased
+	 */
+	public void addScore(String name, Integer value) {
+		playerData.get(name).incrScore(value);
 	}
 	
 	/**

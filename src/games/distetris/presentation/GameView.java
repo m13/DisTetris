@@ -1,19 +1,21 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.Data;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
 import games.distetris.domain.PieceConstants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -194,35 +196,36 @@ public class GameView extends View implements Listener {
 	 * @param left left position where to start drawing
 	 */
 	private void drawScores(Canvas canvas, int top, int left, int right) {
-		Vector<Bundle> vb = dc.getPlayers();
-		Vector<Vector<Integer>> pos = new Vector<Vector<Integer>>();
+		HashMap<String,Data> playerData = dc.getPlayers();
+		Vector<Vector<String>> names = new Vector<Vector<String>>();
 		
-		for (int i=0; i<vb.size(); i++) {
-			pos.add(new Vector<Integer>());
+		for (int i=0; i<playerData.size(); i++) {
+			names.add(new Vector<String>());
 		}
 		
-		for (int i=0; i<vb.size(); i++) {
-			pos.get(vb.get(i).getInt("team")).addElement(i);
+		for (Entry<String, Data> player : playerData.entrySet()) {
+			names.get(player.getValue().getTeam()).addElement(player.getKey());
 		}
 		
-		for (int i=0; i<pos.size(); i++) {
-			if (pos.get(i).isEmpty()) { continue; }
-			Vector<Integer> vi = pos.get(i);
+		for (int i=0; i<names.size(); i++) {
+			if (names.get(i).isEmpty()) { continue; }
+			Vector<String> vs = names.get(i);
 			
 			strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
 			strokepaint.setStrokeWidth(3);
 			
-			RectF piecesq = new RectF(left, top, right, top + 3*PADDING*(vi.size()+1)+PADDING);
+			RectF piecesq = new RectF(left, top, right, top + 3*PADDING*(vs.size()+1)+PADDING);
 			canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
-			
+
 			int score = 0;
-			for (int j=0; j<vi.size(); j++) {
+			strokepaint.setStrokeWidth(1);
+			
+			for (int j=0; j<vs.size(); j++) {
 				top = top + 3*PADDING;
-				strokepaint.setColor(vb.get(vi.get(j)).getInt("color"));
-				strokepaint.setStrokeWidth(1);
-				canvas.drawText(vb.get(vi.get(j)).getString("name"), left+PADDING, top, strokepaint);
-				canvas.drawText(String.valueOf((vb.get(vi.get(j)).getInt("score"))), left+80, top, strokepaint);
-				score += vb.get(vi.get(j)).getInt("score");
+				strokepaint.setColor(playerData.get(vs.get(j).toString()).getColor());
+				canvas.drawText(vs.get(j).toString(), left+PADDING, top, strokepaint);
+				canvas.drawText(String.valueOf(playerData.get(vs.get(j).toString()).getScore()), left+80, top, strokepaint);
+				score += playerData.get(vs.get(j).toString()).getScore();
 			}
 			
 			top = top + 3*PADDING;

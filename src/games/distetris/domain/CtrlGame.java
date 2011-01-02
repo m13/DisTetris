@@ -3,11 +3,11 @@ package games.distetris.domain;
 import games.distetris.storage.DbHelper;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -109,7 +109,7 @@ public class CtrlGame {
 	 * it returns all the players
 	 * @return Vector of Bundle
 	 */
-	public Vector<Bundle> getPlayers() {
+	public HashMap<String,Data> getPlayers() {
 		return this.board.getPlayers();
 	}
 
@@ -120,30 +120,26 @@ public class CtrlGame {
 	 */
 	public void setPlayers(Vector<Integer> teams, Vector<String> names){
 		for (int i=0; i<teams.size(); i++) {
-			Bundle b = new Bundle();
-			b.putInt("team", teams.get(i).intValue());
-			b.putString("name", names.get(i).toString());
-			b.putInt("score", 0);
-			Random color = new Random();
-			b.putInt("color", Color.rgb(color.nextInt(256), color.nextInt(256), color.nextInt(256)));
-			this.board.setPlayer(b);
+			int team = teams.get(i).intValue();
+			Data data = new Data(team);
+			String name = names.get(i).toString();
+			this.board.setPlayer(name, data);
 		}
 	}
 
 	/**
-	 * Saves the scores into the database
+	 * Saves all the scores into the database
 	 */
 	public void saveScore() {
 		// TODO: call
-		Vector<Bundle> players = this.board.getPlayers();
-		int playersSize = players.size();
-		int type = (playersSize==1) ? 0 : 1;
+		HashMap<String,Data> playerData = this.board.getPlayers();
+		
+		int scoresSize = playerData.size();
+		int type = (scoresSize==1) ? 0 : 1;
 		Long date = System.currentTimeMillis();
 		
-		for (int i=0; i<playersSize; i++) {
-			String name = players.get(i).getString("name");
-			Integer score = players.get(i).getInt("score");
-			db.insertValues(type, name, score, date);
+		for (Entry<String, Data> player : playerData.entrySet()) {
+			db.insertValues(type, player.getKey(), player.getValue().getScore(), date);
 		}
 	}
 	
