@@ -161,9 +161,7 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("TURNFINISHED")) {
 			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
 			L.d("Nuevo turn: " + this.serverTurnPointer);
-			// FIXME (Guardamos en board que jugador tendra el turno para saber su color) (Revisalo y borra el FIX)
-			GAME.getBoardToSend().setPlayerName(NET.serverTCPGetConnectedPlayersName().get(this.serverTurnPointer));
-			// --
+			GAME.getBoardToSend().setCurrentTurnPlayer(NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
 			NET.sendTurns(this.serverTurnPointer);
 		}
 
@@ -396,9 +394,11 @@ public class CtrlDomain {
 	 */
 	public void startGame() {		
 		this.myTurns = this.serverNumTurns;
+		this.serverTurnPointer = 0;
 		this.GAME.createNewCleanBoard();
 		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
 				this.NET.serverTCPGetConnectedPlayersName());
+		this.GAME.getBoardToSend().setCurrentTurnPlayer(this.NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
 		this.NET.sendSignalsStartGame();
 	}
 	

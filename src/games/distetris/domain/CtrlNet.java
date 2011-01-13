@@ -266,6 +266,12 @@ public class CtrlNet {
 		return this.players.size();
 	}
 
+	public String serverTCPGetConnectedPlayer(int id) {
+		String result = players.get(id).getName();
+
+		return result;
+	}
+
 	public void sendUpdatedBoardServer() {
 		Board b = CtrlGame.getInstance().getBoardToSend();
 		try {

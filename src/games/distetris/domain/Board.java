@@ -173,7 +173,7 @@ public class Board implements Serializable {
 	 * Set the new current player playing
 	 * @param playername Name of the player
 	 */
-	public void setPlayerName(String playername){
+	public void setCurrentTurnPlayer(String playername) {
 		this.playerName = playername;
 	}
 	
