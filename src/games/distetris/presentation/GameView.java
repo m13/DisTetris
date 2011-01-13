@@ -204,7 +204,8 @@ public class GameView extends View implements Listener {
 		}
 		
 		for (Entry<String, Data> player : playerData.entrySet()) {
-			names.get(player.getValue().getTeam()).addElement(player.getKey());
+			// FIXME: IndexOutOfBoundsException
+			//names.get(player.getValue().getTeam()).addElement(player.getKey());
 		}
 		
 		for (int i=0; i<names.size(); i++) {
