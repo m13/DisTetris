@@ -29,8 +29,8 @@ public class TCPConnection extends Thread {
 			this.keepRunning = true;
 
 		} catch (IOException e) {
+			// TODO: error when establishing a connection?
 			e.printStackTrace();
-			CtrlNet.getInstance().removeConnection(this);
 		}
 	}
 
@@ -45,23 +45,20 @@ public class TCPConnection extends Thread {
 		super.run();
 
 		try {
-			try {
 
-				String received;
-				while (keepRunning && (received = in()) != null) {
-					sendMsg("MSG", received);
-				}
-
-			} catch (Exception e) {
-				L.e("REMOVING ACTIVE CONNECTION");
-				CtrlNet.getInstance().removeConnection(this);
-			} finally {
-				CtrlNet.getInstance().removeConnection(this);
-				socket.close();
+			String received;
+			while (keepRunning && (received = in()) != null) {
+				sendMsg("MSG", received);
 			}
+
+			if (keepRunning) {
+				L.e("CONNECTION READ NULL");
+				CtrlDomain.getInstance().disconnectionDetected(this);
+			}
+
 		} catch (Exception e) {
-			L.e("REMOVING ACTIVE CONNECTION");
-			CtrlNet.getInstance().removeConnection(this);
+			L.e("CONNECTION READ EXCEPTION");
+			CtrlDomain.getInstance().disconnectionDetected(this);
 		}
 
 		L.d("Thread TCPConnection ended the run()");
@@ -69,27 +66,15 @@ public class TCPConnection extends Thread {
 	}
 
 	public String in() throws Exception {
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String result = in.readLine();
-			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
-			CtrlNet.getInstance().removeConnection(this);
-			throw new Exception();
-		}
+		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		String result = in.readLine();
+		return result;
 	}
 
 	public void out(String content) throws Exception {
 		PrintWriter out;
-		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-			out.println(content);
-		} catch (IOException e) {
-			e.printStackTrace();
-			CtrlNet.getInstance().removeConnection(this);
-			throw new Exception();
-		}
+		out = new PrintWriter(socket.getOutputStream(), true);
+		out.println(content);
 	}
 
 	private void sendMsg(String type, String content) {
@@ -101,10 +86,17 @@ public class TCPConnection extends Thread {
 	}
 
 	public void close() {
+
 		L.d("Closing TCPConnection");
+
+		this.keepRunning = false;
+
 		try {
-			this.keepRunning = false;
 			this.socket.shutdownInput();
+		} catch (IOException e) {
+		}
+
+		try {
 			this.socket.close();
 		} catch (IOException e) {
 		}

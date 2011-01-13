@@ -44,7 +44,6 @@ public class GameView extends View implements Listener {
 		fillpaint.setStyle(Paint.Style.FILL);
 		
 		dc = CtrlDomain.getInstance();
-		// TODO Auto-generated constructor stub
 		
 		int[][] board = dc.getBoard();
 		boardw = board[0].length;

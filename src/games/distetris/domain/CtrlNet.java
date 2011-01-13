@@ -40,8 +40,6 @@ public class CtrlNet {
 	 */
 
 	private CtrlNet() {
-		L.d("Created");
-
 		this.players = new Vector<Player>();
 		this.teamPlayer = new Vector<Vector<Integer>>();
 	}
@@ -210,21 +208,13 @@ public class CtrlNet {
 	 */
 
 	public void sendSignal(String string) throws Exception {
-		try {
-			threadTCPClient.out(string);
-		} catch (IOException e) {
-			// TODO: catch exception correctly
-			e.printStackTrace();
-		}
+		L.d("sending to server " + string);
+		threadTCPClient.out(string);
 	}
 	
 	public void sendSignal(Integer client, String string) throws Exception {
-		try {
-			players.get(client).out(string);
-		} catch (IOException e) {
-			// TODO: catch exception correctly
-			e.printStackTrace();
-		}
+		L.d("sending to player " + client + " " + string);
+		players.get(client).out(string);
 	}
 
 	public void sendSignals(String string) {
@@ -272,49 +262,40 @@ public class CtrlNet {
 		return result;
 	}
 
-	public void sendUpdatedBoardServer() {
+	public void sendUpdatedBoardServer() throws Exception {
 		Board b = CtrlGame.getInstance().getBoardToSend();
-		try {
-			sendSignal("UPDATEDBOARD " + CtrlDomain.getInstance().serialize(b));
-		} catch (Exception e) {
-			// TODO :do something
-			e.printStackTrace();
-		}
+		sendSignal("UPDATEDBOARD " + CtrlDomain.getInstance().serialize(b));
 	}
 
 	public void sendUpdatedBoardClients(Board b) {
-		try {
-			sendSignals("UPDATEBOARD " + CtrlDomain.getInstance().serialize(b));
-		} catch (Exception e) {
-			// TODO :do something
-			e.printStackTrace();
-		}
+		sendSignals("UPDATEBOARD " + CtrlDomain.getInstance().serialize(b));
 	}
 
 	public void sendTurns(Integer serverTurnPointer) {
-		sendSignals("UPDATEMYTURN 0");
+		TCPServerSend threadTCPServerSend = new TCPServerSend(players, "UPDATEMYTURN 0");
+		threadTCPServerSend.start();
 		
 		// TODO: proper fix
 		try {
-			Thread.sleep(1000);
+			while (threadTCPServerSend.isAlive()) {
+			}
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
 
 		try {
 			sendSignal(serverTurnPointer, "UPDATEMYTURN " + CtrlDomain.getInstance().getServerNumTurns());
 		} catch (Exception e) {
-			// TODO: FixIt */
-			e.printStackTrace();
+			CtrlDomain.getInstance().disconnectionDetected(players.get(serverTurnPointer).getConnection());
 		}
 	}
 
-	public void sendTurnFinished() {
-		try {
-			sendSignal("TURNFINISHED");
-		} catch (Exception e) {
-			// TODO check this
-			e.printStackTrace();
-		}
+	public void sendTurnFinished() throws Exception {
+		sendSignal("TURNFINISHED");
+	}
+
+	public void sendShutdown() {
+		sendSignals("SHUTDOWN");
 	}
 
 	/**
@@ -322,17 +303,13 @@ public class CtrlNet {
 	 * because it will only remove the player from the game, it WON'T close the
 	 * connection.
 	 */
-	public void removeConnection(TCPConnection c) {
+	public void removePlayer(TCPConnection c) {
 
 		for (Player p : players) {
 			if (p.getConnection().equals(c)) {
 				this.players.remove(p);
 			}
 		}
-
-		// TODO: alert the UI that something wrong happened
-
-		CtrlDomain.getInstance().updatedPlayers();
 	}
 
 	/*

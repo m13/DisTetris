@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +57,15 @@ public class JoinGameWaiting extends Activity {
 			Toast.makeText(getBaseContext(), "Couldn't connect to the server "+serverName, Toast.LENGTH_SHORT).show();
 			finish();
 		}
+
+		Button b;
+		b = (Button) findViewById(R.id.Back);
+		b.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				CtrlDomain.getInstance().serverTCPDisconnect();
+				finish();
+			}
+		});
 	}
 
 	@Override

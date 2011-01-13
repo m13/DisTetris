@@ -19,7 +19,6 @@ public class CtrlGame {
 	Board board;
 
 	private CtrlGame() {
-		L.d("Created");
 	}
 
 	public static CtrlGame getInstance() {

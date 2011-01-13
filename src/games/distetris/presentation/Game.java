@@ -8,9 +8,11 @@ import java.util.TimerTask;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 
 /**
@@ -24,7 +26,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	private CtrlDomain dc;
 	private TimerTask gamelooptask;
 	private TimerTask refreshviewtask;
-	private final Handler handler = new Handler();
 	private Timer gamelooptimer = new Timer();
 	private Timer refreshviewtimer = new Timer();
 	private int mseconds_actualize = 500;
@@ -34,6 +35,22 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	private static int threshold_vy = 800;
 	private static int threshold_vx = 500;
 	
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			Bundle b = msg.getData();
+			String type = b.getString("type");
+
+			if (type.equals("SHUTDOWN")) {
+				Toast.makeText(getBaseContext(), "There was a problem with the connection", Toast.LENGTH_SHORT).show();
+				finish();
+			}
+
+		}
+	};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +61,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         gestureScanner = new GestureDetector(this);
 		
 		dc = CtrlDomain.getInstance();
-		//called twice. One for the first piece, next for the second piece
-		//dc.setNewRandomPiece();
-		//dc.setNewRandomPiece();
+		dc.setHandlerUI(handler);
+
     }
 
 	@Override
@@ -124,7 +140,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		}
 
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			finish();
+			dc.stopGame();
+			return super.onKeyDown(keyCode, event);
 		}
 		
 		v.invalidate();

@@ -48,9 +48,14 @@ public class TCPServerSend extends Thread {
 
 			for (int i = (this.players.size() - 1); i >= 0; i--) {
 				try {
+					L.d("sending to player " + i + " " + data);
 					this.players.get(i).out(data);
 				} catch (Exception e) {
-					// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
+
+					// If the data we are sending is SHUTDOWN ignore the closed sockets and continue sending
+					if (!data.equals("SHUTDOWN")) {
+						CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
+					}
 				}
 			}
 
@@ -60,9 +65,10 @@ public class TCPServerSend extends Thread {
 			for (int d = 0; d < data_vector.size(); d++) {
 				for (int i = (this.players.size() - 1); i >= 0; i--) {
 					try {
+						L.d("sending to player " + i + " " + data_vector.get(d));
 						this.players.get(i).out(data_vector.get(d));
 					} catch (Exception e) {
-						// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
+						CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
 					}
 				}
 			}
@@ -75,9 +81,10 @@ public class TCPServerSend extends Thread {
 
 			for (int i = 0; i < this.players.size(); i++) {
 				try {
+					L.d("sending to player " + i + " " + board);
 					this.players.get(i).out(board);
 				} catch (Exception e) {
-					// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
+					CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
 				}
 			}
 
@@ -101,9 +108,10 @@ public class TCPServerSend extends Thread {
 
 			for (int i = 0; i < this.players.size(); i++) {
 				try {
+					L.d("sending to player " + i + " " + turns.get(i));
 					this.players.get(i).out(turns.get(i));
 				} catch (Exception e) {
-					// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
+					CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
 				}
 			}
 
@@ -117,15 +125,12 @@ public class TCPServerSend extends Thread {
 
 			for (int i = 0; i < this.players.size(); i++) {
 				try {
-					L.d("Sending STARTGAME to player " + i);
+					L.d("Sending to player " + i + " STARTGAME");
 					this.players.get(i).out(text_to_start);
 				} catch (Exception e) {
-					// TODO: check for disconnection, really necessary? The SHUTDOWN command uses this
+					CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
 				}
 			}
-			//this.NET.sendUpdatedBoardClients(this.GAME.getBoardToSend());
-			//this.NET.sendTurns(this.serverTurnPointer);
-			//this.NET.sendSignals("STARTGAME");
 
 		}
 
