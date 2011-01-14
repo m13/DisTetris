@@ -51,10 +51,6 @@ public class CtrlNet {
 		return INSTANCE;
 	}
 
-	public static void newInstance() {
-		INSTANCE = null;
-	}
-
 	/*
 	 * 
 	 * 

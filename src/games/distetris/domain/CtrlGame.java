@@ -31,10 +31,6 @@ public class CtrlGame {
 		return INSTANCE;
 	}
 
-	public static void newInstance() {
-		INSTANCE = null;
-	}
-
 	public void setDbHelper(DbHelper dbHelper) {
 		INSTANCE.db = dbHelper;
 	}
