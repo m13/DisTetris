@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.graphics.Color;
-
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static int FREEBLOCK = 0;
@@ -25,23 +23,6 @@ public class Board implements Serializable {
 	private Piece currentpiece;
 	private Piece nextpiece;
 	
-	/**
-	 * Creates a Board for testing
-	 */
-	private void testboard(){
-		board[ROWS-3][0] = Color.parseColor("#FFFF0000");
-		board[ROWS-3][1] = Color.parseColor("#FFFF0000");
-		board[ROWS-3][2] = Color.parseColor("#FFFF0000");
-		board[ROWS-4][0] = Color.parseColor("#FFFF0000");
-		
-		board[ROWS-4][1] = Color.parseColor("#FF0000FF");
-		board[ROWS-4][2] = Color.parseColor("#FF0000FF");
-		board[ROWS-5][1] = Color.parseColor("#FF0000FF");
-		board[ROWS-5][2] = Color.parseColor("#FF0000FF");
-		
-		for(int c=0;c<COLS;c++) board[ROWS-1][c] = Color.parseColor("#FF00FF00");
-		for(int c=0;c<COLS;c++) board[ROWS-2][c] = Color.parseColor("#FF00FFF0");
-	}
 	
 	/**
 	 * Create a new empty board
@@ -52,8 +33,6 @@ public class Board implements Serializable {
 				board[r][c] = FREEBLOCK;
 			}
 		}
-		
-		//testboard();
 	}
 
 	/**
@@ -128,8 +107,17 @@ public class Board implements Serializable {
 				ret.add(r);
 			}
 		}
-		
+		UpdateScores(ret.size(),1);
 		return ret;
+	}
+
+	/**
+	 * Updates the scores value
+	 * @param lines cleared
+	 * @param multiplier (multiplier to those lines)
+	 */
+	private void UpdateScores(int lines,int multiplier) {
+		int score = (lines * multiplier * 100);
 	}
 
 	/**
@@ -213,16 +201,21 @@ public class Board implements Serializable {
 	 */
 	public void currentPieceFastFall() {
 		int cx = this.currentpiece.x;
+		int sx = cx; //start position
+		int ex = 0; //colision position
 		int r;
 		
 		for(r=cx;r<ROWS;r++){
 			currentpiece.x++;
 			if(!isMovementPossible(currentpiece)){
 				currentpiece.x--;
+				ex = currentpiece.x;
 				this.addPiece(currentpiece);
 				break;
 			}
-		}	
+		}
+		int linescleared = this.cleanBoard().size();
+		UpdateScores(linescleared,(ex-sx)/2); //fast fall gives a multiplier score
 	}
 	
 	

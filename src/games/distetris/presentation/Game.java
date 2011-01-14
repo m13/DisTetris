@@ -77,30 +77,12 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		dc.setNewRandomPiece();
 	}
 
+	/**
+	 * A simple touch event
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {		
 		int action = event.getAction();
-
-		if(action == MotionEvent.ACTION_DOWN){	
-			if(v.touchedInPlayPiece(event.getX(),event.getY())){
-				this.movepiece = true;
-			}
-		}
-		else if(action == MotionEvent.ACTION_MOVE){			
-			if(this.movepiece){
-				int piece_col = v.calcBoardColFromScreenX(event.getX());
-				
-				if(piece_col!=-1 && !dc.currentPieceCollisionRC(dc.getCurrentPiece().x,piece_col)){
-					dc.getCurrentPiece().y = piece_col;	
-				}
-				else{
-					this.movepiece = false;
-				}
-			}
-		}
-		else if(action == MotionEvent.ACTION_UP){
-			this.movepiece = false;
-		}
 		
 		return gestureScanner.onTouchEvent(event);
 	}
@@ -217,11 +199,27 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		return false;
 	}
 
+	/**
+	 * A fling movement
+	 */
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
+		//swipe down
 		if(velocityY>threshold_vy){
 			dc.currentPieceFastFall();
+		}
+		//swipe left
+		else if(velocityX>threshold_vx){
+			if(!dc.currentPieceOffsetCollision(+1)){
+				dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
+			}
+		}
+		//swipe right
+		else if(velocityX<-threshold_vx){
+			if(!dc.currentPieceOffsetCollision(-1)){
+				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
+			}
 		}
 		return false;
 	}
@@ -257,11 +255,16 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		return false;
 	}
 
+	/**
+	 * Single Tap
+	 * 
+	 * Move the piece left or right from its current position
+	 */
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent e) {
 		int x = (int) e.getX();
 		
-		if(x<50){
+		/*if(x<50){
 			if(!dc.currentPieceOffsetCollision(-1)){
 				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
 			}
@@ -273,9 +276,9 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		}
 		else{
 			dc.currentPieceRotateLeft();	
-		}
+		}*/
 		
-		
+		dc.currentPieceRotateLeft();
 		return false;
 	}
 
