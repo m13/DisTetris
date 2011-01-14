@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.util.Log;
+
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static int FREEBLOCK = 0;
@@ -118,6 +120,7 @@ public class Board implements Serializable {
 	 */
 	private void UpdateScores(int lines,int multiplier) {
 		int score = (lines * multiplier * 100);
+		this.addScore(playerName, score);
 	}
 
 	/**
@@ -162,6 +165,7 @@ public class Board implements Serializable {
 	 * @param playername Name of the player
 	 */
 	public void setCurrentTurnPlayer(String playername) {
+		Log.d("SetCurrentTurn","B"+playerName);
 		this.playerName = playername;
 	}
 	
@@ -192,6 +196,7 @@ public class Board implements Serializable {
 	}
 	
 	public Integer color() {
+		Log.d("Color","B"+playerName);
 		return playerData.get(playerName).getColor();
 	}
 	

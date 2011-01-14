@@ -556,6 +556,7 @@ public class CtrlDomain {
 		// Add the piece to the game logic
 		this.GAME.addCurrentPieceToBoard();
 
+		//Send the Board
 		if(!isSingleplay()) NetSendBoard();
 		
 	}
