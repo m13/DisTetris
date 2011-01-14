@@ -299,5 +299,9 @@ public class CtrlGame {
 	public void GameOverActions() {
 		this.saveScore();
 	}
+
+	public boolean BoardGameOverSet() {
+		return this.isGameOver();
+	}
 	
 }

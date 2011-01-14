@@ -493,8 +493,20 @@ public class CtrlDomain {
 	 * 
 	 */
 
-	public void GameOverActions(){
+	public void GameOverActionsOther(){
 		this.GAME.GameOverActions();
+	}
+	
+	/**
+	 * Actions to do when a GameOver is found
+	 */
+	public void GameOverActionsLoser(){
+		this.GAME.GameOverActions();
+		try {
+			this.NET.sendUpdatedBoardServer();
+		} catch (Exception e) {
+			this.shutdownUI();
+		}
 	}
 	
 	public ArrayList<Integer> cleanBoard(){
@@ -555,7 +567,7 @@ public class CtrlDomain {
 	}
 	
 	public boolean isGameOver(){
-		return this.GAME.isGameOver();
+		return this.GAME.isGameOver() || this.GAME.BoardGameOverSet();
 	}
 
 	public Handler getHandlerDomain() {
