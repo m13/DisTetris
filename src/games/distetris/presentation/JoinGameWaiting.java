@@ -106,6 +106,7 @@ public class JoinGameWaiting extends Activity {
 		tv.setText(String.valueOf(room.currentTeamID));
 	
 		LinearLayout ll = (LinearLayout) findViewById(R.id.Players);
+		ll.removeAllViews();
 		
 		for (int i = 0; i < room.players.size(); i++) {
 			View child = getLayoutInflater().inflate(R.layout.row_player, null);
