@@ -74,6 +74,7 @@ public class Board implements Serializable {
 	 * @return
 	 */
 	public boolean isFreeBlock(int x, int y){
+		if(x<0 || y<0 || x>ROWS || y>COLS) return false;
 		return (board[x][y] == FREEBLOCK) ?  true : false;
 	}
 	
