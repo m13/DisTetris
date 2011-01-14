@@ -56,6 +56,7 @@ public class Statistics extends Activity {
 				
 				String name = cr.getString(cr.getColumnIndex("name"));
 				Integer score = cr.getInt(cr.getColumnIndex("score"));
+				Integer tscore = cr.getInt(cr.getColumnIndex("tscore"));
 				Long date = cr.getLong(cr.getColumnIndex("date"));
 				
 				Calendar cal = Calendar.getInstance();
@@ -67,6 +68,7 @@ public class Statistics extends Activity {
 				
 				((TextView)child.findViewById(R.id.Name)).setText(name);
 				((TextView)child.findViewById(R.id.Score)).setText(String.valueOf(score));
+				((TextView)child.findViewById(R.id.Tscore)).setText(String.valueOf(tscore));
 				((TextView)child.findViewById(R.id.Date)).setText(strDate);
 				
 				color = (color==0) ? 1 : 0;

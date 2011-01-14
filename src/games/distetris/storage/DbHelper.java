@@ -18,27 +18,28 @@ public class DbHelper {
 		db.close();
 	}
 
-	public void insertValues(int type, String name, Integer score, Long date) {
+	public void insertValues(int type, String name, Integer score, Integer tscore, Long date) {
 		String[] types = new String[] {
 				"individual",
 				"team" };
 		
-		String sql = "INSERT INTO "+types[type]+" (name, score, date)" +
+		String sql = "INSERT INTO "+types[type]+" (name, score, tscore, date)" +
 				"VALUES (?, " +
 				String.valueOf(score) + ", " + 
+				String.valueOf(tscore) + ", " + 
 				String.valueOf(date)+")";
 		db.execSQL(sql, new String[]{ name });
 	}
 	
 	public Cursor getScoreInd() {
-		String sql = "SELECT name, score, date FROM individual ORDER BY score DESC LIMIT 10";
+		String sql = "SELECT name, score, tscore, date FROM individual ORDER BY score DESC LIMIT 10";
 		Cursor cr = db.rawQuery(sql, null);
 		cr.moveToFirst();
 		return cr;
 	}
 	
 	public Cursor getScoreTeam() {
-		String sql = "SELECT name, score, date FROM team ORDER BY score DESC LIMIT 10";
+		String sql = "SELECT name, score, tscore, date FROM team ORDER BY score DESC LIMIT 10";
 		Cursor cr = db.rawQuery(sql, null);
 		cr.moveToFirst();
 		return cr;

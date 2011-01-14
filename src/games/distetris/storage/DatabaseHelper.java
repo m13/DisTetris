@@ -8,7 +8,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "DISTETRIS";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -21,11 +21,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				"CREATE TABLE config (key TEXT, value TEXT)",
 				"INSERT INTO config (key, value) VALUES ('playername', 'Viciado')",
 				"INSERT INTO config (key, value) VALUES ('servername', 'Wifi')",
-				"INSERT INTO config (key, value) VALUES ('numteams', '3')",
-				"INSERT INTO config (key, value) VALUES ('numturns', '5')",
+				"INSERT INTO config (key, value) VALUES ('numteams', '2')",
+				"INSERT INTO config (key, value) VALUES ('numturns', '2')",
 
-				"CREATE TABLE individual (name TEXT, score INT, date INT)",
-				"CREATE TABLE team (name TEXT, score INT, date INT)"
+				"CREATE TABLE individual (name TEXT, score INT, tscore INT, date INT)",
+				"CREATE TABLE team (name TEXT, score INT, tscore INT, date INT)"
 		};
 
 		for (String sql : sqlBlock) { db.execSQL(sql); }

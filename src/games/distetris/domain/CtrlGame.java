@@ -167,7 +167,14 @@ public class CtrlGame {
 		Long date = System.currentTimeMillis();
 		
 		for (Entry<String, Data> player : playerData.entrySet()) {
-			db.insertValues(type, player.getKey(), player.getValue().getScore(), date);
+			Integer team = player.getValue().getTeam();
+			Integer tscore = 0;
+			for (Entry<String, Data> temp : playerData.entrySet()) {
+				if (temp.getValue().getTeam()==team) {
+					tscore += temp.getValue().getScore();
+				}
+			}
+			db.insertValues(type, player.getKey(), player.getValue().getScore(), tscore, date);
 		}
 	}
 	

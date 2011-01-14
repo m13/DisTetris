@@ -24,4 +24,11 @@
 	  android:gravity="right"
 	  android:textSize="20dip"
 	  android:textColor="#111" />
+  <TextView
+	  android:id="@+id/Tscore"
+	  android:layout_height="wrap_content"
+	  android:layout_width="fill_parent"
+	  android:gravity="right"
+	  android:textSize="10dip"
+	  android:textColor="#111" />
 </LinearLayout>
