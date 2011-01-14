@@ -63,6 +63,8 @@ public class JoinGame extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+		CtrlDomain.newInstance();
+
 		setContentView(R.layout.joingame);
 		
 		ll = ((LinearLayout) findViewById(R.id.Root));

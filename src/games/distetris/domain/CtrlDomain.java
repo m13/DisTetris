@@ -66,6 +66,12 @@ public class CtrlDomain {
 		return INSTANCE;
 	}
 
+	public static void newInstance() {
+		INSTANCE = null;
+		CtrlNet.newInstance();
+		CtrlNet.newInstance();
+	}
+
 	public void setDbHelper(DbHelper dbHelper) {
 		CtrlGame.getInstance().setDbHelper(dbHelper);
 	}

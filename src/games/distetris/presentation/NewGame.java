@@ -15,6 +15,8 @@ public class NewGame extends Activity {
         super.onCreate(savedInstanceState);
 		L.d("Start");
 
+		CtrlDomain.newInstance();
+
         setContentView(R.layout.newgame);
         
         final Button button = (Button) findViewById(R.id.Create);
