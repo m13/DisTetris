@@ -404,6 +404,7 @@ public class CtrlDomain {
 	public void startGame() {
 		if(this.isSingleplay()){
 			this.GAME.createNewCleanBoard();
+			this.GAME.InitRandomPieces();
 		}
 		else{
 			this.serverTurnPointer = 0;
@@ -411,7 +412,9 @@ public class CtrlDomain {
 			this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
 				this.NET.serverTCPGetConnectedPlayersName());
 			this.GAME.getBoardToSend().setCurrentTurnPlayer(this.NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+			this.GAME.InitRandomPieces();
 			this.NET.sendSignalsStartGame();
+			
 		}
 	}
 	/**
@@ -589,7 +592,8 @@ public class CtrlDomain {
 	 * Drop The piece to the bottom
 	 */
 	public void currentPieceFastFall() {
-		this.GAME.currentPieceFastFall();	
+		this.GAME.currentPieceFastFall();
+		if(!isSingleplay()) NetSendBoard();
 	}
 
 	public void setSingleplay(boolean singleplay) {

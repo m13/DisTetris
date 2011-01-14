@@ -78,19 +78,34 @@ public class CtrlGame {
 	}
 	
 	/**
-	 * Creates a new board initializing the
-	 * new random pieces
+	 * Creates a new board without
+	 * initializing the random pieces
 	 */
 	public void createNewCleanBoard(){
 		this.board = new Board();
+	}
+	
+	/**
+	 * Initializes the two random Pieces
+	 */
+	public void InitRandomPieces(){
 		this.setNewRandomPiece();
 		this.setNewRandomPiece();
 	}
 	
+	/**
+	 * Returns all the Board object to send 
+	 * @return
+	 */
 	public Board getBoardToSend(){
 		return board;
 	}
 	
+	/**
+	 * @return Returns the Matrix of int colors representing the board
+	 * to draw
+	 * 
+	 */
 	public int[][] getBoard() {
 		return board.getBoard();
 	}
