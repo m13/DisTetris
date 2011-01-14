@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -87,8 +88,11 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Actions to realize when a GameOver occurs
 	 */
 	private void GameOverActions(boolean loser){
+		Log.d("DISTETRIS","I'm the loser?:"+loser);
 		v.gameover = true;
 		this.gamelooptimer.cancel();
+		this.refreshviewtask.cancel();
+		v.invalidate();
 		if(loser) dc.GameOverActionsLoser();
 		else dc.GameOverActionsOther();
 	}
@@ -97,7 +101,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
-		if(dc.isGameOver()) {GameOverActions(false); return;}
 		if(dc.isMyTurn()){
 			//if current piece collides
 			if(dc.nextStepPieceCollision()){
@@ -108,6 +111,9 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 				dc.setNewRandomPiece();
 			}
 			dc.gameStep();
+		}
+		else{
+			if(dc.isGameOver()) {GameOverActions(false); return;}
 		}
 	}
 
