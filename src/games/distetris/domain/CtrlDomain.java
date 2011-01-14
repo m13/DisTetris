@@ -509,16 +509,8 @@ public class CtrlDomain {
 		return this.GAME.currentPieceOffsetCollision(offset);
 	}
 	
-	public void addCurrentPieceToBoard(){
-		// Countdown the number of turns left
-		this.myTurns--;
-		if (this.myTurns == 0) {
-			this.myTurn = false;
-		}
-
-		// Add the piece to the game logic
-		this.GAME.addCurrentPieceToBoard();
-
+	
+	private void NetSendBoard(){
 		// Update the server with the new board
 		try {
 			this.NET.sendUpdatedBoardServer();
@@ -535,6 +527,24 @@ public class CtrlDomain {
 				shutdownUI();
 			}
 		}
+	}
+	/**
+	 * Adds a current piece to the board
+	 * and if not single player sends
+	 * the new board
+	 */
+	public void addCurrentPieceToBoard(){
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+
+		// Add the piece to the game logic
+		this.GAME.addCurrentPieceToBoard();
+
+		if(!isSingleplay()) NetSendBoard();
+		
 	}
 	
 	public Piece getNextPiece(){
@@ -557,6 +567,10 @@ public class CtrlDomain {
 		return this.myTurn;
 	}
 
+	public void setIsMyTurn(boolean myt){
+		this.myTurn = myt;
+	}
+	
 	public Integer getCurrentTurn() {
 		return this.serverTurnPointer;
 	}
@@ -566,6 +580,14 @@ public class CtrlDomain {
 	 */
 	public void currentPieceFastFall() {
 		this.GAME.currentPieceFastFall();	
+	}
+
+	public void setSingleplay(boolean singleplay) {
+		GAME.setSingleplay(singleplay);
+	}
+
+	public boolean isSingleplay() {
+		return GAME.isSingleplay();
 	}
 
 }

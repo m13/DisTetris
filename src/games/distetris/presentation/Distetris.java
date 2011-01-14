@@ -50,6 +50,7 @@ public class Distetris extends Activity {
             	Intent i = new Intent();
             	i.setClass(v.getContext(), (Class<?>) v.getTag());
             	i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            	if(id == R.drawable.single) i.putExtra("single", true);
 				startActivity(i);
             }
         });
@@ -87,7 +88,7 @@ public class Distetris extends Activity {
         }
 
         public long getItemId(int position) {
-            return position;
+            return mImageIds[position];
         }
 		
         public View getView(int position, View convertView, ViewGroup parent) {

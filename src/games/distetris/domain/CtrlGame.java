@@ -17,8 +17,11 @@ public class CtrlGame {
 	private static CtrlGame INSTANCE = null;
 	private DbHelper db = null;
 	Board board;
+	private int myColor = Color.RED;
+	private boolean singleplay = false;
 
 	private CtrlGame() {
+		board = new Board();
 	}
 
 	public static CtrlGame getInstance() {
@@ -176,10 +179,12 @@ public class CtrlGame {
 	 */
 	public void gameStep() {
 
-		// FIXME (Ponemos el color que toca en la pieza) (Revisalo y borra el FIX)
-		this.board.getCurrentpiece().color = this.board.color();
-		this.board.getNextpiece().color = Color.BLACK; // unknown
-		// --
+		// FIXME (Es posa un myColor com a atribut del joc (per no accedir tota l'estona) (Revisalo y borra el FIX)
+		// Cal iniciar-lo a algun lloc
+		if(!this.isSingleplay()) {
+			this.board.getCurrentpiece().color = myColor;
+			this.board.getNextpiece().color = Color.BLACK;
+		}
 		
 		this.board.getCurrentpiece().x = this.board.getCurrentpiece().x + 1;
 	}
@@ -257,5 +262,13 @@ public class CtrlGame {
 	public void currentPieceFastFall() {
 		this.board.currentPieceFastFall();
 		setNewRandomPiece();
+	}
+
+	public void setSingleplay(boolean singleplay) {
+		this.singleplay = singleplay;
+	}
+
+	public boolean isSingleplay() {
+		return singleplay;
 	}
 }

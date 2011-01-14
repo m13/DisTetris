@@ -54,7 +54,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        
         v = new GameView(getBaseContext());
         setContentView(v);
         
@@ -62,8 +63,19 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		
 		dc = CtrlDomain.getInstance();
 		dc.setHandlerUI(handler);
+		if(this.getIntent().getBooleanExtra("single", false)) setSinglePlayer();
 
     }
+
+    /**
+     * Sets the domain Controller for single player working
+     */
+	private void setSinglePlayer() {
+		dc.setSingleplay(true);
+		dc.setIsMyTurn(true);
+		dc.setNewRandomPiece();
+		dc.setNewRandomPiece();
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {		
