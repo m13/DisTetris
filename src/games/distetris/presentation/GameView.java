@@ -1,6 +1,7 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.CtrlGame;
 import games.distetris.domain.Data;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
@@ -205,7 +206,7 @@ public class GameView extends View implements Listener {
 		
 		for (Entry<String, Data> player : playerData.entrySet()) {
 			// FIXME: IndexOutOfBoundsException
-			//names.get(player.getValue().getTeam()).addElement(player.getKey());
+			names.get(player.getValue().getTeam()).addElement(player.getKey());
 		}
 		
 		for (int i=0; i<names.size(); i++) {
