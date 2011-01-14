@@ -95,6 +95,7 @@ public class GameView extends View implements Listener {
 		canvas.drawText("GAME OVER", left + right/3, top + bottom/2, strokepaint);
 	}
 
+	
 	/**
 	 * Draws a piece in its location
 	 * @param canvas
