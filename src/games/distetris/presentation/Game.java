@@ -30,7 +30,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	private Timer refreshviewtimer = new Timer();
 	private int mseconds_actualize = 500;
 	private int mseconds_viewactualize = 10;
-	private boolean movepiece = false;
 	private GestureDetector gestureScanner;
 	private static int threshold_vy = 800;
 	private static int threshold_vx = 500;
@@ -73,8 +72,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	private void setSinglePlayer() {
 		dc.setSingleplay(true);
 		dc.setIsMyTurn(true);
-		dc.setNewRandomPiece();
-		dc.setNewRandomPiece();
+		dc.startGame();
 	}
 
 	/**
@@ -82,8 +80,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {		
-		int action = event.getAction();
-		
 		return gestureScanner.onTouchEvent(event);
 	}
     
@@ -201,6 +197,10 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
 	/**
 	 * A fling movement
+	 * 
+	 * On fling left -> move piece left
+	 * On fling right -> move piece right
+	 * On fling down -> move piece down
 	 */
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
@@ -258,26 +258,10 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	/**
 	 * Single Tap
 	 * 
-	 * Move the piece left or right from its current position
+	 * Rotate the piece
 	 */
 	@Override
-	public boolean onSingleTapConfirmed(MotionEvent e) {
-		int x = (int) e.getX();
-		
-		/*if(x<50){
-			if(!dc.currentPieceOffsetCollision(-1)){
-				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
-			}
-		}
-		else if(x>v.getWidth()-50){
-			if(!dc.currentPieceOffsetCollision(+1)){
-				dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
-			}
-		}
-		else{
-			dc.currentPieceRotateLeft();	
-		}*/
-		
+	public boolean onSingleTapConfirmed(MotionEvent e) {		
 		dc.currentPieceRotateLeft();
 		return false;
 	}

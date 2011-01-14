@@ -96,7 +96,10 @@ public class CtrlGame {
 	}
 
 	/**
-	 * Sets a new random piece on the board
+	 * Sets a new random piece on the board from the Next Piece Value
+	 * 
+	 * Be careful, if there's no next piece Value the current piece will be
+	 * null (for example in a first execution)
 	 */
 	public void setNewRandomPiece(){
 		int pid = new Double(Math.random() * PieceConstants.npieces).intValue();
@@ -104,6 +107,10 @@ public class CtrlGame {
 		this.board.setCurrentpiece(this.board.getNextpiece());
 		this.board.setNextpiece(p);
 		
+		if(!this.isSingleplay()){
+			if(this.board.getCurrentpiece()!=null) this.board.getCurrentpiece().color = board.color();
+			if(this.board.getNextpiece()!=null) this.board.getNextpiece().color = Color.BLACK;
+		}
 	}
 	
 	public void setBoard(Board object) {
@@ -178,14 +185,6 @@ public class CtrlGame {
 	 * A step in the game
 	 */
 	public void gameStep() {
-
-		// FIXME (Es posa un myColor com a atribut del joc (per no accedir tota l'estona) (Revisalo y borra el FIX)
-		// Cal iniciar-lo a algun lloc
-		if(!this.isSingleplay()) {
-			this.board.getCurrentpiece().color = myColor;
-			this.board.getNextpiece().color = Color.BLACK;
-		}
-		
 		this.board.getCurrentpiece().x = this.board.getCurrentpiece().x + 1;
 	}
 

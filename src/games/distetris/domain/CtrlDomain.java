@@ -392,18 +392,28 @@ public class CtrlDomain {
 	}
 	
 	/**
+	 * Starts a new game
+	 * 
+	 * SinglePlayer : 
+	 * Just create a new board and starts the game
+	 * 
+	 * MultiPlayer:
 	 * Send to all the connected clients that the game is going to start. The
 	 * clients must be on *Waiting views.
 	 */
 	public void startGame() {
-		this.serverTurnPointer = 0;
-		this.GAME.createNewCleanBoard();
-		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
+		if(this.isSingleplay()){
+			this.GAME.createNewCleanBoard();
+		}
+		else{
+			this.serverTurnPointer = 0;
+			this.GAME.createNewCleanBoard();
+			this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
 				this.NET.serverTCPGetConnectedPlayersName());
-		this.GAME.getBoardToSend().setCurrentTurnPlayer(this.NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
-		this.NET.sendSignalsStartGame();
+			this.GAME.getBoardToSend().setCurrentTurnPlayer(this.NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+			this.NET.sendSignalsStartGame();
+		}
 	}
-
 	/**
 	 * The UI wants to close the running game
 	 */
