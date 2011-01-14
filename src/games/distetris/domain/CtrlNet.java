@@ -291,7 +291,8 @@ public class CtrlNet {
 	}
 
 	public void sendTurnFinished() throws Exception {
-		sendSignal("TURNFINISHED");
+		Board b = CtrlGame.getInstance().getBoardToSend();
+		sendSignal("TURNFINISHED " + CtrlDomain.getInstance().serialize(b));
 	}
 
 	public void sendShutdown() {

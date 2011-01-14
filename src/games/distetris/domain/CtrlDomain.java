@@ -158,8 +158,17 @@ public class CtrlDomain {
 
 			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
 			L.d("Nuevo turn: " + this.serverTurnPointer);
+
+			// Save the board sent by the finished player
+			GAME.setBoard((Board) unserialize(args[0]));
+
+			// Update the current turn of the board
 			GAME.getBoardToSend().setCurrentTurnPlayer(NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+
+			// Send the new board to all the clients
 			NET.sendUpdatedBoardClients(GAME.getBoardToSend());
+
+			// Send the new turn
 			NET.sendTurns(this.serverTurnPointer);
 		}
 
@@ -490,13 +499,7 @@ public class CtrlDomain {
 	public void setNewRandomPiece(){
 		this.GAME.setNewRandomPiece();
 		
-		// Countdown the number of turns left
-		this.myTurns--;
-		if (this.myTurns == 0) {
-			this.myTurn = false;
-		}
-
-		if(!isSingleplay()) NetSendBoard();
+		notifyAddedPiece();
 		
 	}
 	
@@ -531,25 +534,6 @@ public class CtrlDomain {
 		return this.GAME.currentPieceOffsetCollision(offset);
 	}
 	
-	
-	private void NetSendBoard(){
-		// Update the server with the new board
-		try {
-			this.NET.sendUpdatedBoardServer();
-		} catch (Exception e) {
-			shutdownUI();
-		}
-
-		// If it was my last turn, notify the server
-		if (!this.myTurn) {
-			try {
-				Thread.sleep(500);
-				this.NET.sendTurnFinished();
-			} catch (Exception e) {
-				shutdownUI();
-			}
-		}
-	}
 	/**
 	 * Adds a current piece to the board
 	 * and if not single player sends
@@ -595,13 +579,8 @@ public class CtrlDomain {
 	public void currentPieceFastFall() {
 		this.GAME.currentPieceFastFall();
 		
-		// Countdown the number of turns left
-		this.myTurns--;
-		if (this.myTurns == 0) {
-			this.myTurn = false;
-		}
-		
-		if(!isSingleplay()) NetSendBoard();
+		notifyAddedPiece();
+
 	}
 
 	public void setSingleplay(boolean singleplay) {
@@ -610,6 +589,35 @@ public class CtrlDomain {
 
 	public boolean isSingleplay() {
 		return GAME.isSingleplay();
+	}
+
+	public void notifyAddedPiece() {
+
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+
+		if (!isSingleplay()) {
+
+			if (this.myTurn) {
+				// Update the server with the new board
+				try {
+					this.NET.sendUpdatedBoardServer();
+				} catch (Exception e) {
+					shutdownUI();
+				}
+
+				// If it was my last turn, notify the server
+			} else if (!this.myTurn) {
+				try {
+					this.NET.sendTurnFinished();
+				} catch (Exception e) {
+					shutdownUI();
+				}
+			}
+		}
 	}
 
 }
