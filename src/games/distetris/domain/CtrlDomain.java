@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
@@ -403,6 +404,21 @@ public class CtrlDomain {
 		NET.sendSignals("WAITINGROOM " + serialize(r));
 	}
 	
+	
+	/**
+	 * Creates the single player structure to save the 
+	 * score
+	 */
+	private void setSinglePlayerStructure(){
+		Vector<Integer> teams = new Vector<Integer>();
+		Vector<String> names = new Vector<String>();
+		
+		teams.add(0);
+		names.add(this.GAME.getPlayerName());
+		this.GAME.getBoardToSend().setCurrentTurnPlayer(this.GAME.getPlayerName());
+		this.GAME.setPlayers(teams, names);
+	}
+	
 	/**
 	 * Starts a new game
 	 * 
@@ -416,7 +432,9 @@ public class CtrlDomain {
 	public void startGame() {
 		if(this.isSingleplay()){
 			this.GAME.createNewCleanBoard();
+			this.setSinglePlayerStructure();
 			this.GAME.InitRandomPieces();
+			
 		}
 		else{
 			this.serverTurnPointer = 0;

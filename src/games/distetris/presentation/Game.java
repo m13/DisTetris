@@ -131,7 +131,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		if(dc.isMyTurn()){
 			switch(keyCode){
 			case KeyEvent.KEYCODE_DPAD_DOWN:
-				gameLoop();
+				this.gameLoop();
 				break;
 			case KeyEvent.KEYCODE_DPAD_LEFT:
 				if(!dc.currentPieceOffsetCollision(-1)){
