@@ -164,6 +164,7 @@ public class CtrlDomain {
 
 			// Update the current turn of the board
 			GAME.getBoardToSend().setCurrentTurnPlayer(NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+			GAME.getBoardToSend().refreshCurrentPieceColor();
 
 			// Send the new board to all the clients
 			NET.sendUpdatedBoardClients(GAME.getBoardToSend());
