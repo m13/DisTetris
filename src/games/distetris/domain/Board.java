@@ -119,7 +119,7 @@ public class Board implements Serializable {
 	 * @param multiplier (multiplier to those lines)
 	 */
 	private void UpdateScores(int lines,int multiplier) {
-		int score = (lines * multiplier * 100);
+		int score = (lines * multiplier);
 		this.addScore(score);
 	}
 

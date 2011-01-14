@@ -489,6 +489,14 @@ public class CtrlDomain {
 	public void setNewRandomPiece(){
 		this.GAME.setNewRandomPiece();
 		
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+
+		if(!isSingleplay()) NetSendBoard();
+		
 	}
 	
 	public Piece getCurrentPiece(){
@@ -547,17 +555,8 @@ public class CtrlDomain {
 	 * the new board
 	 */
 	public void addCurrentPieceToBoard(){
-		// Countdown the number of turns left
-		this.myTurns--;
-		if (this.myTurns == 0) {
-			this.myTurn = false;
-		}
-
 		// Add the piece to the game logic
 		this.GAME.addCurrentPieceToBoard();
-
-		//Send the Board
-		if(!isSingleplay()) NetSendBoard();
 		
 	}
 	
@@ -594,6 +593,13 @@ public class CtrlDomain {
 	 */
 	public void currentPieceFastFall() {
 		this.GAME.currentPieceFastFall();
+		
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+		
 		if(!isSingleplay()) NetSendBoard();
 	}
 
