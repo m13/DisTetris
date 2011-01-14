@@ -3,7 +3,6 @@ package games.distetris.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import android.graphics.Color;
 
@@ -15,9 +14,11 @@ public class Board implements Serializable {
 	private int COLS = 10;
 	private int PIECESIZE = 5;
 	
-
-	// players
-	Map<String,Integer> playersScore = new HashMap<String,Integer>();
+	// who is playing now?
+	private String playerName = null;
+	
+	// playerData: HashMap of (String) player name + (Data) player data
+	private HashMap<String, Data> playerData = new HashMap<String, Data>();
 	
 	// board
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
@@ -160,8 +161,50 @@ public class Board implements Serializable {
 		return true;
 	}
 	
-	public Map<String,Integer> getPlayersScore() {
-		return playersScore;
+	/**
+	 * Get the current player playing
+	 * @return Name of the player
+	 */
+	public String getPlayerName(){
+		return this.playerName;
+	}
+	
+	/**
+	 * Set the new current player playing
+	 * @param playername Name of the player
+	 */
+	public void setCurrentTurnPlayer(String playername) {
+		this.playerName = playername;
+	}
+	
+	/**
+	 * Returns all the players
+	 * @return HashMap of (name -> (Class)Score)
+	 */
+	public HashMap<String,Data> getPlayers() {
+		return this.playerData;
+	}
+	
+	/**
+	 * Adds a new player
+	 * @param name the name of the player
+	 * @param score the necessary values
+	 */
+	public void setPlayer(String name, Data data) {
+		this.playerData.put(name, data);
+	}
+	
+	/**
+	 * Increase the score of a player
+	 * @param name Player name
+	 * @param value Value to be increased
+	 */
+	public void addScore(String name, Integer value) {
+		playerData.get(name).incrScore(value);
+	}
+	
+	public Integer color() {
+		return playerData.get(playerName).getColor();
 	}
 	
 	/**

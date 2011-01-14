@@ -4,18 +4,20 @@
 	android:orientation="horizontal"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
-	android:padding="8sp" >
+	android:padding="8dip" >
 	<TextView
 		android:id="@+id/Player"
 		android:layout_height="wrap_content"
-		android:layout_width="200sp"
-		android:textSize="18sp"
+		android:layout_width="200dip"
+		android:padding="8dip"
+		android:textSize="18dip"
 		android:textColor="#111"
 		android:singleLine="true" />
 	<TextView
 		android:id="@+id/Team"
 		android:layout_height="wrap_content"
-		android:layout_width="150sp"
-		android:textSize="18sp"
+		android:layout_width="150dip"
+		android:padding="8dip"
+		android:textSize="18dip"
 		android:textColor="#111" />
 </LinearLayout>

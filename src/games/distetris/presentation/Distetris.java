@@ -32,6 +32,11 @@ public class Distetris extends Activity {
 		//CtrlDomain.getInstance().startNet();
 		L.d("End");
     }
+    
+    public void onDestroy(){
+    	CtrlDomain.getInstance().closeDb();
+    	super.onDestroy();
+    }
 
     private void setButtons() {
         Gallery g = (Gallery) findViewById(R.id.Gallery);
@@ -56,17 +61,17 @@ public class Distetris extends Activity {
         private Integer[] mImageIds = {
             R.drawable.new_game,
             R.drawable.join_game,
+            R.drawable.single,
             R.drawable.statistics,
-            R.drawable.configure,
-            R.drawable.test
+            R.drawable.configure
         };
 
         private Class<?>[] mImageClass = {
         	NewGame.class, 
         	JoinGame.class,
+        	Game.class,
         	Statistics.class,
-        	Configure.class,
-        	Game.class
+        	Configure.class
         };
 
         public ImageAdapter(Context c) {

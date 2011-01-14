@@ -1,11 +1,16 @@
 package games.distetris.presentation;
 
-import java.util.ArrayList;
-
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.Data;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
 import games.distetris.domain.PieceConstants;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
+import java.util.Map.Entry;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -39,7 +44,6 @@ public class GameView extends View implements Listener {
 		fillpaint.setStyle(Paint.Style.FILL);
 		
 		dc = CtrlDomain.getInstance();
-		// TODO Auto-generated constructor stub
 		
 		int[][] board = dc.getBoard();
 		boardw = board[0].length;
@@ -142,7 +146,7 @@ public class GameView extends View implements Listener {
 		strokepaint.setColor(getResources().getColor(R.color.PIECESTROKE));
 		strokepaint.setStrokeWidth(1);
 		
-		int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
+		// int linezero = getHeight() - boardh*SQSIZE - SQSIZE;
 		
 		//the board is draw from left bottom to right top
 		for(int r=0;r<boardh;r++){
@@ -164,11 +168,11 @@ public class GameView extends View implements Listener {
 	 * @param board
 	 */
 	private void drawInfoZone(Canvas canvas, int[][] board,Piece p) {
-		
+
 		int zone_start_left = boardw*SQSIZE + PADDING;
 		int zone_start_top = getHeight() - boardh*SQSIZE - SQSIZE;
 		int zone_start_right = getWidth() - PADDING;
-		int zone_start_bottom = getHeight();
+		// int zone_start_bottom = getHeight();
 		
 		strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
 		strokepaint.setStrokeWidth(3);
@@ -177,14 +181,12 @@ public class GameView extends View implements Listener {
 		int piecesq_top = zone_start_top;
 		int piecesq_right = zone_start_right;
 		int piecesq_bottom = zone_start_top + 2*PADDING + 4*SQSIZE;
+		
 		RectF piecesq = new RectF(piecesq_left,piecesq_top,piecesq_right,piecesq_bottom);
-
 		canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
 		drawNextPiece(piecesq,canvas,p);
 		
-		drawScores(canvas,piecesq_bottom,zone_start_left);
-		
-		
+		drawScores(canvas, piecesq_bottom + 2*PADDING , zone_start_left, piecesq_right);
 	}
 
 	/**
@@ -193,12 +195,47 @@ public class GameView extends View implements Listener {
 	 * @param top top position where toTimerTask example start drawing
 	 * @param left left position where to start drawing
 	 */
-	private void drawScores(Canvas canvas, int top, int left) {
+	private void drawScores(Canvas canvas, int top, int left, int right) {
+		HashMap<String,Data> playerData = dc.getPlayers();
+		Vector<Vector<String>> names = new Vector<Vector<String>>();
 		
-		//foreach Player draw its score
-		strokepaint.setColor(Color.YELLOW);
-		strokepaint.setStrokeWidth(1);
-		canvas.drawText("3553", left, top + PADDING, strokepaint);
+		for (int i=0; i<playerData.size(); i++) {
+			names.add(new Vector<String>());
+		}
+		
+		for (Entry<String, Data> player : playerData.entrySet()) {
+			// FIXME: IndexOutOfBoundsException
+			//names.get(player.getValue().getTeam()).addElement(player.getKey());
+		}
+		
+		for (int i=0; i<names.size(); i++) {
+			if (names.get(i).isEmpty()) { continue; }
+			Vector<String> vs = names.get(i);
+			
+			strokepaint.setColor(getResources().getColor(R.color.INFOSQSTROKE));
+			strokepaint.setStrokeWidth(3);
+			
+			RectF piecesq = new RectF(left, top, right, top + 3*PADDING*(vs.size()+1)+PADDING);
+			canvas.drawRoundRect(piecesq, 10, 10, strokepaint);
+
+			int score = 0;
+			strokepaint.setStrokeWidth(1);
+			
+			for (int j=0; j<vs.size(); j++) {
+				top = top + 3*PADDING;
+				strokepaint.setColor(playerData.get(vs.get(j).toString()).getColor());
+				canvas.drawText(vs.get(j).toString(), left+PADDING, top, strokepaint);
+				canvas.drawText(String.valueOf(playerData.get(vs.get(j).toString()).getScore()), left+80, top, strokepaint);
+				score += playerData.get(vs.get(j).toString()).getScore();
+			}
+			
+			top = top + 3*PADDING;
+			strokepaint.setColor(Color.DKGRAY);
+			strokepaint.setStrokeWidth(1);
+			canvas.drawText(String.valueOf(score), left+70, top, strokepaint);
+			
+			top = top + 2*PADDING;
+		}
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
@@ -29,6 +30,7 @@ public class CtrlDomain {
 
 	// dynamic configuration
 	private int mode = 0;
+	private Boolean gameRunning = false;
 
 	// dynamic configuration (player)
 	private Integer playerID = 0;
@@ -38,25 +40,18 @@ public class CtrlDomain {
 	private Integer myTurns = 0;
 
 	// dynamic configuration (server)
-	// configured by function serverConfigure()
+	// configured by function setConfCreate
 	private String serverName;
 	private Integer serverNumTeams;
 	private Integer serverNumTurns;
-	private Integer serverTurnPointer;
+	private Integer serverTurnPointer = 0;
 
 	private CtrlDomain() {
-		L.d("Created");
-
 		this.handlerDomain = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.getData().containsKey("MSG")) {
-					try {
-						parserController(msg.getData().get("MSG").toString());
-					} catch (Exception e) {
-						// TODO: notify the UI about the disconnection
-						e.printStackTrace();
-					}
+					parserController(msg.getData().get("MSG").toString());
 				}
 			}
 		};
@@ -74,12 +69,24 @@ public class CtrlDomain {
 	public void setDbHelper(DbHelper dbHelper) {
 		CtrlGame.getInstance().setDbHelper(dbHelper);
 	}
+	
+	public void closeDb() {
+		CtrlGame.getInstance().closeDb();
+	}
 
 	public int[][] getBoard() {
 		return GAME.getBoard();
 	}
+	
+	/**
+	 * it returns all the players
+	 * @return HashMap of (name -> (Class)Score)
+	 */
+	public HashMap<String,Data> getPlayers() {
+		return this.GAME.getPlayers();
+	}
 
-	private void parserController(String str) throws Exception {
+	private void parserController(String str) {
 		L.d(str);
 		String[] actionContent = str.split(" ", 2);
 		String[] args = null;
@@ -109,20 +116,26 @@ public class CtrlDomain {
 		} else if (actionContent[0].equals("SHUTDOWN")) {
 			// The server is closing the connection
 
-			Message msg = new Message();
-			Bundle b = new Bundle();
-			b.putString("type", "SHUTDOWN");
-			msg.setData(b);
-			handlerUI.sendMessage(msg);
+			shutdownUI();
 		} else if (actionContent[0].equals("STARTGAME")) {
 			// The server started the game
 			// Clients must leave the *Waiting view and change it to the Game
+
+			this.gameRunning = true;
 
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString("type", "STARTGAME");
 			msg.setData(b);
 			handlerUI.sendMessage(msg);
+
+		} else if (actionContent[0].equals("UPDATEDBOARD")) {
+			// A client sent a new board
+			// Send this new board to all the clients
+
+			Board b = (Board) unserialize(args[0]);
+			NET.sendUpdatedBoardClients(b);
+			//NET.sendSignals(serialize(b));
 
 		} else if (actionContent[0].equals("UPDATEBOARD")) {
 			// The server sent a new board
@@ -133,7 +146,20 @@ public class CtrlDomain {
 			}
 
 		} else if (actionContent[0].equals("UPDATEMYTURN")) {
-			this.myTurn = Boolean.parseBoolean(((String) unserialize(args[0])));
+			// The server sent new information about my turn
+
+			this.myTurns = Integer.parseInt(((String) args[0]));
+			this.myTurn = (this.myTurns > 0) ? true : false;
+			L.d("Turns updated. myTurn " + this.myTurn + " myTurns " + this.myTurns);
+
+		} else if (actionContent[0].equals("TURNFINISHED")) {
+			// A client just finished playing all the turns
+			// Notify all the clients with the new turn
+
+			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
+			L.d("Nuevo turn: " + this.serverTurnPointer);
+			GAME.getBoardToSend().setCurrentTurnPlayer(NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+			NET.sendTurns(this.serverTurnPointer);
 		}
 
 			
@@ -321,6 +347,7 @@ public class CtrlDomain {
 
 	public void serverTCPStart() throws Exception {
 		this.mode = MODE_SERVER;
+		this.gameRunning = false;
 		NET.serverTCPStart(serverNumTeams, serverNumTurns);
 	}
 
@@ -330,6 +357,7 @@ public class CtrlDomain {
 
 	public void serverTCPConnect(String serverIP, int serverPort) throws Exception {
 		this.mode = MODE_CLIENT;
+		this.gameRunning = false;
 		String result = NET.serverTCPConnect(serverIP, serverPort);
 		this.playerID = Integer.parseInt(result.split("\\|")[0]);
 		this.teamID = Integer.parseInt(result.split("\\|")[1]);
@@ -337,11 +365,13 @@ public class CtrlDomain {
 
 	public void serverTCPDisconnect() {
 		this.mode = 0;
+		this.gameRunning = false;
 		NET.serverTCPDisconnect();
 	}
 
 	public void serverTCPDisconnectClients() {
 		this.mode = 0;
+		this.gameRunning = false;
 		NET.serverTCPDisconnectClients();
 	}
 
@@ -349,9 +379,11 @@ public class CtrlDomain {
 		this.handlerUI = hand;
 	}
 
+	/**
+	 * Notify all the clients that the WaitingRoom has changed because a new
+	 * player joined or a current player disconnected
+	 */
 	public void updatedPlayers() {
-
-		//new_player.out("WAITING " + (players.size()) + "," + (numTeams - 1) + "," + numTurns);
 
 		WaitingRoom r = new WaitingRoom();
 
@@ -364,13 +396,69 @@ public class CtrlDomain {
 	 * clients must be on *Waiting views.
 	 */
 	public void startGame() {
+		this.serverTurnPointer = 0;
 		this.GAME.createNewCleanBoard();
-		this.NET.sendTurns(this.serverTurnPointer);
-		this.NET.sendUpdatedBoard();
-		this.NET.sendSignals("STARTGAME");
+		this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
+				this.NET.serverTCPGetConnectedPlayersName());
+		this.GAME.getBoardToSend().setCurrentTurnPlayer(this.NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+		this.NET.sendSignalsStartGame();
 	}
-	
-	
+
+	/**
+	 * The UI wants to close the running game
+	 */
+	public void stopGame() {
+
+		if (mode == CtrlDomain.MODE_CLIENT) {
+			serverTCPDisconnect();
+		} else if (mode == CtrlDomain.MODE_SERVER) {
+			serverTCPDisconnectClients();
+		}
+	}
+
+	/**
+	 * Notifies the UI that some error with the connection occurred
+	 */
+	public void shutdownUI() {
+		Message msg = new Message();
+		Bundle b = new Bundle();
+		b.putString("type", "SHUTDOWN");
+		msg.setData(b);
+		handlerUI.sendMessage(msg);
+	}
+
+	/**
+	 * A disconnection has been detected. Notify the UI if in client mode or
+	 * notify the rest of the clients if in server mode.
+	 * 
+	 * @param conn
+	 */
+	public void disconnectionDetected(TCPConnection conn) {
+
+		conn.close();
+
+		if (mode == CtrlDomain.MODE_CLIENT) {
+
+			// If in client mode, notify the UI about the shutdown
+			shutdownUI();
+
+		} else if (mode == CtrlDomain.MODE_SERVER && !gameRunning) {
+
+			// This happens when there is a disconnection in the WaitingRoom
+
+			CtrlNet.getInstance().removePlayer(conn);
+			updatedPlayers();
+
+		} else if (mode == CtrlDomain.MODE_SERVER && gameRunning) {
+
+			// This happens when there is a disconnection while playing a game
+
+			CtrlNet.getInstance().sendShutdown();
+		}
+
+
+	}
+
 	/*
 	 * 
 	 * 
@@ -422,8 +510,31 @@ public class CtrlDomain {
 	}
 	
 	public void addCurrentPieceToBoard(){
+		// Countdown the number of turns left
+		this.myTurns--;
+		if (this.myTurns == 0) {
+			this.myTurn = false;
+		}
+
+		// Add the piece to the game logic
 		this.GAME.addCurrentPieceToBoard();
-		this.NET.sendUpdatedBoard();
+
+		// Update the server with the new board
+		try {
+			this.NET.sendUpdatedBoardServer();
+		} catch (Exception e) {
+			shutdownUI();
+		}
+
+		// If it was my last turn, notify the server
+		if (!this.myTurn) {
+			try {
+				Thread.sleep(500);
+				this.NET.sendTurnFinished();
+			} catch (Exception e) {
+				shutdownUI();
+			}
+		}
 	}
 	
 	public Piece getNextPiece(){
@@ -444,6 +555,10 @@ public class CtrlDomain {
 
 	public boolean isMyTurn() {
 		return this.myTurn;
+	}
+
+	public Integer getCurrentTurn() {
+		return this.serverTurnPointer;
 	}
 
 	/**
