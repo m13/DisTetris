@@ -259,7 +259,9 @@ public class CtrlGame {
 	}
 
 	public boolean isGameOver() {
-		return this.board.gameOver();
+		boolean go = this.board.gameOver();
+		if(go) this.saveScore();
+		return go;
 	}
 
 	public boolean currentPieceCollisionRC(int row, int col) {
