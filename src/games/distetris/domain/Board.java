@@ -22,6 +22,7 @@ public class Board implements Serializable {
 	private int[][] board = new int[ROWS][COLS]; 	//[0][0] is the top left board
 	private Piece currentpiece;
 	private Piece nextpiece;
+	private boolean isGameOver = false;
 	
 	
 	/**
@@ -59,9 +60,11 @@ public class Board implements Serializable {
 	 */
 	public boolean gameOver(){
 		for(int i=0;i<COLS;i++){
-			if(board[0][i] != FREEBLOCK) return true;
+			if(board[0][i] != FREEBLOCK){ 
+				this.isGameOver = true;
+			}
 		}
-		return false;
+		return this.isGameOver;
 	}
 	
 	/**
@@ -248,6 +251,14 @@ public class Board implements Serializable {
 
 	public void refreshCurrentPieceColor() {
 		this.getCurrentpiece().color = this.color();
+	}
+
+	public void setGameOver(boolean isGameOver) {
+		this.isGameOver = isGameOver;
+	}
+
+	public boolean isGameOver() {
+		return isGameOver;
 	}
 
 

@@ -86,22 +86,24 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	/**
 	 * Actions to realize when a GameOver occurs
 	 */
-	private void GameOverActions(){
+	private void GameOverActions(boolean loser){
 		v.gameover = true;
 		this.gamelooptimer.cancel();
-		dc.GameOverActions();
+		if(loser) dc.GameOverActionsLoser();
+		else dc.GameOverActionsOther();
 	}
 	
 	/**
 	 * Main Game Loop executed every x seconds
 	 */
 	private void gameLoop(){
+		if(dc.isGameOver()) {GameOverActions(false); return;}
 		if(dc.isMyTurn()){
 			//if current piece collides
 			if(dc.nextStepPieceCollision()){
-				if(dc.isGameOver()) {GameOverActions();}
+				if(dc.isGameOver()) {GameOverActions(true); return;}
 				try{dc.addCurrentPieceToBoard();}
-				catch(Exception e){GameOverActions();}
+				catch(Exception e){GameOverActions(true);}
 				v.deletelines = dc.cleanBoard();
 				dc.setNewRandomPiece();
 			}
