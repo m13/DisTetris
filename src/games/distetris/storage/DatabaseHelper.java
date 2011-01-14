@@ -19,7 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Log.d("DB", "onCreate");
 		String[] sqlBlock = new String[] {
 				"CREATE TABLE config (key TEXT, value TEXT)",
-				"INSERT INTO config (key, value) VALUES ('FirstTime', 1)",
 				"INSERT INTO config (key, value) VALUES ('playername', 'Viciado')",
 				"INSERT INTO config (key, value) VALUES ('servername', 'Wifi')",
 				"INSERT INTO config (key, value) VALUES ('numteams', '3')",

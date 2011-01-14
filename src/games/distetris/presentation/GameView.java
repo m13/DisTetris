@@ -1,6 +1,7 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.CtrlGame;
 import games.distetris.domain.Data;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;

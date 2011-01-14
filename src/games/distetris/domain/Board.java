@@ -120,7 +120,7 @@ public class Board implements Serializable {
 	 */
 	private void UpdateScores(int lines,int multiplier) {
 		int score = (lines * multiplier * 100);
-		this.addScore(playerName, score);
+		this.addScore(score);
 	}
 
 	/**
@@ -187,17 +187,19 @@ public class Board implements Serializable {
 	}
 	
 	/**
-	 * Increase the score of a player
-	 * @param name Player name
+	 * Increase the score of the current player
 	 * @param value Value to be increased
 	 */
-	public void addScore(String name, Integer value) {
-		playerData.get(name).incrScore(value);
+	public void addScore(Integer value) {
+		playerData.get(this.playerName).incrScore(value);
 	}
 	
+	/**
+	 * Retrieve the color of the current player
+	 * @return color of the player
+	 */
 	public Integer color() {
-		Log.d("Color","B"+playerName);
-		return playerData.get(playerName).getColor();
+		return playerData.get(this.playerName).getColor();
 	}
 	
 	/**
