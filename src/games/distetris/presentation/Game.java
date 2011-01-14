@@ -57,6 +57,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         
         
         v = new GameView(getBaseContext());
+        v.gameover = false;
         setContentView(v);
         
         gestureScanner = new GestureDetector(this);
@@ -80,8 +81,10 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * A simple touch event
 	 */
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {		
-		return gestureScanner.onTouchEvent(event);
+	public boolean onTouchEvent(MotionEvent event) {
+		if(dc.isMyTurn()) return gestureScanner.onTouchEvent(event);
+		else return false;
+		
 	}
     
 	/**
@@ -125,23 +128,25 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch(keyCode){
-		case KeyEvent.KEYCODE_DPAD_DOWN:
-			gameLoop();
-			break;
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			if(!dc.currentPieceOffsetCollision(-1)){
-				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
+		if(dc.isMyTurn()){
+			switch(keyCode){
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+				gameLoop();
+				break;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				if(!dc.currentPieceOffsetCollision(-1)){
+					dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
+				}
+				break;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				if(!dc.currentPieceOffsetCollision(+1)){
+					dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
+				}
+				break;
+			case KeyEvent.KEYCODE_DPAD_UP:
+				dc.currentPieceRotateLeft();
+				break;
 			}
-			break;
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			if(!dc.currentPieceOffsetCollision(+1)){
-				dc.getCurrentPiece().y = dc.getCurrentPiece().y + 1;
-			}
-			break;
-		case KeyEvent.KEYCODE_DPAD_UP:
-			dc.currentPieceRotateLeft();
-			break;
 		}
 
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -222,7 +227,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 			float velocityY) {
 		//swipe down
 		if(velocityY>threshold_vy){
-			dc.currentPieceFastFall();
+			try{dc.currentPieceFastFall();}
+			catch (Exception e){GameOverActions(true);}
 		}
 		//swipe left
 		else if(velocityX>threshold_vx){
