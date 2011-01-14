@@ -492,6 +492,10 @@ public class CtrlDomain {
 	 * 
 	 */
 
+	public void GameOverActions(){
+		this.GAME.GameOverActions();
+	}
+	
 	public ArrayList<Integer> cleanBoard(){
 		return this.GAME.cleanBoard();
 	}

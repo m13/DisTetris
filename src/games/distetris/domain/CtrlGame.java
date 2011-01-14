@@ -259,9 +259,7 @@ public class CtrlGame {
 	}
 
 	public boolean isGameOver() {
-		boolean go = this.board.gameOver();
-		if(go) this.saveScore();
-		return go;
+		return this.board.gameOver();
 	}
 
 	public boolean currentPieceCollisionRC(int row, int col) {
@@ -286,5 +284,19 @@ public class CtrlGame {
 
 	public boolean isSingleplay() {
 		return singleplay;
+	}
+
+	/**
+	 * Actions to realize when a GameOver Occurs
+	 */
+	public void GameOverActions() {
+		this.saveScore();
+	}
+	
+	/**
+	 * Refreshes the current Piece color
+	 */
+	public void refreshCurrentPieceColor(){
+		this.board.getCurrentpiece().color = board.color();
 	}
 }

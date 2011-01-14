@@ -52,8 +52,7 @@ public class Board implements Serializable {
 					board[br][bc] = p.color;
 				}
 			}
-		}
-		
+		}	
 	}
 	
 	/**
