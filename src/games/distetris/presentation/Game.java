@@ -91,7 +91,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		Log.d("DISTETRIS","I'm the loser?:"+loser);
 		v.gameover = true;
 		this.gamelooptimer.cancel();
-		this.refreshviewtask.cancel();
+		this.refreshviewtimer.cancel();
 		v.invalidate();
 		if(loser) dc.GameOverActionsLoser();
 		else dc.GameOverActionsOther();
