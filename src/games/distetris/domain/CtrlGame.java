@@ -293,10 +293,4 @@ public class CtrlGame {
 		this.saveScore();
 	}
 	
-	/**
-	 * Refreshes the current Piece color
-	 */
-	public void refreshCurrentPieceColor(){
-		this.board.getCurrentpiece().color = board.color();
-	}
 }

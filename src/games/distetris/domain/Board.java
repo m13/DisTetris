@@ -165,8 +165,8 @@ public class Board implements Serializable {
 	 * @param playername Name of the player
 	 */
 	public void setCurrentTurnPlayer(String playername) {
-		Log.d("SetCurrentTurn","B"+playerName);
 		this.playerName = playername;
+		this.getCurrentpiece().color = this.color();
 	}
 	
 	/**
