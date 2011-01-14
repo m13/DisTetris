@@ -143,6 +143,7 @@ public class CtrlDomain {
 
 			if (!myTurn) {
 				GAME.setBoard((Board) unserialize(args[0]));
+				L.d(" Rebut board amb gameover a " + GAME.getBoardToSend().isGameOver());
 			}
 
 		} else if (actionContent[0].equals("UPDATEMYTURN")) {
