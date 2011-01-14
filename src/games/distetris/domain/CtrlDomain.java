@@ -159,6 +159,7 @@ public class CtrlDomain {
 			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
 			L.d("Nuevo turn: " + this.serverTurnPointer);
 			GAME.getBoardToSend().setCurrentTurnPlayer(NET.serverTCPGetConnectedPlayer(getCurrentTurn()));
+			NET.sendUpdatedBoardClients(GAME.getBoardToSend());
 			NET.sendTurns(this.serverTurnPointer);
 		}
 
