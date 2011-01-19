@@ -171,6 +171,12 @@ public class CtrlDomain {
 			// Send the new board to all the clients
 			NET.sendUpdatedBoardClients(GAME.getBoardToSend());
 
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			// Send the new turn
 			NET.sendTurns(getCurrentTurn());
 		}

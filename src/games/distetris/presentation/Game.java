@@ -242,6 +242,9 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 				dc.getCurrentPiece().y = dc.getCurrentPiece().y - 1;
 			}
 		}
+
+		v.invalidate();
+
 		return false;
 	}
 
@@ -284,6 +287,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent e) {		
 		dc.currentPieceRotateLeft();
+		v.invalidate();
 		return false;
 	}
 
