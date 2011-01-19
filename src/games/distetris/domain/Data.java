@@ -36,8 +36,7 @@ public class Data implements Serializable  {
 	public Data (Integer team) {
 		this.team = team;
 		this.score = 0;
-		Random color = new Random();
-		this.color = Color.rgb(color.nextInt(256), color.nextInt(256), color.nextInt(256));
+		this.color = PieceConstants.nextColor();
 	}
 	
 	/**

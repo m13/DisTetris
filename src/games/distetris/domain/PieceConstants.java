@@ -7,6 +7,7 @@ public class PieceConstants {
 	public static int PIVOTBLOCK = 2;
 	public static int PIECEBLOCK = 1;
 	public static int PIECESIZE = 5;
+	private static int sc = 0;
 
 	public static byte[/*Type*/][/*Rotation*/][/*Horitz Blocks*/][/*Vert Blocks*/] cPieces =
 	{
@@ -290,5 +291,15 @@ public class PieceConstants {
 	public static int randomColor() {
 		int x = (int) (Math.random()*100)%defcolors.length;
 		return defcolors[x];
+	}
+	
+	/**
+	 * Returns a defined color in order
+	 * @return
+	 */
+	public static int nextColor(){
+		int x = defcolors[sc];
+		sc++;
+		return x;
 	}
 }
