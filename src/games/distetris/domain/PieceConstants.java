@@ -286,7 +286,7 @@ public class PieceConstants {
 		 };  
 	
 	public static int npieces = cPieces.length;
-	private static int[] defcolors = {Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.CYAN}; 
+	private static int[] defcolors = {Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.CYAN,Color.GRAY,Color.CYAN,Color.WHITE}; 
 	
 	public static int randomColor() {
 		int x = (int) (Math.random()*100)%defcolors.length;
@@ -300,6 +300,7 @@ public class PieceConstants {
 	public static int nextColor(){
 		int x = defcolors[sc];
 		sc++;
+		if(sc>=defcolors.length) sc = 0;
 		return x;
 	}
 }
