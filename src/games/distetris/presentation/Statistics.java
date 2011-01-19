@@ -29,16 +29,7 @@ public class Statistics extends Activity {
             	finish();
             }
         });
-
-		L.d("End");
-    }
-    
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		L.d("onResume");
-		
+        
 		Cursor cr = CtrlDomain.getInstance().getScoreInd();
 		LinearLayout ll = (LinearLayout) findViewById(R.id.LinearLayoutIndividual);
 		addStats(cr, ll);
@@ -46,7 +37,9 @@ public class Statistics extends Activity {
 		cr = CtrlDomain.getInstance().getScoreTeam();
 		ll = (LinearLayout) findViewById(R.id.LinearLayoutTeam);
 		addStats(cr, ll);
-	}
+
+		L.d("End");
+    }
 	
 	private void addStats(Cursor cr, LinearLayout ll) {
 		if (cr.moveToFirst()) {
