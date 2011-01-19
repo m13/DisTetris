@@ -91,7 +91,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Actions to realize when a GameOver occurs
 	 */
 	private void GameOverActions(boolean loser){
-		Log.d("DISTETRIS","I'm the loser?:"+loser);
 		v.gameover = true;
 		v.invalidate();
 		
@@ -128,6 +127,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(dc.isGameOver()) return false;
 		if(dc.isMyTurn()){
 			switch(keyCode){
 			case KeyEvent.KEYCODE_DPAD_DOWN:
@@ -225,6 +225,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
+		if(dc.isGameOver()) return false;
 		//swipe down
 		if(velocityY>threshold_vy){
 			try{dc.currentPieceFastFall();}
@@ -285,7 +286,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 * Rotate the piece
 	 */
 	@Override
-	public boolean onSingleTapConfirmed(MotionEvent e) {		
+	public boolean onSingleTapConfirmed(MotionEvent e) {
+		if(dc.isGameOver()) return false;
 		dc.currentPieceRotateLeft();
 		v.invalidate();
 		return false;
