@@ -119,6 +119,8 @@ public class CtrlGame {
 	public void setNewRandomPiece(){
 		int pid = new Double(Math.random() * PieceConstants.npieces).intValue();
 		Piece p = new Piece(pid,0);
+		p.y = PieceConstants.startPos[p.getType()][p.getRotation()][0];
+		p.x = PieceConstants.startPos[p.getType()][p.getRotation()][1];
 		this.board.setCurrentpiece(this.board.getNextpiece());
 		this.board.setNextpiece(p);
 		
