@@ -127,6 +127,11 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			dc.stopGame();
+			return super.onKeyDown(keyCode, event);
+		}
+		
 		if(dc.isGameOver()) return false;
 		if(dc.isMyTurn()){
 			switch(keyCode){
@@ -149,10 +154,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 			}
 		}
 
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			dc.stopGame();
-			return super.onKeyDown(keyCode, event);
-		}
+
 		
 		v.invalidate();
 		return true;

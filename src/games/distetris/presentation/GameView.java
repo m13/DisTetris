@@ -286,7 +286,7 @@ public class GameView extends View implements Listener {
 		int left = 0; 
 		int top = getHeight() - boardh*SQSIZE - SQSIZE;
 		int right = boardw*SQSIZE;
-		int bottom = getHeight();
+		int bottom = getHeight()-SQSIZE;
 		
 		fillpaint.setColor(getResources().getColor(R.color.BG));
 		strokepaint.setColor(getResources().getColor(R.color.PLAYZONESTROKE));
