@@ -39,6 +39,8 @@ public class TCPServer extends Thread {
 	
 		try {
 
+			L.d("first line");
+
 			serverSocket = new ServerSocket(CtrlNet.PORT);
 
 			L.d("TCPServer Started");
@@ -55,6 +57,7 @@ public class TCPServer extends Thread {
 			}
 		
 		} catch (Exception e) {
+			L.e("Exception  in running TCPServer", e);
 		}
 	}
 

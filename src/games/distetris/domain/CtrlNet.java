@@ -74,23 +74,33 @@ public class CtrlNet {
 		serverTCPStop();
 		serverTCPDisconnectClients();
 
+		this.players = new Vector<Player>();
+
 		// Creating server
 		this.threadTCPServer = new TCPServer(players, numTeams, numTurns);
 		this.threadTCPServer.start();
+
+		L.d("thread started");
 
 		// Waiting for the server to start
 		while (!this.threadTCPServer.isAlive()) {
 			;
 		}
+		L.d("thread alive");
 		while (!this.threadTCPServer.isListening()) {
 			;
 		}
+		L.d("thread listening");
 
 		// Connecting like a normal client
 		serverTCPConnect("127.0.0.1", PORT);
+
+		L.d("connected");
 	}
 
 	public void serverTCPStop() {
+		L.d("TCPServer starting close");
+
 		if (this.threadTCPServer != null && this.threadTCPServer.isAlive()) {
 			this.threadTCPServer.close();
 			while (this.threadTCPServer.isAlive()) {
@@ -141,20 +151,18 @@ public class CtrlNet {
 
 	public void serverTCPDisconnectClients() {
 
-		// Notify all the clients that the server is going to shutdown
-		sendSignals("SHUTDOWN");
-
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		}
-
+		L.d("Starting disconnection");
 		// Close all the remaining connections
 		for (Player p : players) {
+			L.d("inside for");
 			p.close();
 		}
+		
+		L.d("Closed all sockets, clearing...");
 
 		players.clear();
+
+		L.d("Disconnection ended");
 	}
 
 	/*
@@ -258,6 +266,42 @@ public class CtrlNet {
 
 	public String serverTCPGetConnectedPlayer(int id) {
 		String result = players.get(id).getName();
+
+		return result;
+	}
+
+	public int serverTCPGetNumTeams() {
+		Vector<Integer> result = new Vector<Integer>();
+
+		for (int i = 0; i < players.size(); i++) {
+			if (!result.contains(players.get(i).getTeam())) {
+				result.add(players.get(i).getTeam());
+			}
+		}
+
+		return result.size();
+	}
+
+	public Vector<Integer> serverTCPGetPlayersTeam(Integer teamId) {
+		Vector<Integer> result = new Vector<Integer>();
+
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getTeam().equals(teamId)) {
+				result.add(players.get(i).getNumPlayer());
+			}
+		}
+
+		return result;
+	}
+
+	public int serverTCPGetPosFromId(Integer playerId) {
+		Integer result = null;
+
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getNumPlayer().equals(playerId)) {
+				result = i;
+			}
+		}
 
 		return result;
 	}

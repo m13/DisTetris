@@ -1,6 +1,7 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
+import games.distetris.domain.L;
 import games.distetris.domain.WaitingRoom;
 import android.app.Activity;
 import android.content.Intent;
@@ -41,6 +42,7 @@ public class NewGameWaiting extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		L.d("Start");
 
 		setContentView(R.layout.gamewaiting);
 
@@ -61,11 +63,13 @@ public class NewGameWaiting extends Activity {
 			}
 		});
 
+		L.d("End");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
+		L.d("Start");
 
 		CtrlDomain.getInstance().setHandlerUI(handler);
 
@@ -77,15 +81,19 @@ public class NewGameWaiting extends Activity {
 			finish();
 		}
 
+		L.d("End");
+
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		L.d("Start");
 
 		CtrlDomain.getInstance().serverUDPStop();
 		CtrlDomain.getInstance().serverTCPStop();
 
+		L.d("End");
 	}
 
 	@Override

@@ -45,7 +45,8 @@ public class CtrlDomain {
 	private String serverName;
 	private Integer serverNumTeams;
 	private Integer serverNumTurns;
-	private Integer serverTurnPointer = 0;
+	private Vector<Integer> serverTurnPointer;
+	private Integer serverTeamPointer = 0;
 
 	private CtrlDomain() {
 		this.handlerDomain = new Handler() {
@@ -158,8 +159,8 @@ public class CtrlDomain {
 			// A client just finished playing all the turns
 			// Notify all the clients with the new turn
 
-			this.serverTurnPointer = (++this.serverTurnPointer) % NET.serverTCPGetConnectedPlayersNum();
-			L.d("Nuevo turn: " + this.serverTurnPointer);
+			incrementCurrentTurn();
+			L.d("Nuevo turn: " + getCurrentTurn());
 
 			// Save the board sent by the finished player
 			GAME.setBoard((Board) unserialize(args[0]));
@@ -172,7 +173,7 @@ public class CtrlDomain {
 			NET.sendUpdatedBoardClients(GAME.getBoardToSend());
 
 			// Send the new turn
-			NET.sendTurns(this.serverTurnPointer);
+			NET.sendTurns(getCurrentTurn());
 		}
 
 			
@@ -340,7 +341,6 @@ public class CtrlDomain {
 		this.serverName = b.getString("servername");
 		this.serverNumTeams = Integer.valueOf(b.getString("numteams"));
 		this.serverNumTurns = Integer.valueOf(b.getString("numturns"));
-		this.serverTurnPointer = 0;
 		this.GAME.setConfCreate(b);
 	}
 	
@@ -437,7 +437,7 @@ public class CtrlDomain {
 			
 		}
 		else{
-			this.serverTurnPointer = 0;
+			initializeTurns();
 			this.GAME.createNewCleanBoard();
 			this.GAME.setPlayers( this.NET.serverTCPGetConnectedPlayersTeam(),
 				this.NET.serverTCPGetConnectedPlayersName());
@@ -605,8 +605,33 @@ public class CtrlDomain {
 		this.myTurn = myt;
 	}
 	
+	private void initializeTurns() {
+
+		this.serverTeamPointer = 0;
+
+		this.serverTurnPointer = new Vector<Integer>();
+
+		for (int i = 0; i < this.NET.serverTCPGetNumTeams(); i++) {
+			serverTurnPointer.add(0);
+		}
+
+		L.d("Turns initialized with teams: " + this.NET.serverTCPGetNumTeams());
+		for (int i = 0; i < this.NET.serverTCPGetNumTeams(); i++) {
+			L.d("Team " + i + " number players: " + this.NET.serverTCPGetPlayersTeam(i).size());
+		}
+
+		L.d("Vector: " + this.serverTurnPointer);
+	}
+
 	public Integer getCurrentTurn() {
-		return this.serverTurnPointer;
+		Integer aix = this.serverTurnPointer.get(this.serverTeamPointer);
+		Integer aux = this.NET.serverTCPGetPlayersTeam(this.serverTeamPointer).get(aix);
+		return this.NET.serverTCPGetPosFromId(aux);
+	}
+
+	public void incrementCurrentTurn() {
+		this.serverTurnPointer.set(this.serverTeamPointer, ((this.serverTurnPointer.get(this.serverTeamPointer) + 1) % this.NET.serverTCPGetPlayersTeam(this.serverTeamPointer).size()));
+		this.serverTeamPointer = (this.serverTeamPointer + 1) % this.NET.serverTCPGetNumTeams();
 	}
 
 	/**
