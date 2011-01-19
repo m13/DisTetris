@@ -61,6 +61,8 @@ public class GameView extends View implements Listener {
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
 		super.onDraw(canvas);
+		//the background is always drawn
+		drawGameBackground(canvas);
 		
 		int[][] board = dc.getBoard();
 		
@@ -69,9 +71,8 @@ public class GameView extends View implements Listener {
 			deleteLinesAnim();
 		}
 		drawBoard(canvas,board);
-		drawGameBackground(canvas);
 		drawInfoZone(canvas,board,dc.getNextPiece());
-		drawPiece(canvas);
+		if(dc.isMyTurn()) drawPiece(canvas);
 		
 		if(gameover) drawGameOverLayer(canvas);
 	}
@@ -287,8 +288,12 @@ public class GameView extends View implements Listener {
 		int top = getHeight() - boardh*SQSIZE - SQSIZE;
 		int right = boardw*SQSIZE;
 		int bottom = getHeight()-SQSIZE;
+		int bcolor = 0;
 		
-		fillpaint.setColor(getResources().getColor(R.color.BG));
+		if(dc.isMyTurn()) bcolor = getResources().getColor(R.color.BG);
+		else bcolor = getResources().getColor(R.color.BGNOTURN);
+		
+		fillpaint.setColor(bcolor);
 		strokepaint.setColor(getResources().getColor(R.color.PLAYZONESTROKE));
 		strokepaint.setStrokeWidth(1);
 		

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <color name="BG">#55000000</color>
+<color name="BGNOTURN">#55FF0000</color>
 <color name="INFOSQSTROKE">#FF57474B</color>
 <color name="PIECESTROKE">#FF57474B</color>
 <color name="PLAYZONESTROKE">#FF9C9496</color>
