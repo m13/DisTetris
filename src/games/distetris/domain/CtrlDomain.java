@@ -160,7 +160,6 @@ public class CtrlDomain {
 			// Notify all the clients with the new turn
 
 			incrementCurrentTurn();
-			L.d("Nuevo turn: " + getCurrentTurn());
 
 			// Save the board sent by the finished player
 			GAME.setBoard((Board) unserialize(args[0]));
@@ -632,6 +631,9 @@ public class CtrlDomain {
 	public void incrementCurrentTurn() {
 		this.serverTurnPointer.set(this.serverTeamPointer, ((this.serverTurnPointer.get(this.serverTeamPointer) + 1) % this.NET.serverTCPGetPlayersTeam(this.serverTeamPointer).size()));
 		this.serverTeamPointer = (this.serverTeamPointer + 1) % this.NET.serverTCPGetNumTeams();
+
+		L.d("Nuevo equipo: " + serverTeamPointer);
+		L.d("Nuevo turn del equipo: " + this.serverTurnPointer.get(this.serverTeamPointer));
 	}
 
 	/**

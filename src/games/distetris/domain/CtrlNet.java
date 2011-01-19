@@ -283,7 +283,10 @@ public class CtrlNet {
 		return result.size();
 	}
 
-	public Vector<Integer> serverTCPGetPlayersTeam(Integer teamId) {
+	public Vector<Integer> serverTCPGetPlayersTeam(Integer paramId) {
+
+		Integer teamId = serverTCPGetConnectedPlayersTeam().get(paramId);
+
 		Vector<Integer> result = new Vector<Integer>();
 
 		for (int i = 0; i < players.size(); i++) {

@@ -1,7 +1,6 @@
 package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
-import games.distetris.domain.CtrlGame;
 import games.distetris.domain.Data;
 import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
@@ -200,7 +199,7 @@ public class GameView extends View implements Listener {
 		HashMap<String,Data> playerData = dc.getPlayers();
 		Vector<Vector<String>> names = new Vector<Vector<String>>();
 		
-		for (int i=0; i<playerData.size(); i++) {
+		for (int i = 0; i < 100; i++) {
 			names.add(new Vector<String>());
 		}
 		
