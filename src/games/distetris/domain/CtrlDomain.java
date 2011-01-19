@@ -553,10 +553,13 @@ public class CtrlDomain {
 	
 	public void gameStep(){
 		this.GAME.gameStep();
-		try {
-			this.NET.sendUpdatedBoardServer();
-		} catch (Exception e) {
-			shutdownUI();
+
+		if (!isSingleplay()) {
+			try {
+				this.NET.sendUpdatedBoardServer();
+			} catch (Exception e) {
+				shutdownUI();
+			}
 		}
 	}
 	
