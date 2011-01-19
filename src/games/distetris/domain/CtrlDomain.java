@@ -553,6 +553,11 @@ public class CtrlDomain {
 	
 	public void gameStep(){
 		this.GAME.gameStep();
+		try {
+			this.NET.sendUpdatedBoardServer();
+		} catch (Exception e) {
+			shutdownUI();
+		}
 	}
 	
 	public boolean currentPieceCollision(){
