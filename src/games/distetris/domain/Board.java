@@ -60,7 +60,7 @@ public class Board implements Serializable {
 	 */
 	public boolean gameOver(){
 		for(int i=0;i<COLS;i++){
-			if(board[0][i] != FREEBLOCK){ 
+			if(board[1][i] != FREEBLOCK){ 
 				this.isGameOver = true;
 			}
 		}
