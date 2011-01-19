@@ -681,4 +681,8 @@ public class CtrlDomain {
 		}
 	}
 
+	public void createCleanBoard() {
+		CtrlGame.getInstance().createNewCleanBoard();
+	}
+
 }

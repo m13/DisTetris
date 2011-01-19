@@ -92,6 +92,7 @@ public class JoinGame extends Activity {
 		super.onStart();
 		ll.removeAllViews();
 		CtrlDomain.getInstance().serverUDPFind(udpHandler);
+		CtrlDomain.getInstance().createCleanBoard();
 	}
 
 	/**

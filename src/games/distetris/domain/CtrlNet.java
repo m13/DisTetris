@@ -14,6 +14,7 @@ import android.util.Log;
 public class CtrlNet {
 	
 	public static Integer PORT = 17375;
+	public Integer portServer = 17375;
 	
 	private static CtrlNet INSTANCE = null;
 
@@ -93,7 +94,7 @@ public class CtrlNet {
 		L.d("thread listening");
 
 		// Connecting like a normal client
-		serverTCPConnect("127.0.0.1", PORT);
+		serverTCPConnect("127.0.0.1", this.portServer);
 
 		L.d("connected");
 	}

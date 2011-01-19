@@ -41,7 +41,18 @@ public class TCPServer extends Thread {
 
 			L.d("first line");
 
-			serverSocket = new ServerSocket(CtrlNet.PORT);
+			CtrlNet.getInstance().portServer = CtrlNet.PORT;
+
+			do {
+
+				try {
+					serverSocket = new ServerSocket(CtrlNet.getInstance().portServer);
+				} catch (Exception e) {
+					CtrlNet.getInstance().portServer++;
+					L.d("Trying with " + CtrlNet.getInstance().portServer);
+				}
+
+			} while (serverSocket == null || !serverSocket.isBound());
 
 			L.d("TCPServer Started");
 
