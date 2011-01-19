@@ -1,9 +1,6 @@
 package games.distetris.domain;
 
 import java.io.Serializable;
-import java.util.Random;
-
-import android.graphics.Color;
 
 
 /**

@@ -11,8 +11,6 @@ import android.os.Message;
 
 public class TCPConnection extends Thread {
 
-	private String ip;
-	private int port;
 	private Socket socket;
 
 	private Boolean keepRunning;
@@ -21,8 +19,6 @@ public class TCPConnection extends Thread {
 		super();
 
 		try {
-			this.ip = ip;
-			this.port = port;
 
 			this.socket = new Socket(ip, port);
 

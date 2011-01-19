@@ -17,7 +17,6 @@ public class CtrlGame {
 	private static CtrlGame INSTANCE = null;
 	private DbHelper db = null;
 	Board board;
-	private int myColor = Color.RED;
 	private boolean singleplay = false;
 
 	private CtrlGame() {

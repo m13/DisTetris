@@ -78,7 +78,7 @@ public class CtrlNet {
 		this.players = new Vector<Player>();
 
 		// Creating server
-		this.threadTCPServer = new TCPServer(players, numTeams, numTurns);
+		this.threadTCPServer = new TCPServer(players, numTeams);
 		this.threadTCPServer.start();
 
 		L.d("thread started");

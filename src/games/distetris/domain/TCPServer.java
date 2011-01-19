@@ -12,14 +12,13 @@ public class TCPServer extends Thread {
 	private Vector<Player> players;
 
 	private Integer numTeams;
-	private Integer numTurns;
 	private Integer numPlayerLastAssigned;
 	private Integer numTeamLastAssigned;
 
 	private Boolean keepRunning;
 	private Boolean listening;
 	
-	public TCPServer(Vector<Player> players, Integer numTeams, Integer numTurns) {
+	public TCPServer(Vector<Player> players, Integer numTeams) {
 		super();
 
 		setName("TCPServer");
@@ -27,7 +26,6 @@ public class TCPServer extends Thread {
 		this.players = players;
 
 		this.numTeams = numTeams;
-		this.numTurns = numTurns;
 		this.numPlayerLastAssigned = 0;
 		this.numTeamLastAssigned = 0;
 
