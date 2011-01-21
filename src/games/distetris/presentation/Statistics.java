@@ -41,6 +41,11 @@ public class Statistics extends Activity {
 		L.d("End");
     }
 	
+    /**
+     * Adds a row into the linearlayout ll with the information of cr
+     * @param cr Cursor that points to the data of a row_stats
+     * @param ll The root parent view where add the new row_stats
+     */
 	private void addStats(Cursor cr, LinearLayout ll) {
 		if (cr.moveToFirst()) {
 			int color = 0;

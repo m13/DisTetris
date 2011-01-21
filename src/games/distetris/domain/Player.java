@@ -22,29 +22,15 @@ public class Player {
 		this.connection.start();
 	}
 
-	public String getName() {
-		return name;
-	}
-	
-	public Integer getNumPlayer() {
-		return numPlayer;
-	}
-
-	public Integer getTeam() {
-		return this.numTeam;
-	}
-
-	public String in() throws Exception {
-		return connection.in();
-	}
-
-	public void out(String content) throws Exception {
-		connection.out(content);
-	}
-
-	public TCPConnection getConnection() {
-		return connection;
-	}
+	/*
+	 * getters
+	 */
+	public String getName() { return name; }
+	public Integer getNumPlayer() { return numPlayer; }
+	public Integer getTeam() { return this.numTeam; }
+	public String in() throws Exception { return connection.in(); }
+	public void out(String content) throws Exception { connection.out(content); }
+	public TCPConnection getConnection() { return connection; }
 
 	public void close() {
 		if (this.connection != null && this.connection.isAlive()) {
@@ -55,5 +41,4 @@ public class Player {
 		}
 		this.connection = null;
 	}
-
 }

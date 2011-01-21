@@ -40,7 +40,6 @@ public class WaitingRoom implements Serializable {
 			WaitingRoomPlayer new_player = new WaitingRoomPlayer(players_name.get(i), players_team.get(i));
 			this.players.add(new_player);
 		}
-
 	}
 
 	public class WaitingRoomPlayer implements Serializable {
@@ -55,7 +54,5 @@ public class WaitingRoom implements Serializable {
 			this.name = name;
 			this.team = team;
 		}
-
 	}
-
 }

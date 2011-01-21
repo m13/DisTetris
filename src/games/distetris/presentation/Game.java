@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-
 /**
  * Game activity. Player's zone
  * 
@@ -46,14 +45,12 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 				Toast.makeText(getBaseContext(), "There was a problem with the connection", Toast.LENGTH_SHORT).show();
 				finish();
 			}
-
 		}
 	};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         
         v = new GameView(getBaseContext());
         v.gameover = false;
@@ -64,7 +61,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		dc = CtrlDomain.getInstance();
 		dc.setHandlerUI(handler);
 		if(this.getIntent().getBooleanExtra("single", false)) setSinglePlayer();
-
     }
 
     /**
@@ -83,7 +79,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	public boolean onTouchEvent(MotionEvent event) {
 		if(dc.isMyTurn()) return gestureScanner.onTouchEvent(event);
 		else return false;
-		
 	}
     
 	/**
@@ -153,8 +148,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 			}
 		}
 
-
-		
 		v.invalidate();
 		return true;
 	}
@@ -189,13 +182,11 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		               });
 		        }};
 		    this.refreshviewtimer.schedule(refreshviewtask, 0, this.mseconds_viewactualize); 
-
 	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		if(hasFocus) doGameLoop();
-		
 	}
 
 	@Override
@@ -204,15 +195,12 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		super.onStop();
 	}
 
-
-	public void onLongPress(MotionEvent e)
-	{
-
+	@Override
+	public void onLongPress(MotionEvent e){
 	}
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-
 		return false;
 	}
 
@@ -251,33 +239,26 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 	}
 
 	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		return false;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-
-		
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-
 		return false;
 	}
 
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -293,8 +274,4 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 		v.invalidate();
 		return false;
 	}
-
-
-
-    
 }

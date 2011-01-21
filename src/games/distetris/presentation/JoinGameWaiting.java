@@ -32,7 +32,6 @@ public class JoinGameWaiting extends Activity {
 				Toast.makeText(getBaseContext(), "The server closed the connection", Toast.LENGTH_SHORT).show();
 				finish();
 			}
-
 		}
 	};
 

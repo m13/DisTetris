@@ -131,8 +131,6 @@ public class TCPServerSend extends Thread {
 					CtrlDomain.getInstance().disconnectionDetected(this.players.get(i).getConnection());
 				}
 			}
-
 		}
-
 	}
 }

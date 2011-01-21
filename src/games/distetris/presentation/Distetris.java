@@ -29,15 +29,18 @@ public class Distetris extends Activity {
 
         setContentView(R.layout.main);
         setButtons();
-		//CtrlDomain.getInstance().startNet();
 		L.d("End");
     }
     
+    @Override
     public void onDestroy(){
     	CtrlDomain.getInstance().closeDb();
     	super.onDestroy();
     }
 
+    /**
+     * Generates the horizontal gallery with the main buttons
+     */
     private void setButtons() {
         Gallery g = (Gallery) findViewById(R.id.Gallery);
         g.setUnselectedAlpha(1f);
@@ -56,6 +59,9 @@ public class Distetris extends Activity {
         });
     }
     
+    /**
+     * custom BaseAdapter
+     */
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
 
@@ -75,21 +81,10 @@ public class Distetris extends Activity {
         	Configure.class
         };
 
-        public ImageAdapter(Context c) {
-            mContext = c;
-        }
-
-        public int getCount() {
-            return mImageIds.length;
-        }
-
-        public Object getItem(int position) {
-            return position;
-        }
-
-        public long getItemId(int position) {
-            return mImageIds[position];
-        }
+        public ImageAdapter(Context c) { mContext = c; }
+        public int getCount() { return mImageIds.length; }
+        public Object getItem(int position) { return position; }
+        public long getItemId(int position) { return mImageIds[position];  }
 		
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView i = new ImageView(mContext);

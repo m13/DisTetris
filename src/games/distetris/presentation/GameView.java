@@ -2,7 +2,6 @@ package games.distetris.presentation;
 
 import games.distetris.domain.CtrlDomain;
 import games.distetris.domain.Data;
-import games.distetris.domain.Listener;
 import games.distetris.domain.Piece;
 import games.distetris.domain.PieceConstants;
 
@@ -19,7 +18,7 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.View;
 
-public class GameView extends View implements Listener {
+public class GameView extends View {
 	private final int SQSIZE = 20;
 	private final int PADDING = 5;
 	
@@ -48,18 +47,10 @@ public class GameView extends View implements Listener {
 		int[][] board = dc.getBoard();
 		boardw = board[0].length;
 		boardh = board.length;
-		
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
 		super.onDraw(canvas);
 		//the background is always drawn
 		drawGameBackground(canvas);
@@ -78,8 +69,6 @@ public class GameView extends View implements Listener {
 	}
 
 	private void deleteLinesAnim() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -118,8 +107,6 @@ public class GameView extends View implements Listener {
 				if(p.getBlockType(pr, pc)!=PieceConstants.FREEBLOCK) drawSquare(canvas,r,c);
 			}
 		}
-
-		
 	}
 
 	/**
@@ -191,7 +178,7 @@ public class GameView extends View implements Listener {
 	}
 
 	/**
-	 * Draw the scores on screen
+	 * Draw the scores on the screen
 	 * @param canvas
 	 * @param top top position where toTimerTask example start drawing
 	 * @param left left position where to start drawing
@@ -205,7 +192,6 @@ public class GameView extends View implements Listener {
 		}
 		
 		for (Entry<String, Data> player : playerData.entrySet()) {
-			// FIXME: IndexOutOfBoundsException
 			names.get(player.getValue().getTeam()).addElement(player.getKey());
 		}
 		
@@ -393,6 +379,4 @@ public class GameView extends View implements Listener {
 		
 		return false;
 	}
-	
 }
-

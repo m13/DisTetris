@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class NewGame extends Activity {
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,9 +20,6 @@ public class CtrlNet {
 
 	private Vector<Player> players;
 	private Vector<Vector<Integer>> teamPlayer;
-	private Integer pointerTeamPlayer = 0;
-	
-	private Integer numTeams;
 	
 	private TCPServer threadTCPServer;
 	private TCPConnection threadTCPClient;
@@ -65,7 +62,6 @@ public class CtrlNet {
 	public void serverTCPStart(int numTeams, int numTurns) throws Exception {
 
 		// TODO: Revisar! Sergio's code
-		this.numTeams = numTeams;
 		for (int i = 0; i<(numTeams); i++) {
 			Vector<Integer> seq = new Vector<Integer>();
 			teamPlayer.add(seq);
@@ -365,42 +361,6 @@ public class CtrlNet {
 	 * 
 	 * 
 	 * 
-	 * OTHER
-	 * 
-	 * 
-	 * 
-	 */
-
-	public void registerPlayer(int posPlayer, int chosenTeam) {
-		Integer pos = new Integer(posPlayer);
-		(teamPlayer.elementAt(chosenTeam)).add(pos);
-	}
-
-
-	public void nextPlayer() {
-		do {
-			pointerTeamPlayer++;
-			if (pointerTeamPlayer>=numTeams) {
-				pointerTeamPlayer = 0;
-			}
-		} while (teamPlayer.get(pointerTeamPlayer).isEmpty());
-		
-		Integer first = teamPlayer.get(pointerTeamPlayer).remove(0);
-		teamPlayer.get(pointerTeamPlayer).add(first);
-		
-		Integer firstPlayerPos = teamPlayer.get(pointerTeamPlayer).get(0);
-		try {
-			players.elementAt(firstPlayerPos).out("CONTINUE ");
-		} catch (Exception e) {
-			// TODO: finish game or try next player
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
 	 * NETWORK UTILITIES
 	 * 
 	 * 
@@ -441,6 +401,4 @@ public class CtrlNet {
 		L.d("Wifi set");
 		this.wifiManager = systemService;
 	}
-
-
 }

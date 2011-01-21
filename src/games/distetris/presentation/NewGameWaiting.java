@@ -108,8 +108,7 @@ public class NewGameWaiting extends Activity {
 	/**
 	 * Parse a newly received WaitingRoom class
 	 * 
-	 * @param b
-	 *            Bundle containing the WaitingRoom class
+	 * @param b Bundle containing the WaitingRoom class
 	 */
 	private void updateWaitingRoom(Bundle b) {
 
